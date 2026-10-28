@@ -6,7 +6,13 @@
 
 [ชมวิดีโอทุกท่าจากเกมจริง](docs/PHUZASHI_All_Moves.mp4)
 
-## ล่าสุด: คอมโบเปลี่ยนท่าจริงและหมัดม่วงปิดคอมโบ
+## ล่าสุด: S + J เรียกปีศาจล็อกเป้า
+
+[ดาวน์โหลดเกมทดสอบ Demon Bind (.zip)](https://github.com/poohkk567-sys/game/blob/codex/demon-bind-skill/docs/downloads/PHUZASHI_Demon_Bind_Godot.zip?raw=true) — แตก ZIP → Godot Import `project.godot` → F5
+
+กด **S ค้างแล้วกด J** หรือกด S+J พร้อมกัน ใช้ **25 MP** เรียกปีศาจเงาพุ่งไปล็อกเป้าด้านหน้า **0.7 วินาทีหลังจับติด** มีโซ่ม่วงและเวลานับถอยหลัง เป้าฝึกหยุดลอยขณะโดนล็อก และระบบรองรับการหยุดตัวละครหรือ AI ที่เคลื่อนที่จริงแล้ว ดู [วิธีเล่นและรายละเอียด](docs/DEMON_BIND_TH.md) / [วิดีโอในเกม](docs/PHUZASHI_Demon_Bind.mp4)
+
+## คอมโบเปลี่ยนท่าจริงและหมัดม่วงปิดคอมโบ
 
 [ดาวน์โหลดเกมทดสอบรุ่นท่าใหม่ (.zip)](https://github.com/poohkk567-sys/game/blob/codex/distinct-combo-poses/docs/downloads/PHUZASHI_Distinct_Combos_Godot.zip?raw=true) — แตก ZIP → Godot Import `project.godot` → F5
 

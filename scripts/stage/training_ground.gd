@@ -1,7 +1,7 @@
 extends Node2D
 ## Stage orchestration; F2 demonstrates every move without adding a fighter.
 const InputSetup = preload("res://scripts/character/input_setup.gd")
-const SEQUENCE: Array[String] = ["IDLE", "WALK", "RUN", "JUMP", "CROUCH", "GUARD", "PUNCH", "KICK", "HIT", "FALL", "SPECIAL", "ULTIMATE", "AIR_PUNCH", "AIR_KICK", "PUNCH_COMBO", "KICK_COMBO", "BLINK"]
+const SEQUENCE: Array[String] = ["IDLE", "WALK", "RUN", "JUMP", "CROUCH", "GUARD", "PUNCH", "KICK", "HIT", "FALL", "SPECIAL", "ULTIMATE", "AIR_PUNCH", "AIR_KICK", "PUNCH_COMBO", "KICK_COMBO", "BLINK", "DEMON_BIND"]
 @onready var phuzashi: PhuzashiCharacter = $PHUZASHI
 @onready var target: Area2D = $TrainingCrystal
 var show_help: bool = false
@@ -86,7 +86,7 @@ func _demonstrate(move_name: String) -> void:
 		"BLINK":
 			phuzashi.position.x = 500
 			phuzashi._start_blink(1)
-		"PUNCH", "KICK", "SPECIAL", "ULTIMATE":
+		"PUNCH", "KICK", "SPECIAL", "ULTIMATE", "DEMON_BIND":
 			phuzashi.position.x = 800.0
 			phuzashi.start_action(move_name)
 

@@ -8,7 +8,7 @@ const PIVOT := Vector2(256,360)
 const EXTRA_CLIPS: Dictionary = {
 	"PUNCH_2": "PUNCH", "PUNCH_3": "PUNCH",
 	"KICK_2": "KICK", "KICK_3": "KICK",
-	"AIR_PUNCH": "PUNCH", "AIR_KICK": "KICK"
+	"AIR_PUNCH": "PUNCH", "AIR_KICK": "KICK", "DEMON_BIND": "SPECIAL"
 }
 const FIST_MARKERS: Array[Vector2] = [
 	Vector2(0.81,0.40),Vector2(0.22,0.56),Vector2(0.12,0.60),Vector2(0.84,0.055),
@@ -34,7 +34,8 @@ const EXTRA_CONTACT_PHASES: Dictionary = {
 	"KICK_2": [0.0,0.10,0.20,0.30,0.48,0.64,0.82,0.94],
 	"KICK_3": [0.0,0.08,0.14,0.20,0.34,0.65,0.83,0.95],
 	"AIR_PUNCH": [0.0,0.06,0.15,0.24,0.42,0.60,0.78,0.92],
-	"AIR_KICK": [0.0,0.08,0.16,0.22,0.30,0.66,0.82,0.94]
+	"AIR_KICK": [0.0,0.08,0.16,0.22,0.30,0.66,0.82,0.94],
+	"DEMON_BIND": [0.0,0.08,0.20,0.32,0.48,0.64,0.80,0.94]
 }
 var last_state: String = ""
 
@@ -53,6 +54,10 @@ func _ready() -> void:
 	sprite_frames.set_animation_loop("BLINK", false)
 	for pose: Array in BLINK_POSES:
 		sprite_frames.add_frame("BLINK", FRAMES.get_frame_texture(pose[0], pose[1]))
+	sprite_frames.add_animation("BOUND")
+	sprite_frames.set_animation_loop("BOUND",false)
+	for i in range(8):
+		sprite_frames.add_frame("BOUND",FRAMES.get_frame_texture("HIT",i))
 	centered = false
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	scale = Vector2.ONE*FRAME_SCALE
