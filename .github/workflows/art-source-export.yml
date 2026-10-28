@@ -1,0 +1,22 @@
+name: Export source sprite references for Shadow Blink
+on:
+  push:
+    branches:
+      - codex/shadow-blink-art-12f
+permissions:
+  contents: read
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phuzashi-approved-source-sprites
+          path: |
+            assets/characters/PHUZASHI_MASTER_SHOES_APPROVED.png
+            assets/characters/drafts/idle_walk_draft.png
+            assets/characters/spritesheets/*.png
+            assets/characters/spritesheets/manifest.json
+          if-no-files-found: error
+          retention-days: 3

@@ -13,6 +13,11 @@ const GRAVITY: float = 1500.0
 const ACCELERATION: float = 2300.0
 const FLOOR_Y: float = 586.0
 const SPAWN := Vector2(360, FLOOR_Y)
+const BLINK_DURATION: float = 0.4
+const BLINK_DISTANCE: float = 130.0
+const BLINK_COST: float = 15.0
+const BLINK_WINDOW: float = 0.28
+const BLINK_COOLDOWN: float = 0.5
 # duration, energy, damage, active start/end (normalized), reach, height.
 const ATTACKS: Dictionary = {
 	"PUNCH": [0.42, 0.0, 8, 0.34, 0.60, 112.0, 64.0],
@@ -40,6 +45,12 @@ var debug_hitboxes: bool = false
 var visited: Dictionary = {"IDLE": true}
 var struck: Dictionary = {}
 var pulse_spawned: bool = false
+var blink_timer: float = 0.0
+var blink_cooldown: float = 0.0
+var blink_origin: float = 0.0
+var blink_direction: int = 1
+var left_tap: float = -100.0
+var right_tap: float = -100.0
 var message: String = "Approach the crystal to practice attacks"
 var message_time: float = 3.0
 var effects: Node2D
@@ -55,6 +66,7 @@ func _physics_process(delta: float) -> void:
 	elapsed += delta
 	message_time = maxf(0.0, message_time - delta)
 	energy = minf(100.0, energy + delta * 9.0)
+	blink_cooldown = maxf(0.0, blink_cooldown - delta)
 	if Input.is_action_just_pressed("reset"):
 		reset_training()
 		get_tree().call_group("training_target", "reset_target")
@@ -69,6 +81,19 @@ func _physics_process(delta: float) -> void:
 	jump_buffer = maxf(0.0, jump_buffer - delta)
 	if Input.is_action_just_pressed("jump"):
 		jump_buffer = 0.12
+	for command: String in ["move_left", "move_right"]:
+		if Input.is_action_just_pressed(command):
+			var direction: int = -1 if command == "move_left" else 1
+			var previous: float = left_tap if direction < 0 else right_tap
+			if elapsed - previous < BLINK_WINDOW:
+				_start_blink(direction)
+			if direction < 0:
+				left_tap = elapsed
+			else:
+				right_tap = elapsed
+	if blink_timer > 0.0:
+		_step_blink(delta)
+		return
 	var axis: float = Input.get_axis("move_left", "move_right")
 	var crouching: bool = Input.is_action_pressed("crouch")
 	var guarding: bool = Input.is_action_pressed("guard")
@@ -123,6 +148,47 @@ func _physics_process(delta: float) -> void:
 	rig.animate(state_name, delta, facing, phase)
 	queue_redraw()
 	effects.queue_redraw()
+
+func _start_blink(direction: int) -> bool:
+	if blink_timer > 0.0 or blink_cooldown > 0.0 or action_timer > 0.0:
+		return false
+	if not is_on_floor() or Input.is_action_pressed("crouch") or Input.is_action_pressed("guard"):
+		return false
+	if energy < BLINK_COST:
+		announce("Shadow Blink requires 15 MP")
+		return false
+	energy -= BLINK_COST
+	blink_timer = BLINK_DURATION
+	blink_cooldown = BLINK_COOLDOWN
+	blink_origin = position.x
+	blink_direction = direction
+	facing = direction
+	velocity = Vector2.ZERO
+	jump_buffer = 0.0
+	_set_state("BLINK")
+	announce("SHADOW BLINK / 15 MP")
+	return true
+
+func blink_progress() -> float:
+	return clampf(1.0 - blink_timer / BLINK_DURATION, 0.0, 1.0)
+
+func blink_invulnerable() -> bool:
+	return blink_timer > 0.0 and blink_progress() >= 4.0/12.0 and blink_progress() < 8.0/12.0
+
+func _step_blink(delta: float) -> void:
+	blink_timer = maxf(0.0, blink_timer - delta)
+	var progress: float = blink_progress()
+	var fraction: float = clampf((progress - 0.24) / 0.49, 0.0, 1.0)
+	fraction = fraction * fraction * (3.0 - 2.0 * fraction)
+	velocity = Vector2(0.0, GRAVITY * delta)
+	move_and_slide()
+	position.x = clampf(blink_origin + float(blink_direction) * BLINK_DISTANCE * fraction, 75.0, 1205.0)
+	_set_state("BLINK")
+	rig.animate("BLINK", delta, facing, progress)
+	queue_redraw()
+	effects.queue_redraw()
+	if blink_timer <= 0.0:
+		_set_state("IDLE")
 
 func start_action(action: String) -> bool:
 	if not ATTACKS.has(action) or action_timer > 0.0 or not is_on_floor():
@@ -186,6 +252,9 @@ func _process_attack() -> void:
 			target_struck.emit(int(config[2]))
 
 func receive_training_hit(knockdown: bool) -> void:
+	if blink_invulnerable():
+		announce("SHADOW BLINK / attack avoided")
+		return
 	if action_name == "FALL":
 		return
 	var blocked: bool = Input.is_action_pressed("guard") and is_on_floor() and action_timer <= 0.0
@@ -230,6 +299,10 @@ func reset_training() -> void:
 	jump_buffer = 0.0
 	struck.clear()
 	pulse_spawned = false
+	blink_timer = 0.0
+	blink_cooldown = 0.0
+	left_tap = -100.0
+	right_tap = -100.0
 	_set_state("IDLE")
 	rig.reset_pose()
 	_update_body_shape()
