@@ -30,7 +30,7 @@ func _draw() -> void:
 	var p: float = clampf(fighter.action_progress(), 0.0, 1.0)
 	var envelope: float = sin(p * PI)
 	match fighter.action_name:
-		"PUNCH", "PUNCH_2", "PUNCH_3", "AIR_PUNCH":
+		"PUNCH", "PUNCH_2", "AIR_PUNCH":
 			var strike_y: float = -80.0 if fighter.is_air_attack() else -104.0
 			if p > 0.20 and p < 0.7:
 				for i in range(3):

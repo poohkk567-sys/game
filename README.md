@@ -1,12 +1,22 @@
 # PHUZASHI — DARK PULSE
 
-เกมต่อสู้ 2D มุมมองด้านข้าง ฉากฝึกตัวละคร PHUZASHI ตัวเดียว สำหรับ Godot **4.2.2+** ใช้ **spritesheet 12 ท่าหลัก รวม 96 เฟรม** เป็นภาพเต็มตัว พร้อมโจมตีกลางอากาศและคอมโบ 3 จังหวะ
+เกมต่อสู้ 2D มุมมองด้านข้าง ฉากฝึกตัวละคร PHUZASHI ตัวเดียว สำหรับ Godot **4.2.2+** มีภาพเต็มตัว **128 เฟรม** รวม 12 ท่าหลัก 96 เฟรมและคอมโบท่าใหม่ 32 เฟรม พร้อมโจมตีกลางอากาศ
 
 ![Twelve illustrated moves](docs/screenshots/pose_gallery.png)
 
 [ชมวิดีโอทุกท่าจากเกมจริง](docs/PHUZASHI_All_Moves.mp4)
 
-## ล่าสุด: กระโดดต่อย–เตะ และคอมโบ 3 จังหวะ
+## ล่าสุด: คอมโบเปลี่ยนท่าจริงและหมัดม่วงปิดคอมโบ
+
+[ดาวน์โหลดเกมทดสอบรุ่นท่าใหม่ (.zip)](https://github.com/poohkk567-sys/game/blob/codex/distinct-combo-poses/docs/downloads/PHUZASHI_Distinct_Combos_Godot.zip?raw=true) — แตก ZIP → Godot Import `project.godot` → F5
+
+**J–J–J:** หมัดตรง → หมัดฮุกบิดตัว → อัปเปอร์คัตพลังม่วง
+
+**K–K–K:** เตะเดิม → หมุนตัวเตะ → ยกขาเตะฟาดปิดคอมโบ
+
+ใช้ภาพใหม่ 4 ชุด ชุดละ 8 เฟรม หมัดที่ 3 มีพลังหุ้มกำปั้น เส้นพลังขณะยกหมัด และระเบิดม่วงเมื่อโดนเป้าจริง ดู [รายละเอียดและสไปรต์ชีต](docs/DISTINCT_COMBO_POSES_TH.md) / [วิดีโอจากเกมจริง](docs/PHUZASHI_Distinct_Combos.mp4) ไม่มี EXE ใหม่ในรอบนี้
+
+## กระโดดต่อย–เตะ และคอมโบ 3 จังหวะ
 
 [ดาวน์โหลดเกมทดสอบ Godot รุ่นคอมโบ (.zip)](https://github.com/poohkk567-sys/game/blob/codex/air-attacks-three-hit-combos/docs/downloads/PHUZASHI_Air_Combos_Godot.zip?raw=true) — แตก ZIP → Import `project.godot` → F5
 

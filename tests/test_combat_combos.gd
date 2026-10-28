@@ -53,10 +53,15 @@ func run() -> void:
 	for clip: String in sprite.EXTRA_CLIPS:
 		check(sprite.sprite_frames.has_animation(clip) and sprite.sprite_frames.get_frame_count(clip) == 8, "Complete approved animation exists: " + clip)
 		var source: String = sprite.EXTRA_CLIPS[clip]
-		check(sprite.sprite_frames.get_frame_texture(clip,3).get_image().get_data() == sprite.FRAMES.get_frame_texture(source,3).get_image().get_data(), "Existing body art is unchanged: " + clip)
+		var imported: AtlasTexture = sprite.sprite_frames.get_frame_texture(clip,3)
+		if sprite.COMBO_FRAMES.has_animation(clip):
+			check(imported.atlas.resource_path.begins_with("res://assets/characters/combos/") and imported.atlas != sprite.FRAMES.get_frame_texture(source,3).atlas, "Distinct whole-body drawing is used: " + clip)
+		else:
+			check(imported.get_image().get_data() == sprite.FRAMES.get_frame_texture(source,3).get_image().get_data(), "Existing aerial body art is unchanged: " + clip)
 		var config: Array = actor.ATTACKS[clip]
 		var contact_frame: int = sprite.frame_at_progress(clip, float(config[3]) + 0.03)
-		check(contact_frame in ([4,5] if source == "KICK" else [3,4,5]), "Extended strike drawing matches actual hit timing: " + clip)
+		var allowed: Array = [3,4,5] if clip == "KICK_2" or source == "PUNCH" else [4,5]
+		check(contact_frame in allowed, "Extended strike drawing matches actual hit timing: " + clip)
 
 	for left: bool in [false, true]:
 		for family: String in ["PUNCH", "KICK"]:
