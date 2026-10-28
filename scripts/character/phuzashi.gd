@@ -25,7 +25,7 @@ const ATTACKS: Dictionary = {
 	"PUNCH": [0.42, 0.0, 8, 0.34, 0.60, 112.0, 64.0],
 	"KICK": [0.58, 0.0, 14, 0.40, 0.65, 150.0, 78.0],
 	"PUNCH_2": [0.36, 0.0, 10, 0.32, 0.57, 118.0, 70.0],
-	"PUNCH_3": [0.50, 0.0, 16, 0.30, 0.62, 138.0, 80.0],
+	"PUNCH_3": [0.50, 0.0, 16, 0.30, 0.62, 138.0, 140.0],
 	"KICK_2": [0.50, 0.0, 16, 0.36, 0.62, 158.0, 86.0],
 	"KICK_3": [0.64, 0.0, 22, 0.34, 0.65, 174.0, 92.0],
 	"AIR_PUNCH": [0.32, 0.0, 9, 0.24, 0.60, 104.0, 76.0],
@@ -36,6 +36,8 @@ const ATTACKS: Dictionary = {
 const Pulse = preload("res://scripts/character/dark_pulse.gd")
 const Effects = preload("res://scripts/character/combat_effects.gd")
 const ShadowBlinkVFX = preload("res://scripts/effects/shadow_blink_vfx.gd")
+const PurpleFist = preload("res://scripts/effects/purple_fist.gd")
+const PurpleImpact = preload("res://scripts/effects/purple_punch_impact.gd")
 
 @onready var rig: Node2D = $Rig
 @onready var body_shape: CollisionShape2D = $CollisionShape2D
@@ -67,6 +69,7 @@ var combo_grace: float = 0.0
 var message: String = "Approach the crystal to practice attacks"
 var message_time: float = 3.0
 var effects: Node2D
+var purple_fist: Node2D
 
 func _ready() -> void:
 	effects = Node2D.new()
@@ -74,6 +77,9 @@ func _ready() -> void:
 	effects.name = "CombatEffects"
 	add_child(effects)
 	move_child(effects, 0)
+	purple_fist = PurpleFist.new()
+	purple_fist.name = "PurpleFist"
+	add_child(purple_fist)
 
 func _physics_process(delta: float) -> void:
 	elapsed += delta
@@ -329,7 +335,7 @@ func _process_attack() -> void:
 			get_parent().add_child(pulse)
 		return
 	attack_shape.shape.size = Vector2(float(config[5]), float(config[6]))
-	var strike_y: float = -64.0 if action_name == "AIR_KICK" else (-78.0 if action_name == "AIR_PUNCH" else -82.0)
+	var strike_y: float = -116.0 if action_name == "PUNCH_3" else (-64.0 if action_name == "AIR_KICK" else (-78.0 if action_name == "AIR_PUNCH" else -82.0))
 	attack_shape.position = Vector2(facing * (float(config[5]) * 0.5 + 18.0), strike_y)
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = attack_shape.shape
@@ -343,6 +349,11 @@ func _process_attack() -> void:
 			struck[target.get_instance_id()] = true
 			target.take_hit(int(config[2]), action_name)
 			target_struck.emit(int(config[2]))
+			if action_name == "PUNCH_3":
+				var impact: Node2D = PurpleImpact.new()
+				impact.position = target.global_position + Vector2(-facing*12,-30)
+				impact.direction = facing
+				get_parent().add_child(impact)
 
 func receive_training_hit(knockdown: bool) -> void:
 	if blink_invulnerable():
@@ -356,6 +367,8 @@ func receive_training_hit(knockdown: bool) -> void:
 		announce("GUARD — impact absorbed (2 chip damage)")
 		return
 	_clear_combo()
+	if is_instance_valid(purple_fist):
+		purple_fist.clear()
 	action_name = "FALL" if knockdown else "HIT"
 	action_duration = 1.4 if knockdown else 0.48
 	action_timer = action_duration
@@ -403,6 +416,9 @@ func reset_training() -> void:
 	_update_body_shape()
 	get_tree().call_group("dark_pulses", "queue_free")
 	get_tree().call_group("shadow_blink_effects", "queue_free")
+	get_tree().call_group("purple_punch_impacts", "queue_free")
+	if is_instance_valid(purple_fist):
+		purple_fist.clear()
 	announce("Training reset")
 
 func _draw() -> void:

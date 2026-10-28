@@ -1,5 +1,7 @@
 # กระโดดโจมตีและคอมโบ 3 จังหวะ
 
+รุ่นล่าสุดเปลี่ยนหมัดที่ 2–3 และเตะที่ 2–3 เป็นภาพท่าใหม่ พร้อมหมัดม่วงแล้ว ดู [รุ่นท่าใหม่และไฟล์ดาวน์โหลด](DISTINCT_COMBO_POSES_TH.md)
+
 [ดาวน์โหลดเกมทดสอบ Godot ZIP](https://github.com/poohkk567-sys/game/blob/codex/air-attacks-three-hit-combos/docs/downloads/PHUZASHI_Air_Combos_Godot.zip?raw=true)
 
 แตก ZIP → เปิด Godot 4.2.2 ขึ้นไป → Import `project.godot` → กด F5 เล่น

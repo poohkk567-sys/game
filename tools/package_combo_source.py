@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 """Package the playable combo source and review media, without editor caches/EXEs."""
 from hashlib import sha256
+import argparse
 from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
 
 
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
-    output = root / "docs/downloads/PHUZASHI_Air_Combos_Godot.zip"
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-name", default="PHUZASHI_Air_Combos_Godot.zip")
+    parser.add_argument("--folder-name", default="PHUZASHI_Air_Combos")
+    args = parser.parse_args()
+    output = root / "docs/downloads" / args.output_name
     output.parent.mkdir(parents=True, exist_ok=True)
     paths = set()
     for folder in ("assets", "scenes", "scripts", "tests", "tools", "docs/screenshots"):
@@ -20,7 +25,7 @@ def main() -> None:
     paths.update(root / name for name in (
         "project.godot", "README.md", "README_TH.md", "START_HERE_TH.txt"
     ))
-    prefix = "PHUZASHI_Air_Combos/"
+    prefix = args.folder_name.rstrip("/") + "/"
     with ZipFile(output, "w", ZIP_DEFLATED, compresslevel=6) as archive:
         for path in sorted(paths):
             archive.write(path, prefix + path.relative_to(root).as_posix())
