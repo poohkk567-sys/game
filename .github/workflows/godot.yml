@@ -1,0 +1,25 @@
+name: Godot training checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        godot: [4.2.2, 4.6.3]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Godot
+        env:
+          GODOT_VERSION: ${{ matrix.godot }}
+        run: |
+          mkdir -p work/engine
+          curl --fail --location --retry 3 "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip" -o work/engine/godot.zip
+          unzip -q work/engine/godot.zip -d work/engine
+      - name: Import and run physics integration tests
+        env:
+          GODOT_VERSION: ${{ matrix.godot }}
+        run: GODOT_BIN="$PWD/work/engine/Godot_v${GODOT_VERSION}-stable_linux.x86_64" tools/check.sh

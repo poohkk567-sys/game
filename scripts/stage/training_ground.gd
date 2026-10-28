@@ -1,0 +1,98 @@
+extends Node2D
+## Stage orchestration; F2 demonstrates every move without adding a fighter.
+const InputSetup = preload("res://scripts/character/input_setup.gd")
+const SEQUENCE: Array[String] = ["IDLE", "WALK", "RUN", "JUMP", "CROUCH", "GUARD", "PUNCH", "KICK", "HIT", "FALL", "SPECIAL", "ULTIMATE"]
+@onready var phuzashi: PhuzashiCharacter = $PHUZASHI
+@onready var target: Area2D = $TrainingCrystal
+var show_help: bool = false
+var showcase: bool = false
+var showcase_index: int = -1
+var showcase_clock: float = 0.0
+var paused: bool = false
+var demo_held: Array[String] = []
+
+func _enter_tree() -> void:
+	InputSetup.install()
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
+func _ready() -> void:
+	# Children pause normally; the orchestrator remains available for Esc.
+	for child: Node in get_children():
+		child.process_mode = Node.PROCESS_MODE_PAUSABLE
+	$HUD.process_mode = Node.PROCESS_MODE_ALWAYS
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause") and not event.is_echo():
+		paused = not paused
+		get_tree().paused = paused
+	if event.is_action_pressed("help") and not event.is_echo():
+		show_help = not show_help
+	if event.is_action_pressed("hitboxes") and not event.is_echo():
+		phuzashi.debug_hitboxes = not phuzashi.debug_hitboxes
+	if event.is_action_pressed("showcase") and not event.is_echo():
+		set_showcase(not showcase)
+	elif showcase and event is InputEventKey and event.pressed and not event.echo and not event.is_action("pause") and not event.is_action("help") and not event.is_action("hitboxes"):
+		set_showcase(false)
+
+func _physics_process(delta: float) -> void:
+	if paused or not showcase:
+		return
+	showcase_clock -= delta
+	if showcase_clock <= 0.0:
+		_release_demo()
+		showcase_index = (showcase_index + 1) % SEQUENCE.size()
+		phuzashi.reset_training()
+		phuzashi.position.x = 800.0
+		showcase_clock = 2.4
+		# Wait a physics frame after reset so grounding/contact are established.
+		phuzashi.announce("SHOWCASE / " + SEQUENCE[showcase_index] + " — F2 to return")
+		call_deferred("_demonstrate", SEQUENCE[showcase_index])
+
+func set_showcase(enabled: bool) -> void:
+	showcase = enabled
+	showcase_clock = 0.0
+	showcase_index = -1
+	_release_demo()
+	phuzashi.reset_training()
+	phuzashi.announce("SHOWCASE — cycling all 12 poses; F2 or any movement key exits" if enabled else "Manual training")
+
+func _demonstrate(move_name: String) -> void:
+	if not showcase:
+		return
+	match move_name:
+		"WALK":
+			phuzashi.position.x = 270.0
+			_hold_demo("move_right")
+		"RUN":
+			phuzashi.position.x = 160.0
+			_hold_demo("move_right")
+			_hold_demo("run")
+		"JUMP":
+			phuzashi.velocity.y = phuzashi.JUMP_VELOCITY
+		"CROUCH": _hold_demo("crouch")
+		"GUARD": _hold_demo("guard")
+		"HIT": phuzashi.receive_training_hit(false)
+		"FALL": phuzashi.receive_training_hit(true)
+		"PUNCH", "KICK", "SPECIAL", "ULTIMATE":
+			phuzashi.position.x = 800.0
+			phuzashi.start_action(move_name)
+
+func _hold_demo(action: String) -> void:
+	Input.action_press(action)
+	demo_held.append(action)
+
+func _release_demo() -> void:
+	for action: String in demo_held:
+		Input.action_release(action)
+	demo_held.clear()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_node_ready():
+		if showcase:
+			set_showcase(false)
+		for action: StringName in InputMap.get_actions():
+			Input.action_release(action)
+
+func _exit_tree() -> void:
+	_release_demo()
+	get_tree().paused = false
