@@ -18,10 +18,18 @@ const BLINK_DISTANCE: float = 130.0
 const BLINK_COST: float = 15.0
 const BLINK_WINDOW: float = 0.28
 const BLINK_COOLDOWN: float = 0.5
+const COMBO_LINK_PHASE: float = 0.72
+const COMBO_GRACE: float = 0.22
 # duration, energy, damage, active start/end (normalized), reach, height.
 const ATTACKS: Dictionary = {
 	"PUNCH": [0.42, 0.0, 8, 0.34, 0.60, 112.0, 64.0],
 	"KICK": [0.58, 0.0, 14, 0.40, 0.65, 150.0, 78.0],
+	"PUNCH_2": [0.36, 0.0, 10, 0.32, 0.57, 118.0, 70.0],
+	"PUNCH_3": [0.50, 0.0, 16, 0.30, 0.62, 138.0, 80.0],
+	"KICK_2": [0.50, 0.0, 16, 0.36, 0.62, 158.0, 86.0],
+	"KICK_3": [0.64, 0.0, 22, 0.34, 0.65, 174.0, 92.0],
+	"AIR_PUNCH": [0.32, 0.0, 9, 0.24, 0.60, 104.0, 76.0],
+	"AIR_KICK": [0.42, 0.0, 15, 0.30, 0.66, 146.0, 88.0],
 	"SPECIAL": [0.90, 25.0, 24, 0.42, 0.55, 0.0, 0.0],
 	"ULTIMATE": [1.80, 60.0, 60, 0.48, 0.80, 620.0, 180.0]
 }
@@ -52,6 +60,10 @@ var blink_origin: float = 0.0
 var blink_direction: int = 1
 var left_tap: float = -100.0
 var right_tap: float = -100.0
+var combo_family: String = ""
+var combo_step: int = 0
+var combo_buffer: int = 0
+var combo_grace: float = 0.0
 var message: String = "Approach the crystal to practice attacks"
 var message_time: float = 3.0
 var effects: Node2D
@@ -68,6 +80,10 @@ func _physics_process(delta: float) -> void:
 	message_time = maxf(0.0, message_time - delta)
 	energy = minf(100.0, energy + delta * 9.0)
 	blink_cooldown = maxf(0.0, blink_cooldown - delta)
+	if action_timer <= 0.0 and combo_grace > 0.0:
+		combo_grace = maxf(0.0, combo_grace - delta)
+		if combo_grace <= 0.0:
+			_clear_combo()
 	if Input.is_action_just_pressed("reset"):
 		reset_training()
 		get_tree().call_group("training_target", "reset_target")
@@ -100,19 +116,25 @@ func _physics_process(delta: float) -> void:
 	var guarding: bool = Input.is_action_pressed("guard")
 	if axis != 0.0 and action_timer <= 0.0:
 		facing = 1 if axis > 0.0 else -1
-	if action_timer <= 0.0 and not crouching and not guarding:
-		for binding: String in ["ultimate", "special", "kick", "punch"]:
-			if Input.is_action_just_pressed(binding):
-				start_action(binding.to_upper())
-				break
+	# Resolve jump first, so Space+J/K on the same frame is an aerial attack.
 	if jump_buffer > 0.0 and coyote > 0.0 and action_timer <= 0.0 and not crouching and not guarding:
 		velocity.y = JUMP_VELOCITY
 		jump_buffer = 0.0
 		coyote = 0.0
-
-	var locked: bool = action_timer > 0.0 or (was_grounded and (crouching or guarding))
+		_clear_combo()
+	if not crouching and not guarding:
+		for binding: String in ["ultimate", "special", "kick", "punch"]:
+			if Input.is_action_just_pressed(binding):
+				start_action(binding.to_upper())
+				break
+	if action_timer <= 0.0 and (crouching or guarding):
+		_clear_combo()
+	var airborne: bool = not was_grounded or velocity.y < 0.0
+	var locked: bool = (action_timer > 0.0 and not is_air_attack()) or (not airborne and (crouching or guarding))
 	var speed: float = RUN_SPEED if Input.is_action_pressed("run") else WALK_SPEED
-	var desired: float = 0.0 if locked else axis * (speed if was_grounded else AIR_SPEED)
+	var desired: float = 0.0 if locked else axis * (AIR_SPEED if airborne else speed)
+	if not airborne and action_name in ["PUNCH_2", "PUNCH_3", "KICK_2", "KICK_3"] and action_progress() >= 0.15 and action_progress() < 0.45:
+		desired = facing * (80.0 if combo_step == 3 else 45.0)
 	velocity.x = move_toward(velocity.x, desired, ACCELERATION * delta)
 	if not was_grounded or velocity.y < 0.0:
 		velocity.y += GRAVITY * delta
@@ -121,13 +143,26 @@ func _physics_process(delta: float) -> void:
 	if position.y > 800.0:
 		reset_training()
 		return
+	if is_air_attack() and is_on_floor():
+		# Landing immediately releases the aerial pose/hitbox and buffered inputs.
+		action_timer = 0.0
+		action_name = ""
+		_clear_combo()
 
 	if action_timer > 0.0:
 		action_timer = maxf(0.0, action_timer - delta)
 		if ATTACKS.has(action_name):
 			_process_attack()
-		if action_timer <= 0.0:
+		if combo_buffer > 0 and _is_combo_action() and action_progress() >= COMBO_LINK_PHASE:
+			combo_buffer -= 1
+			combo_step += 1
+			_begin_attack(_combo_clip())
+		elif action_timer <= 0.0:
 			action_name = ""
+			if combo_step > 0 and combo_step < 3:
+				combo_grace = COMBO_GRACE
+			else:
+				_clear_combo()
 	var next: String = "IDLE"
 	if action_timer > 0.0:
 		next = action_name
@@ -159,6 +194,7 @@ func _start_blink(direction: int) -> bool:
 		announce("Shadow Blink requires 15 MP")
 		return false
 	energy -= BLINK_COST
+	_clear_combo()
 	blink_timer = BLINK_DURATION
 	blink_cooldown = BLINK_COOLDOWN
 	blink_origin = position.x
@@ -197,25 +233,75 @@ func _step_blink(delta: float) -> void:
 		_set_state("IDLE")
 
 func start_action(action: String) -> bool:
-	if not ATTACKS.has(action) or action_timer > 0.0 or not is_on_floor():
+	if blink_timer > 0.0:
 		return false
 	if Input.is_action_pressed("guard") or Input.is_action_pressed("crouch"):
+		return false
+	if action in ["PUNCH", "KICK"]:
+		return _request_normal_attack(action)
+	if action not in ["SPECIAL", "ULTIMATE"] or action_timer > 0.0 or not is_on_floor() or velocity.y < 0.0:
 		return false
 	var config: Array = ATTACKS[action]
 	if energy < float(config[1]):
 		announce("Not enough MP — wait for regeneration or press R")
 		return false
 	energy -= float(config[1])
+	_clear_combo()
+	_begin_attack(action)
+	return true
+
+func _request_normal_attack(family: String) -> bool:
+	if action_timer > 0.0:
+		# Store up to the remaining two taps; holding a button never adds inputs.
+		if _is_combo_action() and combo_family == family and combo_step + combo_buffer < 3:
+			combo_buffer += 1
+			return true
+		return false
+	if not is_on_floor() or velocity.y < 0.0:
+		_clear_combo()
+		_begin_attack("AIR_" + family)
+		return true
+	if combo_family != family or combo_grace <= 0.0 or combo_step >= 3:
+		_clear_combo()
+		combo_family = family
+		combo_step = 1
+	else:
+		combo_step += 1
+	combo_grace = 0.0
+	_begin_attack(_combo_clip())
+	return true
+
+func _begin_attack(action: String) -> void:
+	var config: Array = ATTACKS[action]
 	action_name = action
 	action_duration = float(config[0])
 	action_timer = action_duration
 	struck.clear()
 	pulse_spawned = false
-	velocity.x = 0.0
+	if not is_air_attack():
+		velocity.x = 0.0
 	jump_buffer = 0.0
 	_set_state(action)
 	attack_started.emit(action)
-	return true
+	if combo_step > 0:
+		announce("%s COMBO / %d OF 3" % [combo_family, combo_step])
+	elif is_air_attack():
+		announce("JUMP " + action.trim_prefix("AIR_"))
+
+func _combo_clip() -> String:
+	return combo_family if combo_step <= 1 else "%s_%d" % [combo_family, combo_step]
+
+func _is_combo_action() -> bool:
+	return combo_step > 0 and not combo_family.is_empty() and action_name == _combo_clip()
+
+func is_air_attack() -> bool:
+	return action_timer > 0.0 and action_name in ["AIR_PUNCH", "AIR_KICK"]
+
+func _clear_combo() -> void:
+	combo_family = ""
+	combo_step = 0
+	combo_buffer = 0
+	combo_grace = 0.0
 
 func action_progress() -> float:
 	return 1.0 - action_timer / maxf(action_duration, 0.001)
@@ -243,7 +329,8 @@ func _process_attack() -> void:
 			get_parent().add_child(pulse)
 		return
 	attack_shape.shape.size = Vector2(float(config[5]), float(config[6]))
-	attack_shape.position = Vector2(facing * (float(config[5]) * 0.5 + 18.0), -82.0)
+	var strike_y: float = -64.0 if action_name == "AIR_KICK" else (-78.0 if action_name == "AIR_PUNCH" else -82.0)
+	attack_shape.position = Vector2(facing * (float(config[5]) * 0.5 + 18.0), strike_y)
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = attack_shape.shape
 	query.transform = attack_shape.global_transform
@@ -268,6 +355,7 @@ func receive_training_hit(knockdown: bool) -> void:
 	if blocked:
 		announce("GUARD — impact absorbed (2 chip damage)")
 		return
+	_clear_combo()
 	action_name = "FALL" if knockdown else "HIT"
 	action_duration = 1.4 if knockdown else 0.48
 	action_timer = action_duration
@@ -309,6 +397,7 @@ func reset_training() -> void:
 	blink_cooldown = 0.0
 	left_tap = -100.0
 	right_tap = -100.0
+	_clear_combo()
 	_set_state("IDLE")
 	rig.reset_pose()
 	_update_body_shape()

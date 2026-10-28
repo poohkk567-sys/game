@@ -1,12 +1,18 @@
 # PHUZASHI — DARK PULSE
 
-เกมต่อสู้ 2D มุมมองด้านข้าง ฉากฝึกตัวละคร PHUZASHI ตัวเดียว สำหรับ Godot **4.2.2+** รุ่นปัจจุบันใช้ **spritesheet ครบ 12 ท่า รวม 96 เฟรม** เป็นภาพเต็มตัวทุกเฟรม
+เกมต่อสู้ 2D มุมมองด้านข้าง ฉากฝึกตัวละคร PHUZASHI ตัวเดียว สำหรับ Godot **4.2.2+** ใช้ **spritesheet 12 ท่าหลัก รวม 96 เฟรม** เป็นภาพเต็มตัว พร้อมโจมตีกลางอากาศและคอมโบ 3 จังหวะ
 
 ![Twelve illustrated moves](docs/screenshots/pose_gallery.png)
 
 [ชมวิดีโอทุกท่าจากเกมจริง](docs/PHUZASHI_All_Moves.mp4)
 
-## ล่าสุด: Shadow Blink พร้อมเอฟเฟกต์รอยแยก 16 เฟรม
+## ล่าสุด: กระโดดต่อย–เตะ และคอมโบ 3 จังหวะ
+
+[ดาวน์โหลดเกมทดสอบ Godot รุ่นคอมโบ (.zip)](https://github.com/poohkk567-sys/game/blob/codex/air-attacks-three-hit-combos/docs/downloads/PHUZASHI_Air_Combos_Godot.zip?raw=true) — แตก ZIP → Import `project.godot` → F5
+
+กด **Space + J** กระโดดต่อย / **Space + K** กระโดดเตะ หรือกด J/K หลังเริ่มกระโดดแล้วก็ได้ กด **J–J–J** เพื่อต่อย 3 จังหวะ และ **K–K–K** เพื่อเตะ 3 จังหวะ กดต่อเนื่องล่วงหน้าได้ มีเอฟเฟกต์ท่าปิดคอมโบและ F2 สาธิตท่าใหม่ ดู [วิธีเล่นและดาเมจ](docs/COMBAT_COMBOS_TH.md) / [วิดีโอจากเกมจริง](docs/PHUZASHI_Air_Combos.mp4) ชุดนี้ไม่มี EXE ใหม่
+
+## Shadow Blink พร้อมเอฟเฟกต์รอยแยก 16 เฟรม
 
 [ดาวน์โหลดโปรเจกต์ทดสอบ Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/shadow-blink-enhanced-vfx/docs/downloads/PHUZASHI_Shadow_Blink_FX_Godot.zip?raw=true) — แตก ZIP → Import `project.godot` → F5 → แตะ A หรือ D สองครั้งเพื่อพุ่งหลบ
 

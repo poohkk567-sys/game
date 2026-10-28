@@ -249,10 +249,11 @@ func animate(state: String, delta: float, facing: int, progress: float = -1.0) -
 	for i in range(REST.size()):
 		displayed_pose[i] = lerpf(float(displayed_pose[i]), float(pose[i]), smoothing)
 	scale = Vector2(3.0 * facing, 3.0)
-	apply_pose(displayed_pose, state != "JUMP")
+	apply_pose(displayed_pose, state != "JUMP" and not state.begins_with("AIR_"))
 
 func sample_pose(state: String, phase: float) -> Array:
-	var frames: Array = timelines.get(state, timelines.IDLE)
+	var base: String = state.trim_prefix("AIR_").get_slice("_", 0)
+	var frames: Array = timelines.get(state, timelines.get(base, timelines.IDLE))
 	for i in range(frames.size() - 1):
 		var a: Array = frames[i]
 		var b: Array = frames[i + 1]

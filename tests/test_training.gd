@@ -210,9 +210,12 @@ func run() -> void:
 
 	player.visited = {"IDLE": true}
 	stage.set_showcase(true)
-	await frames(1770)
+	await frames(ceili(stage.SEQUENCE.size() * 2.4 * 60.0) + 10)
 	stage.set_showcase(false)
-	expect(player.visited.size() == 12, "Automatic showcase exercises all 12 states")
+	var demonstrated: bool = true
+	for move: String in player.rig.CLIPS + ["AIR_PUNCH", "AIR_KICK", "PUNCH_2", "PUNCH_3", "KICK_2", "KICK_3", "BLINK"]:
+		demonstrated = demonstrated and player.visited.has(move)
+	expect(demonstrated, "Automatic showcase exercises base moves, aerial attacks, combo stages and Blink")
 	expect(not Input.is_action_pressed("run") and not Input.is_action_pressed("move_right"), "Leaving showcase releases synthetic input")
 
 	print("RESULT: %d checks, %d failures" % [checks, failures])
