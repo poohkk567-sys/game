@@ -49,7 +49,7 @@ func _draw() -> void:
 		_text(Vector2(463,232), "SHOWCASE  %02d / 12   %s" % [stage.showcase_index+1, stage.SEQUENCE[maxi(0,stage.showcase_index)]], 17, WHITE)
 	# Footer is inside the safe screen area, with every control visible.
 	_panel(Rect2(26,646,1228,56), Color("69728c"))
-	_text(Vector2(44,668), "A/D  MOVE     SHIFT  RUN     SPACE  JUMP     S  CROUCH     L  GUARD     J  PUNCH     K  KICK     U  SPECIAL     I  ULTIMATE", 13, WHITE)
+	_text(Vector2(44,668), "A/D MOVE  A+A/D+D BLINK 15MP  SHIFT RUN  SPACE JUMP     S  CROUCH     L  GUARD     J  PUNCH     K  KICK     U  SPECIAL     I  ULTIMATE", 13, WHITE)
 	_text(Vector2(44,690), "H  TEST HIT     N  KNOCKDOWN     R  RESET     F1  MOVE LIST     F2  SHOWCASE     F3  HITBOXES     F4  COMPARE ART     ESC  PAUSE", 12, MUTED)
 	if player.debug_hitboxes:
 		_text(Vector2(1021,627), "HITBOXES ON", 12, CYAN)
@@ -64,7 +64,7 @@ func _draw_move_list() -> void:
 	_panel(Rect2(343,188,594,419), PURPLE)
 	_text(Vector2(367,224), "MOVE LIST / PHUZASHI", 23, WHITE)
 	var rows: Array = [
-		["A / D", "Walk · Shift to run", "—"], ["SPACE", "Jump · control direction in the air", "—"],
+		["A / D", "Walk · Shift to run", "—"], ["A+A / D+D", "Shadow Blink 130px", "15 MP"], ["SPACE", "Jump · control direction in the air", "—"],
 		["S / DOWN", "Crouch · lower hurtbox", "—"], ["L", "Guard · test with H or N", "2 chip"],
 		["J", "Punch", "8 DMG"], ["K", "Kick", "14 DMG"],
 		["U", "Dark Pulse · traveling projectile", "25 MP / 24 DMG"],

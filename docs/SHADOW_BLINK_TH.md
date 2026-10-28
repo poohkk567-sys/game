@@ -1,0 +1,3 @@
+# PHUZASHI Shadow Blink / playable 12 frames
+
+This feature uses the ACTUAL existing approved `phuzashi_frames.res` full-body drawings. It dynamically assembles 12 frames from IDLE / CROUCH / RUN rather than cutting apart or regenerating the character. Double tap A or D within 280ms. Costs 15MP, travels 130px, lasts 0.4 seconds, cooldown 0.5sec. The center frames have temporary invulnerability. Combat effects are separate from character art and are drawn procedurally. Character body and shoes are not modified. For visual review and separate 12-frame character/FX PNG sheets, use the standalone Shadow Blink asset package delivered in chat. This branch does NOT change the earlier exported Windows ZIP; build a new EXE with Godot after tests.
