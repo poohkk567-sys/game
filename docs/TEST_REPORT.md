@@ -67,3 +67,11 @@ godot --path . --audio-driver Dummy --fixed-fps 30 \
 CI runs the gameplay suites on both engine versions and the sprite/legacy-mesh rendered regressions on 4.6.3 through Xvfb/Mesa.
 
 To regenerate the frame bundle, import sources and run `tools/import_spritesheets.gd` using **Godot 4.2.2**. The compressed binary resource must be saved by the minimum supported version to preserve backwards compatibility.
+
+## Portable download packages
+
+A Windows x86-64 release executable was exported with Godot 4.6.3 and the matching official template. It embeds the game PCK, so its ZIP requires no separate PCK or Godot installation. The PE architecture, embedded pack header/footer, archive CRCs and SHA-256 digests were checked.
+
+The matching Linux release export using the same project data passed a headless startup and an actual GL Compatibility viewport recording. This export test initially found that selecting only the main scene omitted script preloads; the packaging preset now includes all game resources from an isolated staging project. The source ZIP was separately extracted and passed all 163 checks with Godot 4.2.2.
+
+The Windows executable has not been run on native Windows in this environment. This limitation is recorded in the build manifest. See docs/downloads/README.md for reproduction and download links.

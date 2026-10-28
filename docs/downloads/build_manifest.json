@@ -1,0 +1,18 @@
+{
+  "game_commit": "578acfe01101b780146efdc597ab753ea68fbf00",
+  "engine": "4.6.3.stable.official.7d41c59c4",
+  "packages": [
+    {
+      "file": "PHUZASHI_Windows_x64.zip",
+      "bytes": 40715787,
+      "sha256": "8847eabb1328fd144a7b0974515db1b6b17600af6d372253a369410325edec95"
+    },
+    {
+      "file": "PHUZASHI_Godot_Source.zip",
+      "bytes": 5816268,
+      "sha256": "e9b569a9615f3c69eaae619cae85be9ce9e10f41cbb190c1f0cd1fe1a6f2189b"
+    }
+  ],
+  "windows_native_runtime_tested": false,
+  "linux_exported_runtime_smoke_test": "passed"
+}

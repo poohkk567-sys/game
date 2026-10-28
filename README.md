@@ -6,7 +6,15 @@
 
 [ชมวิดีโอทุกท่าจากเกมจริง](docs/PHUZASHI_All_Moves.mp4)
 
-## เปิดเล่น
+## ดาวน์โหลดไฟล์เล่นบน Windows
+
+[ดาวน์โหลด PHUZASHI สำหรับ Windows 64-bit (.zip)](https://github.com/poohkk567-sys/game/blob/codex/phuzashi-training-complete/docs/downloads/PHUZASHI_Windows_x64.zip?raw=true)
+
+แตก ZIP แล้วเข้าโฟลเดอร์ `PHUZASHI` ดับเบิลคลิก `PHUZASHI.exe` เล่นได้โดยไม่ต้องติดตั้ง Godot กด F2 สาธิตทุกท่า หรือ F1 ดูปุ่มควบคุม
+
+[ไฟล์โปรเจกต์ Godot สำหรับแก้ไข (.zip)](https://github.com/poohkk567-sys/game/blob/codex/phuzashi-training-complete/docs/downloads/PHUZASHI_Godot_Source.zip?raw=true)
+
+## เปิดเล่นผ่าน Godot
 
 1. เปิด Godot → Import → เลือก `project.godot`
 2. กด **F5** เล่น หรือเปิด `scenes/main.tscn` แล้วกด **F6**
