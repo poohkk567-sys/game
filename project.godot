@@ -3,7 +3,7 @@ config_version=5
 
 [application]
 config/name="PHUZASHI — DARK PULSE"
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/versus_school.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 
 [display]

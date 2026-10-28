@@ -1,6 +1,27 @@
-# Test report — 2026-10-28
+# Test report — 2026-10-29
 
-## Current result
+## School local-versus result
+
+| Engine | Import/gameplay | New PHUZASHI rendered samples |
+| --- | --- | --- |
+| Godot 4.2.2 stable | **550 checks, 0 failures** | **344, 0 failures** |
+| Godot 4.6.3 stable | **550 checks, 0 failures** | **344, 0 failures** |
+
+Gameplay total: Training88 + SpriteTrial75 + VFX11 + Blink13 + BlinkVFX20 + Combos90 + ComboPoses30 + DemonBind55 + RedCap77 + LocalVersus91 = **550**. Existing suites remain unchanged; the new suite loads the real school scene and physics server.
+
+The 91 versus checks cover independent simultaneous movement, jump/crouch/guard and hurtboxes; both players attacking both directions without self-damage; exact 34/52-damage three-hit combos and 9/15-damage aerial attacks; guarded chip damage; unchanged 24-damage pulse and 60-damage dragon/MP costs; a real second player pinned by Demon Bind and released after 0.7s; Blink immunity; purple-fist tracking on the new uppercut; and complete body frames/contact timing.
+
+They also cover ready countdown, timeout winner, first-to-two scoring, simultaneous KO draw, no duplicated score, persistent KO pose, restart, pause/focus loss, cleanup, and F6 travel to new-model solo training and back without leaked fighters.
+
+The new body has 16 source clips x 8 = **128 unique complete drawings**. Rendering checks all source frames, AIR_PUNCH/AIR_KICK/BOUND/DEMON_BIND aliases and twelve Blink poses, mirrored: **344 samples per engine**. Source silhouettes are checked at full opacity because Blink deliberately fades during runtime; the existing Blink suites still check live timing/effects.
+
+Godot 4.6.3 additionally passes the retained mesh216 + original sprites192 + original combo64 + RedCap224 = 696 samples. Including the new344, the current actual-render regression is **1,040 passing samples**.
+
+Actual GL Compatibility footage on Mesa llvmpipe captures both human input channels, school sign Thai/English, new fair-skin model, normal combos, aerial attack, Demon Bind, Dark Pulse, purple uppercut, dragon, Blink, controls and round result. Unsupported VSync is the only expected virtual-display warning. New SpriteFrames were saved with Godot 4.2.2.
+
+The importer preserves generated PNGs. It orders rows by their floor baselines so crouching/seated figures remain in the right order, and isolates complete connected silhouettes where rectangular source bounds overlap. Original PHUZASHI master and existing effect PNGs remain byte-identical.
+
+## Earlier Red Cap / training results
 
 | Engine | Import and gameplay | Red Cap rendered frames |
 | --- | --- | --- |

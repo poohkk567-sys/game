@@ -11,6 +11,16 @@ static func install() -> void:
 		"showcase": [KEY_F2], "hitboxes": [KEY_F3], "sprite_trial": [KEY_F4], "pause": [KEY_ESCAPE],
 		"switch_fighter": [KEY_TAB]
 	}
+	var players: Dictionary = {
+	 "p1_move_left":[KEY_A], "p1_move_right":[KEY_D], "p1_jump":[KEY_SPACE,KEY_W],
+	 "p1_crouch":[KEY_S], "p1_run":[KEY_SHIFT], "p1_guard":[KEY_L],
+	 "p1_punch":[KEY_J], "p1_kick":[KEY_K], "p1_special":[KEY_U], "p1_ultimate":[KEY_I],
+	 "p2_move_left":[KEY_LEFT], "p2_move_right":[KEY_RIGHT], "p2_jump":[KEY_UP],
+	 "p2_crouch":[KEY_DOWN], "p2_run":[KEY_CTRL], "p2_guard":[KEY_KP_3,KEY_SLASH],
+	 "p2_punch":[KEY_KP_1,KEY_COMMA], "p2_kick":[KEY_KP_2,KEY_PERIOD]
+	}
+	bindings.merge(players)
+
 	for action: String in bindings:
 		if InputMap.has_action(action):
 			continue
