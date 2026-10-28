@@ -17,7 +17,8 @@ static func install() -> void:
 	 "p1_punch":[KEY_J], "p1_kick":[KEY_K], "p1_special":[KEY_U], "p1_ultimate":[KEY_I],
 	 "p2_move_left":[KEY_LEFT], "p2_move_right":[KEY_RIGHT], "p2_jump":[KEY_UP],
 	 "p2_crouch":[KEY_DOWN], "p2_run":[KEY_CTRL], "p2_guard":[KEY_KP_3,KEY_SLASH],
-	 "p2_punch":[KEY_KP_1,KEY_COMMA], "p2_kick":[KEY_KP_2,KEY_PERIOD]
+	 "p2_punch":[KEY_KP_1,KEY_COMMA], "p2_kick":[KEY_KP_2,KEY_PERIOD],
+	 "p2_ultimate":[KEY_KP_5,KEY_SEMICOLON]
 	}
 	bindings.merge(players)
 

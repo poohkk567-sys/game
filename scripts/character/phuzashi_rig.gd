@@ -5,9 +5,11 @@ extends Node2D
 
 const DraftAnimation = preload("res://scripts/character/draft_sprite_animation.gd")
 const RedCapAnimation = preload("res://scripts/character/red_cap_animation.gd")
+const RedAwakenedAnimation = preload("res://scripts/character/red_awakened_animation.gd")
 const ClearAnimation = preload("res://scripts/character/clear_phuzashi_animation.gd")
 var fighter_profile: String = "PHUZASHI"
 var use_clear_model: bool = false
+var red_awakened: bool = false
 @export var use_draft_spritesheet: bool = false
 var draft_animation: AnimatedSprite2D
 
@@ -291,13 +293,17 @@ func set_character_profile(profile: String) -> void:
 	old.queue_free()
 	draft_animation = AnimatedSprite2D.new()
 	draft_animation.name = "DraftSpriteAnimation"
-	draft_animation.set_script(RedCapAnimation if profile == "RED_CAP" else (ClearAnimation if use_clear_model else DraftAnimation))
+	draft_animation.set_script((RedAwakenedAnimation if red_awakened else RedCapAnimation) if profile == "RED_CAP" else (ClearAnimation if use_clear_model else DraftAnimation))
 	add_child(draft_animation)
 	use_draft_spritesheet = true
 	reset_pose()
 
 func set_clear_enabled(enabled: bool) -> void:
 	use_clear_model = enabled
+	set_character_profile(fighter_profile)
+
+func set_red_awakened(enabled: bool) -> void:
+	red_awakened = enabled
 	set_character_profile(fighter_profile)
 
 func _sync_presentation() -> void:

@@ -145,16 +145,21 @@ func run() -> void:
 			await frames(50)
 			check(actor.is_on_floor() and actor.state_name == "IDLE","Air attack lands and releases normally")
 	await reset()
-	for action: String in ["SPECIAL","ULTIMATE","DEMON_BIND"]:
+	for action: String in ["SPECIAL","DEMON_BIND"]:
 		check(not actor.start_action(action) and actor.energy == 100,"Unassigned skill rejects without spending MP: "+action)
+	actor.energy = 99.0
+	check(not actor.start_action("ULTIMATE") and actor.energy == 99.0,"Cap Off requires the full 100 MP")
+	actor.energy = 100.0
 	check(not actor._start_blink(1) and actor.energy == 100,"Red Cap cannot borrow Shadow Blink")
 	await tap("special")
+	actor.energy = 99.0
 	await tap("ultimate")
+	actor.energy = 100.0
 	Input.action_press("crouch")
 	await tap("punch")
 	Input.action_release("crouch")
 	await frames(40)
-	check(started.is_empty() and actor.energy == 100 and target.hit_count == 0,"U, I and S+J input cannot cast borrowed skills")
+	check(started.is_empty() and actor.energy == 100 and target.hit_count == 0,"U, underfunded I and S+J cannot cast borrowed skills")
 	check(get_nodes_in_group("demon_bind_effects").is_empty() and get_nodes_in_group("dark_pulses").is_empty() and get_nodes_in_group("shadow_blink_effects").is_empty(),"Unassigned skills create no world effects")
 	await tap("move_right")
 	await tap("move_right")

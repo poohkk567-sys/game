@@ -1,12 +1,20 @@
 # PHUZASHI — DARK PULSE
 
-เกมต่อสู้ 2D มุมมองด้านข้าง ฉากฝึกสลับเล่น PHUZASHI / RED CAP ทีละตัว สำหรับ Godot **4.2.2+** รุ่นปัจจุบันมีภาพเต็มตัว **240 เฟรม**: PHUZASHI แบบใหม่128เฟรม และ RED CAP112เฟรม เก็บภาพเดิมไว้สำหรับตรวจย้อนหลัง พร้อมโจมตีกลางอากาศและคอมโบสามจังหวะ
+เกมต่อสู้ 2D สำหรับ Godot **4.2.2+** มีสนามโรงเรียนแบบสองผู้เล่นและสนามฝึกเดี่ยว รุ่นปัจจุบันมีภาพเต็มตัว **368 เฟรม**: PHUZASHI แบบใหม่128, Red Cap ปกติ112, ร่างถอดเสื้อ112 และแปลงร่าง16เฟรม พร้อมโจมตีกลางอากาศและคอมโบสามจังหวะ
 
 ![Twelve illustrated moves](docs/screenshots/pose_gallery.png)
 
-[ชมวิดีโอทุกท่าจากเกมจริง](docs/PHUZASHI_All_Moves.mp4)
+[ชมอัลติแปลงร่างในเกมจริง](docs/PHUZASHI_Red_Transform.mp4)
 
-## ล่าสุด: PHUZASHI แบบใหม่ · สนามโรงเรียน · 2 ผู้เล่น
+## ล่าสุด: อัลติ Red Cap ใช้มานา100 แปลงร่างหัวโล้นถอดเสื้อ
+
+[ดาวน์โหลดเกม Godot รุ่นแปลงร่าง (.zip)](https://github.com/poohkk567-sys/game/blob/codex/red-cap-ultimate-transform/docs/downloads/PHUZASHI_Red_Cap_Transform_Godot.zip?raw=true) — แตก ZIP → Import project.godot → F5
+
+ผู้เล่น2กด **Numpad5 หรือ ;** เพื่อถอดหมวก → เหยาะซอสขวดเหลืองบนหัว → ถอดเสื้อเป็นร่างต่อสู้ใหม่ ใช้มานา100 คงร่างจนจบยก มีท่าใหม่ครบ112เฟรมและแปลงร่าง16เฟรม ในสนามฝึกเลือก Red Cap แล้วกด I อ่าน [วิธีใช้และภาพในเกม](docs/RED_CAP_TRANSFORM_TH.md) / [วิดีโอ](docs/PHUZASHI_Red_Transform.mp4)
+
+ร่างปกติยังใช้ท่าปกติและอัลติแปลงร่าง สกิล/เอฟเฟกต์ของ PHUZASHI และสนามโรงเรียนสองผู้เล่นคงเดิม ไม่มี EXE ใหม่
+
+## PHUZASHI แบบใหม่ · สนามโรงเรียน · 2 ผู้เล่น
 
 [ดาวน์โหลดเกมทดสอบสองผู้เล่น (.zip)](https://github.com/poohkk567-sys/game/blob/codex/school-local-versus/docs/downloads/PHUZASHI_School_2P_Godot.zip?raw=true) — แตก ZIP → Godot Import `project.godot` → F5
 

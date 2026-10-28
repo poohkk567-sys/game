@@ -1,6 +1,23 @@
 # Test report — 2026-10-29
 
-## School local-versus result
+## Red Cap ultimate transformation
+
+| Engine | Import/gameplay | Transformation + awakened rendering |
+| --- | --- | --- |
+| Godot 4.2.2 | **614 checks, 0 failures** | **304 samples, 0 failures** |
+| Godot 4.6.3 | **614 checks, 0 failures** | **304 samples, 0 failures** |
+
+The current total is 550 regression checks (including updated Red Cap expectations for its newly assigned ultimate) plus 64 transformation checks. The latter exercise the actual school scene and the solo-training scene.
+
+Coverage includes numpad5/semicolon input, full100-MP gating with no partial charges, ready/ground/guard/attack/status restrictions, exactly one charge per held input, cap/sauce/shirt chronology, frozen movement and input buffering, pause, delayed mana regeneration, zero offensive damage, complete body swap, all112 awakened drawings, persistent form through normal combos/air attacks/HIT/BOUND/KO, repeat rejection, interruption without refunds, round/reset cancellation and restore, solo I, profile switching, and preservation of PHUZASHI's original60-MP dragon.
+
+Rendering covers16 transformation frames in both directions, including held cap/bottle/shirt props, plus the awakened bank's112 normal drawings and24 alias frames mirrored: **304 samples**. Checks verify a complete body silhouette, source isolation, floor pivot and viewport bounds.
+
+The transition is3.2seconds, costs100MP immediately and can be interrupted by an opponent hit or movement lock. Completion persists until round/reset; normals retain original damage and input rules. Neither form borrows PHUZASHI's special powers. Native4.6 gameplay footage shows both directions and post-transform combat.
+
+Both resources were saved using Godot4.2.2. The importer retains generated PNGs and groups each whole transformation body with its held props. Existing PHUZASHI/effect art is unchanged.
+
+## Earlier school local-versus result
 
 | Engine | Import/gameplay | New PHUZASHI rendered samples |
 | --- | --- | --- |

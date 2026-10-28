@@ -30,6 +30,11 @@ func _draw() -> void:
 	var p: float = clampf(fighter.action_progress(), 0.0, 1.0)
 	var envelope: float = sin(p * PI)
 	match fighter.action_name:
+		"TRANSFORM":
+			# A short golden completion accent; the bottle and clothes are drawn frames.
+			if p > 0.86:
+				var glow: float = sin((p-0.86)/0.14*PI)
+				draw_arc(Vector2(0,-75),80,0,TAU,36,Color(1,0.82,0.30,glow*0.65),3,false)
 		"PUNCH_3":
 			if not fighter.specials_enabled and p > 0.20 and p < 0.70:
 				draw_arc(Vector2(d*35,-98),57,-0.4 if d > 0 else PI-2.0,1.5 if d > 0 else PI-0.1,20,Color(1,0.94,0.78,envelope*0.85),5,false)
