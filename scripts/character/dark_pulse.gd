@@ -49,10 +49,12 @@ func _on_target(target: Area2D) -> void:
 	queue_redraw()
 
 func _frame(index: int, dimensions: Vector2, opacity: float = 1.0) -> void:
-	var size: Vector2 = ATLAS.get_size() / 4.0
 	var col: int = index % 4
 	var row: int = floori(float(index) / 4.0)
-	draw_texture_rect_region(ATLAS, Rect2(-dimensions * 0.5, dimensions), Rect2(Vector2(col, row) * size, size), Color(1, 1, 1, opacity), false, true)
+	var size: Vector2 = ATLAS.get_size()
+	var upper := Vector2(floorf(float(col) * size.x / 4.0), floorf(float(row) * size.y / 4.0))
+	var lower := Vector2(floorf(float(col + 1) * size.x / 4.0), floorf(float(row + 1) * size.y / 4.0))
+	draw_texture_rect_region(ATLAS, Rect2(-dimensions * 0.5, dimensions), Rect2(upper, lower - upper), Color(1, 1, 1, opacity), false, true)
 
 func _draw() -> void:
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2(float(direction), 1))
