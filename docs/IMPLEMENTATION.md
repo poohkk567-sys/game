@@ -1,58 +1,52 @@
-# Implementation notes
+# Implementation
 
-## Repository and scene structure
+## Current animation: twelve complete spritesheet sequences
 
-The uploaded Godot scenes referenced `res://scenes/`, `res://scripts/` and `res://assets/`, but their dependencies lived in the repository root. Files now live under their actual resource paths. `project.godot` opens `scenes/main.tscn`; that scene instances `scenes/phuzashi.tscn`. The original HTML prototype is preserved under `browser/` and is not the current game's runtime.
+The default character renderer uses `AnimatedSprite2D` and 96 complete full-body drawings: eight frames each for IDLE, WALK, RUN, JUMP, CROUCH, GUARD, PUNCH, KICK, HIT, FALL, SPECIAL and ULTIMATE. Eighty new frames in five sheets extend the sixteen idle/walk frames selected by the user. New artwork follows that same character model, clothing and shoes. The approved single-frame master remains byte-identical.
 
-- `input_setup.gd`: installs named InputMap actions without overwriting existing remaps.
-- `phuzashi.gd`: movement, state priority, attack timing, resource costs, physics queries, and training reset.
-- `phuzashi_rig.gd`: continuous original-texture skin, joint hierarchy and 12 authored keyframe timelines.
-- `dark_pulse.gd`: finite-lifetime traveling special projectile, one collision per projectile.
-- `combat_effects.gd`: guard shield, attack trails, charge effects and the violet dragon.
-- `stage_art.gd`: static environment, generated once rather than redrawn every gameplay frame.
-- `training_crystal.gd`: an inanimate hurt area, damage/combination counters and automatic target refill.
-- `training_ground.gd`: input toggles, pause and the twelve-move showcase.
-- `training_hud.gd`: health/MP, state, attack phase, move list and target statistics.
+`scripts/character/draft_sprite_animation.gd` retains its earlier filename but now presents the full library in `assets/characters/spritesheets/phuzashi_frames.res`. It never deforms these drawings. IDLE/WALK/RUN loop. CROUCH/GUARD enter their poses once and hold their final frame while the key remains pressed. Timed actions select their frames from gameplay progress, with explicit contact thresholds matching damage windows. Jump progress follows vertical velocity; knockdown includes horizontal lying frames and a get-up sequence.
 
-The arena uses a 1280×720 reference canvas. Both the platform art and physical floor start at y=586. Horizontal movement is clamped to the arena; jump input has a 100 ms coyote window and 120 ms buffer. Jumping cannot be repeated in the air. A held crouch lowers the body collision shape and a held guard absorbs the training hit inputs. Actions, hit-stun and knockdown temporarily lock new attacks.
+Only one character renderer is visible. F4 switches between the spritesheets and the previous master-based mesh for comparison; this changes no physics, action timers or resource costs. The HUD identifies the active renderer. Effects remain independent nodes and drawings, including the traveling pulse, guard shield and violet dragon.
 
-## Mountain drawing fix
+## Sprite import and source isolation
 
-The old outline used a fixed base at y=320 while some peaks had ridge vertices below that base (`peak_y + 62`, `peak_y + 80`). For example, the mountain with peak y=288 placed ridge points at y=350 and y=368. The final edge then cut back through the outline, producing an invalid polygon for Godot's triangulator.
+The source drawings do not form a perfectly uniform atlas: running feet, extended punches and horizontal knockdown poses cross nominal cell boundaries. `tools/import_spritesheets.gd` uses Godot's alpha bitmap contours to identify sixteen complete silhouettes per sheet, groups them by row and sorts by horizontal position. Each is imported whole, rather than cut at an arbitrary grid boundary.
 
-`mountain_points()` now produces a ridge ordered from left to right, clamps the peak above its base with enough clearance for every ridge point, and closes along the bottom. Snow and shadow faces are separate simple polygons. Regression tests call Godot's `Geometry2D.triangulate_polygon()` with normal peaks and the former failure cases, including a requested peak below its base.
+Every frame has a virtual 512×384 canvas and pivot (256,360). Margins align the opaque ground support and the waist. A fixed scale of 52/286 inside the existing 3× character display scale is shared by all states, including crouched and lying poses. It does not rescale individual limbs or normalize away intentional changes of pose.
 
-## Source art preservation and animation
+Two FALL source rectangles overlap a neighboring character. Those two frames use an exact connected-component copy of the source colors, removing only pixels belonging to the neighboring silhouette. The lossless isolated textures are embedded in the resource. All other frames reference the source PNG atlases directly. Faint stray alpha is discarded by the same cutout shader as the idle/walk trial. Source PNGs are left unchanged.
 
-The repository supplies one approved 64×64 frame. The reference image describes the requested moves; it is not treated as a transparent, uniformly spaced sprite atlas.
+The common canvas is wider than the previous trial canvas so extended kicks and the falling body cannot be clipped by texture margins. `manifest.json` records every source rectangle, anchor and isolated-frame flag. The binary resource is generated with Godot 4.2.2 so it is readable by both the minimum version and newer engines. Rebuilding with a newer binary-resource format can break backwards compatibility; use the documented 4.2.2 build command.
 
-The approved PNG is moved without modification. Its original face, hair, outfit, colors, skull motif, trousers and shoes are retained. At load time each visible source pixel is assigned exactly once to one of ten rigid pieces: torso, head, two upper arms, two forearms, two thighs and two lower legs including the original shoes. The generated in-memory textures copy their colors directly from the master. They are not painted or saved over the source image.
+## Game systems
 
-The joint hierarchy drives one indexed `ArrayMesh` rendered by `MeshInstance2D` with the unchanged master texture and nearest filtering. Each visible source pixel contributes two triangles. Vertices at anatomical seams are shared, so adjacent triangles cannot move apart when the joint rotates. Skin weights blend only near real neck, shoulder, elbow, hip and knee joints. Face/hair vertices and shoe vertices retain a single rigid transform. The source-piece sprites remain hidden for ownership/reconstruction checks; they no longer render independently.
+- `input_setup.gd`: named actions without overwriting existing remaps.
+- `phuzashi.gd`: movement, state priority, action timing, damage queries and training reset.
+- `phuzashi_rig.gd`: renderer selection and the retained F4 master comparison.
+- `dark_pulse.gd`: finite-lifetime traveling projectile, one impact per projectile.
+- `combat_effects.gd`: guard, attack trails, charge effects and violet dragon.
+- `stage_art.gd`: static environment drawn once.
+- `training_crystal.gd`: inanimate target, damage/combo counters and automatic refill.
+- `training_ground.gd`: pause, input toggles and the twelve-move showcase.
+- `training_hud.gd`: health/MP, state, renderer, attack phase and move list.
 
-This corrects the visible gaps reported during movement and guard: exact source-pixel ownership did not guarantee a continuous animated silhouette. Incidental contacts must also remain separate: a fist touching trousers in the original pose must not drag the trousers when raised. Those borders have independent vertices. This is skeletal animation from the original image, not newly illustrated frame-by-frame sprites or reconstructed unseen surfaces.
-
-Ground planting now uses the actual rendered mesh vertices, rather than support hulls of the hidden rigid pieces. The integration suite checks all grounded clips at 21 phases and verifies that the face and footwear remain rigid at every sampled phase, including jump. A display-required regression renders 216 silhouettes across all twelve clips, both directions and fractional screen positions, and checks for detached body regions. The same regression detects 23 failures with the old renderer and zero with the corrected renderer.
-
-## Combat and training
+The arena is 1280×720. Platform artwork and its physics floor start at y=586. Movement is clamped to the arena, with 100 ms coyote time and a 120 ms jump buffer. Crouch lowers the collider. Held guard absorbs the training hit inputs. Actions, hit-stun and knockdown temporarily prevent new attacks.
 
 | Move | Duration | Active phase | MP | Damage |
 | --- | --- | --- | --- | --- |
 | Punch | 0.42 s | 34–60% | 0 | 8 |
 | Kick | 0.58 s | 40–65% | 0 | 14 |
-| Special | 0.90 s | Projectile spawns at 42% | 25 | 24 |
+| Special | 0.90 s | Projectile at 42% | 25 | 24 |
 | Ultimate | 1.80 s | 48–80% | 60 | 60 |
 
-Melee and ultimate use physics shape queries against collision layer 4. A per-action set prevents multiple damage applications while a target remains in the active shape. The special spawns one `Area2D`, travels at 620 px/s, and disappears on impact, timeout, boundary exit or training reset. Both facing directions are tested. MP regenerates at 9 units/s. The crystal has no AI or attack behavior and is not a second fighter.
+Melee and ultimate query collision layer 4, with a per-action set preventing repeated hits in one active window. The pulse travels at 620 px/s and disappears on impact, timeout, boundary exit or reset. MP regenerates at 9/s. H applies 8 HP and 0.48 s hit-stun; N applies 18 HP and a 1.4 s fall/get-up sequence. Guard reduces either to 2 chip damage. There is no second fighter or opponent AI.
 
-H applies 8 HP of training damage and 0.48 seconds of hit-stun. N applies 18 HP and a 1.4 second fall/get-up sequence. Held guard reduces either to 2 chip damage. These are explicit practice inputs, not opponent attacks. HP remains depleted until R; target HP refills after depletion. Reset also clears action state, jump buffering and in-flight projectiles.
+Esc pauses gameplay. F2 demonstrates each state for 2.4 seconds, resetting resources between demonstrations and releasing synthetic inputs when stopped. Gameplay keys exit demonstration mode. Focus loss releases held inputs without resetting manual progress.
 
-Esc pauses gameplay while retaining input for resuming and drawing the overlay. F2 cycles every state at 2.4 seconds per demonstration, refills resources and releases its synthetic held actions when stopped. Gameplay key input exits demonstration mode. Losing application focus releases held inputs to avoid stuck movement.
+## Original project repairs
 
-## Playable spritesheet trial
+The uploaded scenes referenced scenes/, scripts/ and assets/ while their dependencies were in the repository root. Files were moved to valid resource paths, and the original browser prototype was preserved separately.
 
-The user requested an in-game trial of the generated idle/walk draft. The main character scene now sets `use_draft_spritesheet=true`; its rig delegates IDLE/WALK to an `AnimatedSprite2D`, while other states continue to use the existing mesh. F4 toggles the comparison without changing gameplay state. The HUD identifies which renderer is visible, and exactly one is visible at a time.
+The original mountain outline closed at y=320 while intermediate ridge vertices could lie below that base, causing self-intersection. The current ridge is ordered left-to-right and clamped above the base, with separate simple snow/shadow polygons. Tests call Godot's triangulator for normal and former failure cases.
 
-`tools/import_draft_spritesheet.gd` reads the existing draft texture, identifies each cell's opaque bounds at alpha ≥ 0.5, and creates sixteen `AtlasTexture` resources in one `SpriteFrames`. Region margins align the waist and floor inside a common 320×362 virtual canvas with pivot (160,340). Frame artwork is not resampled, repainted, or mesh-deformed. One fixed display scale is used for all frames. The trial shader discards faint stray alpha from the generated draft. The PNGs, including the approved master, remain unchanged.
-
-The atlas is deliberately marked as draft artwork: it is a playable comparison of complete illustrated frames, not a claim that all twelve animation sets or every identity detail have been finalized. `test_sprite_trial.gd` exercises actual playback, input, fallback, F4, reset, combat recovery and pause. `test_sprite_render.gd` renders all sixteen frames in both directions and checks the silhouette and floor alignment.
+The earlier independent cutouts were replaced with a continuous master-texture mesh to repair joint seams. That implementation is retained only for F4 comparison. Normal play now uses whole illustrated frames for every state, addressing the user's preference for spritesheets over deformation of one frame.

@@ -58,7 +58,7 @@ func _gallery() -> void:
 	background.size = Vector2(1280,720)
 	panel.add_child(background)
 	var title := Label.new()
-	title.text = "PHUZASHI / DARK PULSE  ·  12 ANIMATED POSES"
+	title.text = "PHUZASHI / DARK PULSE  ·  96 FRAMES / 12 SPRITESHEET MOVES"
 	title.position = Vector2(32,18)
 	title.add_theme_font_size_override("font_size",27)
 	panel.add_child(title)
@@ -72,16 +72,16 @@ func _gallery() -> void:
 		panel.add_child(card)
 		var rig := Node2D.new()
 		rig.set_script(RigScript)
+		rig.use_draft_spritesheet = true
 		panel.add_child(rig)
 		rig.position = origin + Vector2(140,168)
 		rig.scale = Vector2(2.7,2.7)
 		var clip: String = rig.CLIPS[i]
-		var phase: float = 0.5
-		if clip == "IDLE": phase = 0.0
-		if clip == "WALK": phase = 0.0
-		if clip == "RUN": phase = 0.0
-		if clip == "JUMP": phase = 0.36
-		rig.apply_pose(rig.sample_pose(clip, phase), clip != "JUMP")
+		var contact_frames: Array = [0,2,2,3,7,7,3,4,2,4,4,4]
+		rig.animate(clip,1.0/60.0,1)
+		rig.scale = Vector2(2.7,2.7)
+		rig.draft_animation.pause()
+		rig.draft_animation.frame = contact_frames[i]
 		var label := Label.new()
 		label.text = "%02d  %s" % [i+1,clip]
 		label.position = origin + Vector2(12,7)

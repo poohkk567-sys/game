@@ -1,24 +1,35 @@
 # PHUZASHI — DARK PULSE
 
-ฉากฝึกซ้อมเกมต่อสู้ 2D มุมมองด้านข้าง สำหรับ Godot **4.2.2 ขึ้นไป** มี PHUZASHI ตัวเดียว ใช้ภาพต้นฉบับเดิม พร้อมแอนิเมชันครบ 12 ท่า เป้าคริสตัลวัดความเสียหาย และโหมดสาธิตทุกท่า
+เกมต่อสู้ 2D มุมมองด้านข้าง ฉากฝึกตัวละคร PHUZASHI ตัวเดียว สำหรับ Godot **4.2.2+** รุ่นปัจจุบันใช้ **spritesheet ครบ 12 ท่า รวม 96 เฟรม** เป็นภาพเต็มตัวทุกเฟรม
 
-![Spritesheet trial in game](docs/screenshots/spritesheet_idle.png)
+![Twelve illustrated moves](docs/screenshots/pose_gallery.png)
 
-**เวอร์ชันทดลองล่าสุด:** ท่ายืนและเดินใช้ `AnimatedSprite2D` จากร่าง spritesheet จริง ท่าละ 8 เฟรม เปิดเกมด้วย F5 แล้วกด **F4** เทียบกับภาพเดิมได้ ท่าอื่นยังใช้ rig เดิม ร่างงานอาร์ตนี้ยังต้องปรับรายละเอียดให้ตรง Master ก่อนทำครบทุกท่า
-
-[ชมวิดีโอทดลอง spritesheet และสลับเทียบภาพเดิม](docs/PHUZASHI_Spritesheet_Trial.mp4)
-
-[ชมวิดีโอสาธิตครบทุกท่าจาก Godot](docs/PHUZASHI_All_Moves.mp4)
+[ชมวิดีโอทุกท่าจากเกมจริง](docs/PHUZASHI_All_Moves.mp4)
 
 ## เปิดเล่น
 
 1. เปิด Godot → Import → เลือก `project.godot`
-2. กด **F5** เล่นทั้งโปรเจกต์ หรือเปิด `scenes/main.tscn` แล้วกด **F6**
-3. กด **F1** ดูรายการท่า หรือ **F2** ชมการสาธิตครบทั้ง 12 ท่า
+2. กด **F5** เล่น หรือเปิด `scenes/main.tscn` แล้วกด **F6**
+3. กด **F2** สาธิตครบทุกท่า หรือ **F1** ดูรายการปุ่ม
 
 ```sh
 godot --path .
 ```
+
+## ท่าทั้งหมด
+
+เพิ่มใหม่ **80 เฟรมใน 5 แผ่น** ต่อจากยืน–เดิน 16 เฟรมที่ผู้ใช้เลือก รูปลักษณ์อ้างอิงตัวละครชุดเดียวกัน ไม่มีตัวละครที่สอง
+
+| ท่า | เฟรม | การเล่น | ภาพต้นทาง |
+| --- | --- | --- | --- |
+| IDLE / WALK | 8 + 8 | วนรอบ | [ยืน–เดิน](assets/characters/drafts/idle_walk_draft.png) |
+| RUN / JUMP | 8 + 8 | วิ่งวนรอบ / กระโดดตามฟิสิกส์ | [เคลื่อนไหว](assets/characters/spritesheets/mobility.png) |
+| CROUCH / GUARD | 8 + 8 | เข้าท่าแล้วค้างเฟรมสุดท้าย | [หมอบ–ป้องกัน](assets/characters/spritesheets/defense.png) |
+| PUNCH / KICK | 8 + 8 | เตรียม–สัมผัส–คืนท่า | [ต่อย–เตะ](assets/characters/spritesheets/strikes.png) |
+| HIT / FALL | 8 + 8 | โดนโจมตี / ล้ม–นอน–ลุก | [รับแรงโจมตี](assets/characters/spritesheets/reactions.png) |
+| SPECIAL / ULTIMATE | 8 + 8 | ชาร์จ–ปล่อยพลัง–คืนท่า | [สกิล–อัลติเมต](assets/characters/spritesheets/powers.png) |
+
+ใช้ `AnimatedSprite2D` กับ `SpriteFrames` ทั้ง 12 สถานะ ไม่มีการดัดข้อต่อหรือ mesh กับภาพชุดใหม่ เอฟเฟกต์กระสุน โล่ และมังกรแสดงแยกจากตัวละคร เฟรมโจมตีสัมพันธ์กับช่วงสร้างความเสียหายจริง
 
 ## ปุ่มควบคุม
 
@@ -26,83 +37,64 @@ godot --path .
 | --- | --- |
 | A / D หรือ ← / → | เดินและหันตามทิศทาง |
 | Shift + ทิศทาง | วิ่ง |
-| Space | กระโดด; ควบคุมซ้ายขวากลางอากาศ |
+| Space | กระโดดและควบคุมทิศทางกลางอากาศ |
 | S / ↓ ค้าง | หมอบ ลดขนาด collider |
-| L ค้าง | ป้องกัน; ทดลองรับแรงโจมตีด้วย H / N |
-| J | ต่อย — 8 damage |
-| K | เตะ — 14 damage |
-| U | Dark Pulse — 25 MP, กระสุนเดินทางจริง, 24 damage |
+| L ค้าง | ป้องกัน; ทดลองด้วย H / N |
+| J / K | ต่อย 8 damage / เตะ 14 damage |
+| U | Dark Pulse — 25 MP, กระสุนเดินทาง, 24 damage |
 | I | Ultimate — 60 MP, มังกรพลังม่วง, 60 damage |
-| H | ทดลองโดนโจมตี — 8 HP พร้อม hit-stun |
-| N | ทดลองล้ม — 18 HP พร้อมลุกกลับอัตโนมัติ |
+| H / N | ทดลองโดนโจมตี 8 HP / ล้ม 18 HP แล้วลุกอัตโนมัติ |
 | R | รีเซ็ตตำแหน่ง HP, MP, เป้า และกระสุน |
-| F1 | เปิด/ปิดรายการท่า |
-| F2 | สาธิตครบ 12 ท่าวนซ้ำ; กดปุ่มเล่นเพื่อกลับไปควบคุมเอง |
-| F3 | แสดง collider และ hitbox |
-| F4 | สลับ spritesheet ยืน/เดินกับภาพ Master เดิม |
-| Esc | หยุด/เล่นต่อ |
+| F1 / F2 | รายการท่า / สาธิตครบ 12 ท่า |
+| F3 / F4 | แสดง hitbox / เทียบกับแอนิเมชันจาก Master เดิม |
+| Esc | หยุด / เล่นต่อ |
 
-เข้าใกล้คริสตัลด้านขวาเพื่อลองต่อยและเตะ สกิลยิงได้จากระยะไกล MP ฟื้น 9 หน่วย/วินาที การโจมตีมีช่วงเตรียม/ออกท่า/คืนท่า และสร้างความเสียหายหนึ่งครั้งต่อท่าต่อเป้า การป้องกันลดความเสียหายจาก H / N เหลือ 2 HP
+เข้าใกล้คริสตัลด้านขวาเพื่อต่อยและเตะ สกิลยิงได้จากระยะไกล MP ฟื้น 9 หน่วย/วินาที การโจมตีมีช่วงเตรียม/ออกท่า/คืนท่า และสร้างความเสียหายหนึ่งครั้งต่อท่าต่อเป้า การป้องกันลดความเสียหายจาก H / N เหลือ 2 HP
 
-## ตัวละครต้นฉบับและท่าทั้งหมด
+## การจัดเฟรมและไฟล์ต้นฉบับ
 
-![All twelve poses](docs/screenshots/pose_gallery.png)
+ภาพ PNG ต้นทางมีท่าที่ยื่นพ้นกริดปกติ จึงตัดตามตัวละครที่ต่อเนื่องกันจริง ไม่แบ่งภาพเป็นช่องเท่ากันจนมือหรือเท้าขาด `AtlasTexture` ใช้ canvas ร่วม 512×384 และ pivot (256,360) เท้าทุกเฟรมอยู่ระดับเดียวกัน ใช้สเกลเดียวตลอดชุด
 
-**IDLE, WALK, RUN, JUMP, CROUCH, GUARD, PUNCH, KICK, HIT, FALL, SPECIAL, ULTIMATE** มี keyframe timeline แยกกัน ท่ากระโดดใช้ความเร็วแนวตั้งกำหนดช่วงขึ้น/ลง ส่วน FALL เป็นท่าล้มและลุก ไม่ใช่สถานะตกกลางอากาศ
+เฟรมล้มสองเฟรมมีกรอบภาพซ้อนกับตัวข้าง ๆ ตัวนำเข้าแยกเฉพาะพิกเซลของตัวที่ถูกต้องแบบ lossless และเก็บเป็น texture ใน resource ส่วนภาพ PNG ต้นทางยังคงเดิม ข้อมูลเฟรมทั้งหมดอยู่ใน [manifest.json](assets/characters/spritesheets/manifest.json)
 
-สำหรับท่าอื่นที่ยังไม่มี spritesheet: ต้นฉบับใน Repository มีภาพโปร่งใส **64×64 เพียงเฟรมเดียว** จึงใช้ rig 10 ข้อต่อขับ **mesh ต่อเนื่องที่ใช้ texture ต้นฉบับ** ขอบภาพตรงข้อต่อใช้จุดร่วมกันและผสมน้ำหนักเฉพาะบริเวณข้อต่อ เพื่อไม่ให้ภาพขาดเมื่อแขนขาหมุน ใบหน้า/ผมและรองเท้าเคลื่อนเป็นส่วนแข็งโดยไม่ยืดรูป ไม่วาดดีไซน์ใหม่หรือเปลี่ยนสี เอฟเฟกต์พลังแสดงแยกจากตัวละคร นี่เป็นแอนิเมชันจากภาพเดิม ไม่ใช่ sprite sheet ที่วาดใหม่ทุกเฟรมตามภาพตัวอย่าง
-
-![Joint seam fix before and after](docs/screenshots/joint_fix_comparison.png)
-
-ไฟล์ `assets/characters/PHUZASHI_MASTER_SHOES_APPROVED.png` คงเดิมทุกไบต์:
+Master เดิม `assets/characters/PHUZASHI_MASTER_SHOES_APPROVED.png` คงเดิมทุกไบต์:
 
 ```text
 SHA-256 d0d6156d5114d612c1d04e39781fcd5c783eb09b0ba1268fc8b42c9779e6be06
 ```
 
-ระบบตรวจสอบว่าทุกพิกเซลที่มองเห็นถูกกำหนดให้ข้อต่อเดียว และประกอบชิ้นส่วนกลับเป็นต้นฉบับได้พอดี ไม่มีตัวละครที่สอง เป้าคริสตัลเป็นวัตถุฝึกที่ไม่เคลื่อนที่หรือโจมตีกลับ
+ภาพแอนิเมชันชุดใหม่เป็นภาพเต็มตัวที่สร้างต่อจากชุดยืน–เดินที่ผู้ใช้เลือก ไม่ใช่การคัดลอก Master เฟรมเดียวซ้ำให้เป็นทุกท่า
 
 ## โครงสร้าง
 
 ```text
-assets/characters/    ภาพ Master, ร่าง spritesheet และ SpriteFrames
-scenes/              ฉากฝึกและฉาก PHUZASHI
-scripts/character/   Input, movement/state, rig, combat และ projectile
-scripts/stage/       ภูเขา/ฉาก, คริสตัล และโหมดสาธิต
-scripts/ui/          HUD, รายการท่า และ pause overlay
-tests/               Godot integration tests และการบันทึกภาพ/วิดีโอ
-tools/check.sh       ตรวจ import, runtime errors และ gameplay
-docs/                ผลทดสอบ ภาพ และรายละเอียดการออกแบบ
-browser/             HTML ต้นแบบเดิม เก็บไว้อ้างอิง
+assets/characters/              Master และชุดยืน–เดินเดิม
+assets/characters/spritesheets/ แผ่นใหม่, manifest และ SpriteFrames
+scenes/                        ฉากฝึกและฉากตัวละคร
+scripts/character/             Input, movement, combat, animation และ projectile
+scripts/stage/                 ฉากภูเขา คริสตัล และโหมดสาธิต
+scripts/ui/                    HUD, รายการท่า และ pause overlay
+tests/                         ตรวจระบบเกม เฟรมภาพ และบันทึกสาธิต
+tools/                         ตัวนำเข้า spritesheet และคำสั่งทดสอบ
+docs/                          รายงาน ภาพ และวิดีโอ
+browser/                       HTML ต้นแบบเก่า เก็บไว้อ้างอิง
 ```
 
-เกมที่พัฒนารอบนี้อยู่ใน **Godot** ส่วน `browser/PHUZASHI_Playable_Demo.html` เป็นต้นแบบเก่าที่เก็บรักษาไว้และมีระบบการเล่นคนละรุ่น
-
-## ทดสอบ
+## ทดสอบและสร้าง resource ใหม่
 
 ```sh
 tools/check.sh
-# หรือระบุ Godot binary
+# หรือระบุ binary:
 GODOT_BIN=/path/to/godot tools/check.sh
 ```
 
-ทดสอบด้วย physics server จริง ตรวจ movement, jump/landing, facing, arena bounds, crouch/guard, hit windows, damage, MP, projectile lifecycle, hit/fall recovery, pause, reset, ความคงเดิมของพิกเซล การเชื่อม mesh และโหมดสาธิตครบ 12 สถานะ เพิ่มการทดสอบภาพเรนเดอร์ 216 ภาพสำหรับป้องกันแขนขาขาดจากตัว มี CI บน Godot 4.2.2 และ 4.6.3
+ทดสอบบน Godot 4.2.2 และ 4.6.3: ระบบเกม 88 รายการ + ระบบ spritesheet 75 รายการ รวม **163 รายการต่อเวอร์ชัน** และภาพเรนเดอร์ **192 เฟรมต่อเวอร์ชัน** มี CI ตรวจซ้ำ ดู [รายงาน](docs/TEST_REPORT.md) และ [รายละเอียดระบบ](docs/IMPLEMENTATION.md)
 
-ดู [รายงานการทดสอบ](docs/TEST_REPORT.md) และ [รายละเอียดระบบ](docs/IMPLEMENTATION.md)
-
-## การนำ spritesheet ร่างมาใช้จริง
-
-ภาพร่าง 2172×724 ถูกคัดลอกโดยไม่แก้พิกเซลไปไว้ที่ `assets/characters/drafts/idle_walk_draft.png` ตัวนำเข้าหาขอบตัวละครจาก alpha ≥ 0.5 แล้วสร้าง `AtlasTexture` 16 เฟรมใน canvas ร่วม 320×362 พร้อม pivot (160,340) ตั้งเท้าและเอวตรงกัน โดยไม่ยืดหรือดัดแต่ละส่วนของภาพ
-
-- IDLE: 8 เฟรม / 6 FPS; WALK: 8 เฟรม / 11 FPS
-- ใช้สเกลเดียวกันทุกเฟรม ตัวละครสูงสุด 156 px ในฉาก
-- Shader ตัด alpha จางที่เป็นเศษรอบภาพ โดยไม่แก้ PNG ต้นฉบับ
-- เปิดใช้ในฉากตัวละครเป็นค่าเริ่มต้นสำหรับ IDLE/WALK และกด F4 สลับเทียบได้
-- Master PNG ยังคงเดิมทุกไบต์; การทดลองร่างนี้ไม่ถือเป็นการรับรองว่ารายละเอียดทุกเฟรมตรงกับ Master แล้ว
-
-สร้าง resource ใหม่หลังเปลี่ยนภาพร่างด้วย:
+การสร้าง `phuzashi_frames.res` ใหม่ใช้ **Godot 4.2.2** เพื่อให้ binary resource อ่านได้ตั้งแต่เวอร์ชันขั้นต่ำขึ้นไป:
 
 ```sh
-godot --headless --path . --editor --import --quit
-godot --headless --path . --script tools/import_draft_spritesheet.gd
+/path/to/godot-4.2.2 --headless --path . --editor --import --quit
+/path/to/godot-4.2.2 --headless --path . --script tools/import_spritesheets.gd
 ```
+
+ผู้เล่นเปิดเกมได้ทันทีจาก resource ที่รวมมาแล้ว ขั้นตอนนำเข้าใหม่นี้ใช้เมื่อเปลี่ยนภาพต้นทาง

@@ -24,7 +24,7 @@ jobs:
           GODOT_VERSION: ${{ matrix.godot }}
         run: GODOT_BIN="$PWD/work/engine/Godot_v${GODOT_VERSION}-stable_linux.x86_64" tools/check.sh
 
-      - name: Render mesh and spritesheet regressions (216 + 32 frames)
+      - name: Render mesh and spritesheet regressions (216 + 192 frames)
         if: matrix.godot == '4.6.3'
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'

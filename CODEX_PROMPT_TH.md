@@ -1,20 +1,23 @@
-# แนวทางพัฒนาต่อ / PHUZASHI — DARK PULSE
+# PHUZASHI — DARK PULSE / แนวทางพัฒนาต่อ
 
-อ่าน README.md และ docs/IMPLEMENTATION.md ก่อนแก้ไข ใช้ Godot 4.2.2+ และคงตัวละคร PHUZASHI เพียงตัวเดียวตามขอบเขตปัจจุบัน
+อ่าน README.md และ docs/IMPLEMENTATION.md ก่อนแก้ไข โปรเจกต์ใช้ Godot 4.2.2+ มี PHUZASHI ตัวเดียวและเป้าคริสตัล ไม่มีคู่ต่อสู้
 
-## รักษาต้นฉบับ
+## แอนิเมชันปัจจุบัน
 
-ห้ามแก้ไฟล์ `assets/characters/PHUZASHI_MASTER_SHOES_APPROVED.png` หรือออกแบบใบหน้า ผม ชุด ลายกะโหลก กางเกง และรองเท้าใหม่ SHA-256 ต้องเป็น `d0d6156d5114d612c1d04e39781fcd5c783eb09b0ba1268fc8b42c9779e6be06`
+ผู้ใช้เลือกภาพ spritesheet แบบใหม่ เกมใช้ AnimatedSprite2D ครบ 12 สถานะ ท่าละ 8 เฟรม รวม 96 เฟรมแล้ว: IDLE, WALK, RUN, JUMP, CROUCH, GUARD, PUNCH, KICK, HIT, FALL, SPECIAL, ULTIMATE
 
-ต้นฉบับมีหนึ่งเฟรม เกมปัจจุบันใช้ rig 10 ข้อต่อขับ mesh ที่ใช้ texture เดิม โดยเชื่อม vertex ตามข้อต่อเพื่อป้องกันรอยขาด รักษาใบหน้าและรองเท้าเป็นส่วนแข็ง พร้อม timeline สำหรับ 12 สถานะแล้ว ไม่มีการวาด sprite sheet ใหม่ ถ้าปรับท่า ให้แก้ keyframe ใน `scripts/character/phuzashi_rig.gd` และตรวจภาพจริง ไม่เปลี่ยนรูปลักษณ์ตัวละคร
+ไฟล์หลักคือ `assets/characters/spritesheets/phuzashi_frames.res` และ manifest.json ภาพต้นทางอยู่ใน spritesheets/ 5 แผ่น และ drafts/idle_walk_draft.png อีก 1 แผ่น กด F4 เพื่อเทียบกับ Master rig เดิม; เส้นทางปกติไม่ใช้การดัด mesh กับ spritesheet
 
-## การตรวจสอบ
+รักษารูปลักษณ์จากชุดยืน–เดินที่ผู้ใช้เลือก ไม่ออกแบบตัวละครหรือรองเท้าใหม่ ไฟล์ Master เดิมต้องคง SHA-256 `d0d6156d5114d612c1d04e39781fcd5c783eb09b0ba1268fc8b42c9779e6be06`
 
-รัน `tools/check.sh` หลังแก้ระบบเกม ต้องไม่มี SCRIPT ERROR หรือ ERROR ตรวจ `docs/TEST_REPORT.md` สำหรับวิธีบันทึกภาพและวิดีโอผ่าน Godot โดยตรง
+## จุดสำคัญ
 
-ภูเขาต้องมีลำดับจุด ridge เรียงซ้ายไปขวาและอยู่เหนือฐาน ตรวจ triangulation รวมกรณี peak สูงกว่าค่า base ด้วย ห้ามนำรูปทรงที่เส้นขอบตัดกันกลับมาใช้
+- อย่าตัดแผ่นด้วยกริดเท่ากัน: มือ เท้า หรือท่าล้มอาจยื่นข้ามช่อง ใช้ตัวนำเข้าที่แยก silhouette จริง
+- บางกรอบภาพท่าล้มซ้อนกัน ต้องแยกพิกเซลของตัวที่ถูกต้อง ไม่รวมเศษภาพจากตัวข้าง ๆ
+- ใช้ canvas 512×384, pivot (256,360), สเกลเดียวกันทั้งชุด
+- IDLE/WALK/RUN วนรอบ; CROUCH/GUARD เล่นเข้าท่าแล้วค้าง ไม่เริ่มท่ายืนซ้ำขณะกดค้าง
+- เฟรมโจมตี HIT/FALL และ JUMP ผูกกับความคืบหน้าจริงของเกม ไม่เล่น loop อิสระ
+- แยกเอฟเฟกต์จากภาพตัวละคร
+- สร้าง binary resource ด้วย Godot 4.2.2 เพื่อคงความเข้ากันได้กับเวอร์ชันขั้นต่ำ
 
-
-## Spritesheet trial ปัจจุบัน
-
-ผู้ใช้ขอให้นำร่างยืน–เดินมาลองในเกมจริงแล้ว ฉากหลักเปิด `use_draft_spritesheet=true` ใช้ AnimatedSprite2D สำหรับ IDLE/WALK ท่าละ 8 เฟรม ส่วนท่าอื่นยังใช้ mesh เดิม F4 สลับเทียบโดยไม่เปลี่ยน physics ภาพร่างอยู่ใน assets/characters/drafts/ และยังไม่ใช่ชุดอาร์ตสุดท้าย อ่าน docs/art_review/SPRITESHEET_PLAN_TH.md และอย่าอ้างว่ามี spritesheet ครบทั้ง 12 ท่า
+รัน tools/check.sh และตรวจภาพด้วย tests/test_sprite_render.gd หลังแก้ระบบหรือภาพ ดู docs/TEST_REPORT.md สำหรับคำสั่งและการบันทึกวิดีโอ

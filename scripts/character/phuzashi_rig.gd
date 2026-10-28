@@ -25,6 +25,7 @@ var pieces: Dictionary = {}
 var hip: Node2D
 var clock: float = 0.0
 var current_clip: String = "IDLE"
+var animation_progress: float = -1.0
 var displayed_pose: Array = REST.duplicate()
 var pixel_count: int = 0
 var timelines: Dictionary = {}
@@ -237,6 +238,7 @@ func animate(state: String, delta: float, facing: int, progress: float = -1.0) -
 		clock = 0.0
 		current_clip = state
 	clock += delta
+	animation_progress = progress
 	var phase: float = fmod(clock / float(LENGTHS.get(state, 1.0)), 1.0)
 	if progress >= 0.0:
 		phase = clampf(progress, 0.0, 1.0)
@@ -280,7 +282,7 @@ func set_draft_enabled(enabled: bool) -> void:
 func _sync_presentation() -> void:
 	if not is_instance_valid(draft_animation):
 		return
-	skin.visible = not draft_animation.show_state(current_clip,use_draft_spritesheet)
+	skin.visible = not draft_animation.show_state(current_clip,use_draft_spritesheet,animation_progress)
 
 func renderer_name() -> String:
 	return "SPRITESHEET" if is_instance_valid(draft_animation) and draft_animation.visible else "MASTER RIG"
@@ -288,6 +290,7 @@ func renderer_name() -> String:
 func reset_pose() -> void:
 	clock = 0.0
 	current_clip = "IDLE"
+	animation_progress = -1.0
 	displayed_pose = REST.duplicate()
 	draft_animation.restart()
 	apply_pose(REST)

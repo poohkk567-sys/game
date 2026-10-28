@@ -18,7 +18,7 @@ func run() -> void:
 	viewport.add_child(rig)
 	rig.position = Vector2(160,220)
 	for facing: int in [-1,1]:
-		for clip: String in ["IDLE","WALK"]:
+		for clip: String in rig.CLIPS:
 			rig.animate(clip,1.0/60.0,facing)
 			var sprite: AnimatedSprite2D = rig.draft_animation
 			sprite.pause()

@@ -31,7 +31,7 @@ func _input(event: InputEvent) -> void:
 		phuzashi.debug_hitboxes = not phuzashi.debug_hitboxes
 	if event.is_action_pressed("sprite_trial") and not event.is_echo():
 		phuzashi.rig.set_draft_enabled(not phuzashi.rig.use_draft_spritesheet)
-		phuzashi.announce("SPRITESHEET TRIAL: IDLE / WALK" if phuzashi.rig.use_draft_spritesheet else "Original master animation")
+		phuzashi.announce("SPRITESHEET: ALL 12 MOVES" if phuzashi.rig.use_draft_spritesheet else "Original master animation")
 	if event.is_action_pressed("showcase") and not event.is_echo():
 		set_showcase(not showcase)
 	elif showcase and event is InputEventKey and event.pressed and not event.echo and not event.is_action("pause") and not event.is_action("help") and not event.is_action("hitboxes") and not event.is_action("sprite_trial"):
