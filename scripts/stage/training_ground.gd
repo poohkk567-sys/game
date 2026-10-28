@@ -1,7 +1,7 @@
 extends Node2D
 ## Stage orchestration; F2 demonstrates every move without adding a fighter.
 const InputSetup = preload("res://scripts/character/input_setup.gd")
-const SEQUENCE: Array[String] = ["IDLE", "WALK", "RUN", "JUMP", "CROUCH", "GUARD", "PUNCH", "KICK", "HIT", "FALL", "SPECIAL", "ULTIMATE"]
+const SEQUENCE: Array[String] = ["IDLE", "WALK", "RUN", "JUMP", "CROUCH", "GUARD", "PUNCH", "KICK", "HIT", "FALL", "SPECIAL", "ULTIMATE", "AIR_PUNCH", "AIR_KICK", "PUNCH_COMBO", "KICK_COMBO", "BLINK"]
 @onready var phuzashi: PhuzashiCharacter = $PHUZASHI
 @onready var target: Area2D = $TrainingCrystal
 var show_help: bool = false
@@ -57,7 +57,7 @@ func set_showcase(enabled: bool) -> void:
 	showcase_index = -1
 	_release_demo()
 	phuzashi.reset_training()
-	phuzashi.announce("SHOWCASE — cycling all 12 poses; F2 or any movement key exits" if enabled else "Manual training")
+	phuzashi.announce("SHOWCASE — moves and combos; F2 or any movement key exits" if enabled else "Manual training")
 
 func _demonstrate(move_name: String) -> void:
 	if not showcase:
@@ -76,6 +76,16 @@ func _demonstrate(move_name: String) -> void:
 		"GUARD": _hold_demo("guard")
 		"HIT": phuzashi.receive_training_hit(false)
 		"FALL": phuzashi.receive_training_hit(true)
+		"AIR_PUNCH", "AIR_KICK":
+			phuzashi.velocity.y = phuzashi.JUMP_VELOCITY
+			phuzashi.start_action(move_name.trim_prefix("AIR_"))
+		"PUNCH_COMBO", "KICK_COMBO":
+			var family: String = move_name.trim_suffix("_COMBO")
+			for _i in range(3):
+				phuzashi.start_action(family)
+		"BLINK":
+			phuzashi.position.x = 500
+			phuzashi._start_blink(1)
 		"PUNCH", "KICK", "SPECIAL", "ULTIMATE":
 			phuzashi.position.x = 800.0
 			phuzashi.start_action(move_name)

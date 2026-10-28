@@ -30,14 +30,19 @@ func _draw() -> void:
 	var p: float = clampf(fighter.action_progress(), 0.0, 1.0)
 	var envelope: float = sin(p * PI)
 	match fighter.action_name:
-		"PUNCH":
-			if p > 0.28 and p < 0.7:
+		"PUNCH", "PUNCH_2", "PUNCH_3", "AIR_PUNCH":
+			var strike_y: float = -80.0 if fighter.is_air_attack() else -104.0
+			if p > 0.20 and p < 0.7:
 				for i in range(3):
-					draw_line(Vector2(d * 45, -104 + i * 9), Vector2(d * (95 + envelope * 30), -104 + i * 9), Color(1, 0.91, 0.7, envelope * 0.8), 3, false)
-		"KICK":
+					draw_line(Vector2(d * 45, strike_y + i * 9), Vector2(d * (95 + envelope * 30), strike_y + i * 9), Color(1, 0.91, 0.7, envelope * 0.8), 3 + maxi(0,fighter.combo_step-1), false)
+			if fighter.combo_step == 3 and fighter.attack_phase() == "ACTIVE":
+				_finisher(Vector2(d * 104, -88), p)
+		"KICK", "KICK_2", "KICK_3", "AIR_KICK":
 			if p > 0.3 and p < 0.75:
 				var start: float = -1.4 if d > 0 else PI - 1.0
-				draw_arc(Vector2(d * 25, -65), 92, start, start + 1.9, 25, Color(0.75, 0.92, 1, envelope * 0.9), 5, false)
+				draw_arc(Vector2(d * 25, -65), 92 + fighter.combo_step * 3, start, start + 1.9, 25, Color(0.75, 0.92, 1, envelope * 0.9), 5 + maxi(0,fighter.combo_step-1), false)
+			if fighter.combo_step == 3 and fighter.attack_phase() == "ACTIVE":
+				_finisher(Vector2(d * 135, -70), p)
 		"HIT":
 			var center := Vector2(d * 24, -99)
 			for i in range(8):
@@ -51,6 +56,12 @@ func _draw() -> void:
 			draw_set_transform(Vector2.ZERO, 0.0, Vector2(d, 1))
 			_ultimate(p, t)
 			draw_set_transform(Vector2.ZERO)
+
+func _finisher(center: Vector2, progress: float) -> void:
+	for i in range(8):
+		var ray := Vector2.from_angle(float(i) * TAU / 8.0 + progress * 3.0)
+		draw_line(center + ray * 10, center + ray * (24 + progress * 20), Color(0.78, 0.43, 1, 0.8), 4, false)
+		draw_line(center + ray * 11, center + ray * (20 + progress * 18), Color(0.96, 0.84, 1, 0.95), 1.5, false)
 
 func _special(p: float, t: float) -> void:
 	var hand := Vector2(49, -88)

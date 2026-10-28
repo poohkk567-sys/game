@@ -27,16 +27,28 @@ func _draw() -> void:
 	_text(Vector2(470,94), "01  /  One fighter. Every move.", 12, Color("d4e2e8"))
 	_panel(Rect2(951,24,303,113), CYAN)
 	_text(Vector2(970,49), "TRAINING CRYSTAL", 15, WHITE)
-	_text(Vector2(970,72), "LAST  %s  /  %d DMG" % [crystal.last_move,crystal.last_damage], 13, PURPLE)
+	var last_move_label: String = crystal.last_move.replace("AIR_", "JUMP ").replace("_", " ")
+	_text(Vector2(970,72), "LAST  %s  /  %d DMG" % [last_move_label,crystal.last_damage], 13, PURPLE)
 	_text(Vector2(970,94), "TOTAL  %03d    HITS  %02d" % [crystal.total_damage,crystal.hit_count], 13, MUTED)
 	_text(Vector2(970,116), "COMBO  %02d" % crystal.combo, 13, CYAN)
 	# Compact state card keeps the center of the arena open.
 	_panel(Rect2(26,155,207,117), Color("677eaa"))
 	_text(Vector2(42,178), "MOVE / " + ("LEFT" if player.facing < 0 else "RIGHT"), 12, MUTED)
-	_text(Vector2(42,207), player.state_name, 23, WHITE)
+	var move_label: String = player.state_name.replace("AIR_", "JUMP ")
+	if player.combo_step > 0 and player.action_timer > 0.0:
+		move_label = "%s %d/3" % [player.combo_family, player.combo_step]
+	_text(Vector2(42,207), move_label, 23, WHITE)
 	var phase: String = player.attack_phase()
 	_text(Vector2(42,229), player.rig.renderer_name() if phase == "READY" else phase, 12, CYAN if phase == "ACTIVE" else PURPLE)
-	_text(Vector2(42,251), "%d / 12 POSES PRACTICED" % player.visited.size(), 11, MUTED)
+	if player.combo_step > 0:
+		_text(Vector2(42,251), "NEXT INPUTS: %d  /  %s" % [player.combo_buffer, "J" if player.combo_family == "PUNCH" else "K"], 11, MUTED)
+	else:
+		var practiced: Dictionary = {}
+		for move: String in player.visited:
+			var base: String = move.trim_prefix("AIR_").get_slice("_",0)
+			if base in player.rig.CLIPS:
+				practiced[base] = true
+		_text(Vector2(42,251), "%d / 12 POSES PRACTICED" % practiced.size(), 11, MUTED)
 	# Target label and health stay near the target rather than obscuring it.
 	var target_x: float = crystal.position.x
 	_text(Vector2(target_x-57,403), "PRACTICE TARGET", 11, Color("293c59"))
@@ -46,11 +58,11 @@ func _draw() -> void:
 		_text(Vector2(302,166), player.message, 13, WHITE)
 	if stage.showcase:
 		_panel(Rect2(445,203,390,46), PURPLE)
-		_text(Vector2(463,232), "SHOWCASE  %02d / 12   %s" % [stage.showcase_index+1, stage.SEQUENCE[maxi(0,stage.showcase_index)]], 17, WHITE)
+		_text(Vector2(463,232), "SHOWCASE  %02d / %02d   %s" % [stage.showcase_index+1, stage.SEQUENCE.size(), stage.SEQUENCE[maxi(0,stage.showcase_index)].replace("_", " ")], 16, WHITE)
 	# Footer is inside the safe screen area, with every control visible.
 	_panel(Rect2(26,646,1228,56), Color("69728c"))
-	_text(Vector2(44,668), "A/D MOVE  A+A/D+D BLINK 15MP  SHIFT RUN  SPACE JUMP     S  CROUCH     L  GUARD     J  PUNCH     K  KICK     U  SPECIAL     I  ULTIMATE", 13, WHITE)
-	_text(Vector2(44,690), "H  TEST HIT     N  KNOCKDOWN     R  RESET     F1  MOVE LIST     F2  SHOWCASE     F3  HITBOXES     F4  COMPARE ART     ESC  PAUSE", 12, MUTED)
+	_text(Vector2(44,668), "A/D MOVE   SHIFT RUN   SPACE JUMP   J/J/J PUNCH COMBO   K/K/K KICK COMBO   SPACE+J/K AIR ATTACK   U SPECIAL   I ULTIMATE", 12, WHITE)
+	_text(Vector2(44,690), "A+A/D+D BLINK 15MP   S CROUCH   L GUARD   H/N TEST HIT/FALL   R RESET   F1 HELP   F2 DEMO   F3 BOXES   F4 ART   ESC PAUSE", 12, MUTED)
 	if player.debug_hitboxes:
 		_text(Vector2(1021,627), "HITBOXES ON", 12, CYAN)
 	if stage.show_help:
@@ -61,22 +73,24 @@ func _draw() -> void:
 		_text(Vector2(520,377), "ESC  /  Return to training", 16, PURPLE)
 
 func _draw_move_list() -> void:
-	_panel(Rect2(343,188,594,419), PURPLE)
-	_text(Vector2(367,224), "MOVE LIST / PHUZASHI", 23, WHITE)
+	_panel(Rect2(343,174,594,444), PURPLE)
+	_text(Vector2(367,210), "MOVE LIST / PHUZASHI", 23, WHITE)
 	var rows: Array = [
 		["A / D", "Walk · Shift to run", "—"], ["A+A / D+D", "Shadow Blink 130px", "15 MP"], ["SPACE", "Jump · control direction in the air", "—"],
+		["SPACE + J", "Jump punch · keep moving in the air", "9 DMG"],
+		["SPACE + K", "Jump kick · landing ends the attack", "15 DMG"],
 		["S / DOWN", "Crouch · lower hurtbox", "—"], ["L", "Guard · test with H or N", "2 chip"],
-		["J", "Punch", "8 DMG"], ["K", "Kick", "14 DMG"],
+		["J / J / J", "Punch combo · three separate taps", "8 / 10 / 16"], ["K / K / K", "Kick combo · three separate taps", "14 / 16 / 22"],
 		["U", "Dark Pulse · traveling projectile", "25 MP / 24 DMG"],
 		["I", "Ultimate · violet dragon", "60 MP / 60 DMG"],
 		["H / N", "Test hit / fall + automatic recovery", "—"], ["R", "Reset position, HP, MP and target", "—"]
 	]
 	for i in range(rows.size()):
-		var y: float = 258+i*30
+		var y: float = 241+i*26
 		_text(Vector2(368,y), rows[i][0], 13, PURPLE)
 		_text(Vector2(472,y), rows[i][1], 12, WHITE)
 		_text(Vector2(787,y), rows[i][2], 11, CYAN)
-	_text(Vector2(368,584), "F2 cycles all 12 poses. Any gameplay key returns manual control.", 12, MUTED)
+	_text(Vector2(368,599), "F2 demonstrates moves and combos. Any gameplay key returns control.", 12, MUTED)
 
 func _panel(rect: Rect2, accent: Color) -> void:
 	draw_rect(rect, Color(0.025,0.045,0.085,0.93))
