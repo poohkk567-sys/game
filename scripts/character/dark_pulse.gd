@@ -37,15 +37,23 @@ func _physics_process(delta: float) -> void:
 	queue_redraw()
 
 func _on_target(target: Area2D) -> void:
-	if hit or not target.has_method("take_hit"):
+	if hit or (not target.has_method("take_hit") and not target.has_method("receive_attack")):
 		return
+	if target.has_method("can_be_hit_by") and not target.can_be_hit_by(source):
+		return
+	var inflicted: int = 24
+	if target.has_method("receive_attack"):
+		inflicted = target.receive_attack(24,"SPECIAL",source)
+		if inflicted < 0:
+			return
+	else:
+		target.take_hit(24,"SPECIAL")
 	hit = true
 	# Delay collision disable to avoid mutating physics flags in a callback.
 	set_deferred("monitoring", false)
 	set_deferred("collision_mask", 0)
-	target.take_hit(24, "SPECIAL")
 	if is_instance_valid(source):
-		source.target_struck.emit(24)
+		source.target_struck.emit(inflicted)
 	queue_redraw()
 
 func _frame(index: int, dimensions: Vector2, opacity: float = 1.0) -> void:

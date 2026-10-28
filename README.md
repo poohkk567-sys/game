@@ -1,12 +1,26 @@
 # PHUZASHI — DARK PULSE
 
-เกมต่อสู้ 2D มุมมองด้านข้าง ฉากฝึกสลับเล่น PHUZASHI / RED CAP ทีละตัว สำหรับ Godot **4.2.2+** มีภาพเต็มตัว **240 เฟรม**: PHUZASHI 128 เฟรม และ RED CAP 112 เฟรม พร้อมโจมตีกลางอากาศและคอมโบสามจังหวะ
+เกมต่อสู้ 2D มุมมองด้านข้าง ฉากฝึกสลับเล่น PHUZASHI / RED CAP ทีละตัว สำหรับ Godot **4.2.2+** รุ่นปัจจุบันมีภาพเต็มตัว **240 เฟรม**: PHUZASHI แบบใหม่128เฟรม และ RED CAP112เฟรม เก็บภาพเดิมไว้สำหรับตรวจย้อนหลัง พร้อมโจมตีกลางอากาศและคอมโบสามจังหวะ
 
 ![Twelve illustrated moves](docs/screenshots/pose_gallery.png)
 
 [ชมวิดีโอทุกท่าจากเกมจริง](docs/PHUZASHI_All_Moves.mp4)
 
-## ล่าสุด: ตัวหมวกแดงไม่มีผม พร้อมท่าปกติและคอมโบ
+## ล่าสุด: PHUZASHI แบบใหม่ · สนามโรงเรียน · 2 ผู้เล่น
+
+[ดาวน์โหลดเกมทดสอบสองผู้เล่น (.zip)](https://github.com/poohkk567-sys/game/blob/codex/school-local-versus/docs/downloads/PHUZASHI_School_2P_Godot.zip?raw=true) — แตก ZIP → Godot Import `project.godot` → F5
+
+PHUZASHI ใช้โมเดลผิวขาวแบบใหม่ครบ128เฟรม โดยคงสกิลและเอฟเฟกต์เดิมครบ สนามหน้าโรงเรียนตามภาพอ้างอิง พร้อม RED CAP เล่นพร้อมกันคนละตัวบนคีย์บอร์ดเดียว มี HP/MP แยกสองฝั่ง ระบบแพ้ชนะ จับเวลา และแข่งชนะ2ยก
+
+**P1:** A/D เดิน · Space กระโดด · J/K ต่อย/เตะ · L ป้องกัน · U/I สกิล · S+J ปีศาจ
+
+**P2:** ลูกศรเดิน/กระโดด/หมอบ · Numpad1/2/3 หรือ , . / ต่อย/เตะ/ป้องกัน
+
+F1 ดูปุ่ม · R เริ่มแมตช์ใหม่ · F6 สลับสนามฝึกคนเดียว อ่าน [คู่มือสองผู้เล่น](docs/LOCAL_VERSUS_TH.md) / [วิดีโอ](docs/PHUZASHI_Local_Versus.mp4) รุ่นนี้ไม่มี EXE ใหม่
+
+![สนามใหม่พร้อมสองผู้เล่น](docs/screenshots/versus_school_gate.png)
+
+## ตัวหมวกแดงไม่มีผม พร้อมท่าปกติและคอมโบ
 
 [ดาวน์โหลดเกมทดสอบ Red Cap (.zip)](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/PHUZASHI_Red_Cap_Normals_Godot.zip?raw=true) · [สไปรต์ชีต 112 เฟรม](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/RED_CAP_Normal_Spritesheets.zip?raw=true)
 

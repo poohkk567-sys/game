@@ -18,12 +18,18 @@ func _enter_tree() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _ready() -> void:
+	if get_tree().get_meta("clear_training",false):
+		phuzashi.rig.set_clear_enabled(true)
 	# Children pause normally; the orchestrator remains available for Esc.
 	for child: Node in get_children():
 		child.process_mode = Node.PROCESS_MODE_PAUSABLE
 	$HUD.process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_F6:
+		get_tree().paused = false
+		get_tree().change_scene_to_file("res://scenes/versus_school.tscn")
+		return
 	if event.is_action_pressed("switch_fighter") and not event.is_echo() and not paused:
 		switch_fighter()
 		return

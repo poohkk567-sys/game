@@ -78,6 +78,60 @@ var demon_spawned: bool = false
 var fighter_profile: String = "PHUZASHI"
 var display_name: String = "PHUZASHI"
 var specials_enabled: bool = true
+@export var input_prefix: String = ""
+var duel_mode: bool = false
+var controls_enabled: bool = true
+var spawn_point: Vector2 = SPAWN
+var opponent: PhuzashiCharacter
+var hurt_area: Area2D
+var damage_taken: int = 0
+var last_received: String = ""
+
+func pressed(command: String) -> bool:
+	var binding: String = input_prefix+command
+	return controls_enabled and InputMap.has_action(binding) and Input.is_action_pressed(binding)
+
+func just_pressed(command: String) -> bool:
+	var binding: String = input_prefix+command
+	return controls_enabled and InputMap.has_action(binding) and Input.is_action_just_pressed(binding)
+
+func movement_axis() -> float:
+	return float(pressed("move_right"))-float(pressed("move_left"))
+
+func enable_duel(prefix: String, enemy: PhuzashiCharacter, spawn: Vector2) -> void:
+	input_prefix = prefix
+	duel_mode = true
+	opponent = enemy
+	spawn_point = spawn
+	hurt_area = load("res://scripts/combat/fighter_hurtbox.gd").new()
+	hurt_area.name = "FighterHurtbox"
+	add_child(hurt_area)
+
+func receive_attack(damage: int, move_name: String, attacker: Node2D) -> int:
+	if not duel_mode or not controls_enabled or health <= 0.0 or blink_invulnerable():
+		return -1
+	var guarded: bool = pressed("guard") and is_on_floor() and action_timer <= 0.0
+	if is_instance_valid(attacker):
+		guarded = guarded and (attacker.global_position.x-global_position.x)*facing >= 0.0
+	var actual: int = 2 if guarded else damage
+	health = maxf(0.0,health-actual)
+	damage_taken += actual
+	last_received = move_name
+	if guarded:
+		announce("GUARD / 2 CHIP")
+		return actual
+	_clear_combo()
+	purple_fist.clear()
+	blink_timer = 0.0
+	jump_buffer = 0.0
+	action_name = "FALL" if move_name in ["KICK_3","ULTIMATE"] or health <= 0 else "HIT"
+	action_duration = 1.4 if action_name == "FALL" else 0.48
+	action_timer = action_duration
+	velocity.x = -facing*95.0
+	_set_state(action_name)
+	_update_body_shape()
+	return actual
+
 
 func select_fighter(profile: String) -> bool:
 	if profile not in ["PHUZASHI","RED_CAP"]:
@@ -107,6 +161,19 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	elapsed += delta
+	if duel_mode and health <= 0.0:
+		velocity.x = 0.0
+		if not is_on_floor():
+			velocity.y += GRAVITY*delta
+		move_and_slide()
+		_set_state("FALL")
+		rig.animate("FALL",delta,facing,0.95)
+		_update_body_shape()
+		queue_redraw()
+		effects.queue_redraw()
+		return
+	if duel_mode and is_instance_valid(opponent) and action_timer <= 0.0 and blink_timer <= 0.0 and absf(opponent.position.x-position.x) > 2.0:
+		facing = 1 if opponent.position.x > position.x else -1
 	message_time = maxf(0.0, message_time - delta)
 	energy = minf(100.0, energy + delta * 9.0)
 	blink_cooldown = maxf(0.0, blink_cooldown - delta)
@@ -114,7 +181,7 @@ func _physics_process(delta: float) -> void:
 		combo_grace = maxf(0.0, combo_grace - delta)
 		if combo_grace <= 0.0:
 			_clear_combo()
-	if Input.is_action_just_pressed("reset"):
+	if not duel_mode and just_pressed("reset"):
 		reset_training()
 		get_tree().call_group("training_target", "reset_target")
 		return
@@ -126,18 +193,18 @@ func _physics_process(delta: float) -> void:
 		queue_redraw()
 		effects.queue_redraw()
 		return
-	if Input.is_action_just_pressed("test_hit"):
+	if not duel_mode and just_pressed("test_hit"):
 		receive_training_hit(false)
-	elif Input.is_action_just_pressed("test_fall"):
+	elif not duel_mode and just_pressed("test_fall"):
 		receive_training_hit(true)
 
 	var was_grounded: bool = is_on_floor()
 	coyote = 0.10 if was_grounded else maxf(0.0, coyote - delta)
 	jump_buffer = maxf(0.0, jump_buffer - delta)
-	if Input.is_action_just_pressed("jump"):
+	if just_pressed("jump"):
 		jump_buffer = 0.12
 	for command: String in ["move_left", "move_right"]:
-		if Input.is_action_just_pressed(command):
+		if just_pressed(command):
 			var direction: int = -1 if command == "move_left" else 1
 			var previous: float = left_tap if direction < 0 else right_tap
 			if elapsed - previous < BLINK_WINDOW:
@@ -149,10 +216,10 @@ func _physics_process(delta: float) -> void:
 	if blink_timer > 0.0:
 		_step_blink(delta)
 		return
-	var axis: float = Input.get_axis("move_left", "move_right")
-	var crouching: bool = Input.is_action_pressed("crouch")
-	var guarding: bool = Input.is_action_pressed("guard")
-	if axis != 0.0 and action_timer <= 0.0:
+	var axis: float = movement_axis()
+	var crouching: bool = pressed("crouch")
+	var guarding: bool = pressed("guard")
+	if axis != 0.0 and action_timer <= 0.0 and not duel_mode:
 		facing = 1 if axis > 0.0 else -1
 	# Resolve jump first, so Space+J/K on the same frame is an aerial attack.
 	if jump_buffer > 0.0 and coyote > 0.0 and action_timer <= 0.0 and not crouching and not guarding:
@@ -160,19 +227,19 @@ func _physics_process(delta: float) -> void:
 		jump_buffer = 0.0
 		coyote = 0.0
 		_clear_combo()
-	var bind_pressed: bool = crouching and Input.is_action_pressed("punch") and (Input.is_action_just_pressed("punch") or Input.is_action_just_pressed("crouch"))
+	var bind_pressed: bool = crouching and pressed("punch") and (just_pressed("punch") or just_pressed("crouch"))
 	if bind_pressed:
 		start_action("DEMON_BIND")
 	elif not crouching and not guarding:
 		for binding: String in ["ultimate", "special", "kick", "punch"]:
-			if Input.is_action_just_pressed(binding):
+			if just_pressed(binding):
 				start_action(binding.to_upper())
 				break
 	if action_timer <= 0.0 and (crouching or guarding):
 		_clear_combo()
 	var airborne: bool = not was_grounded or velocity.y < 0.0
 	var locked: bool = (action_timer > 0.0 and not is_air_attack()) or (not airborne and (crouching or guarding))
-	var speed: float = RUN_SPEED if Input.is_action_pressed("run") else WALK_SPEED
+	var speed: float = RUN_SPEED if pressed("run") else WALK_SPEED
 	var desired: float = 0.0 if locked else axis * (AIR_SPEED if airborne else speed)
 	if not airborne and action_name in ["PUNCH_2", "PUNCH_3", "KICK_2", "KICK_3"] and action_progress() >= 0.15 and action_progress() < 0.45:
 		desired = facing * (80.0 if combo_step == 3 else 45.0)
@@ -214,7 +281,7 @@ func _physics_process(delta: float) -> void:
 	elif guarding:
 		next = "GUARD"
 	elif absf(velocity.x) > 15.0:
-		next = "RUN" if Input.is_action_pressed("run") else "WALK"
+		next = "RUN" if pressed("run") else "WALK"
 	_set_state(next)
 	_update_body_shape()
 	var phase: float = -1.0
@@ -227,11 +294,13 @@ func _physics_process(delta: float) -> void:
 	effects.queue_redraw()
 
 func _start_blink(direction: int) -> bool:
+	if duel_mode and (not controls_enabled or health <= 0):
+		return false
 	if not specials_enabled:
 		return false
 	if is_movement_locked() or blink_timer > 0.0 or blink_cooldown > 0.0 or action_timer > 0.0:
 		return false
-	if not is_on_floor() or Input.is_action_pressed("crouch") or Input.is_action_pressed("guard"):
+	if not is_on_floor() or pressed("crouch") or pressed("guard"):
 		return false
 	if energy < BLINK_COST:
 		announce("Shadow Blink requires 15 MP")
@@ -276,12 +345,14 @@ func _step_blink(delta: float) -> void:
 		_set_state("IDLE")
 
 func start_action(action: String) -> bool:
+	if duel_mode and (not controls_enabled or health <= 0):
+		return false
 	if not specials_enabled and action in ["SPECIAL","ULTIMATE","DEMON_BIND"]:
 		announce("RED CAP / Special skills are not assigned yet")
 		return false
 	if is_movement_locked() or blink_timer > 0.0:
 		return false
-	if Input.is_action_pressed("guard") or (Input.is_action_pressed("crouch") and action != "DEMON_BIND"):
+	if pressed("guard") or (pressed("crouch") and action != "DEMON_BIND"):
 		return false
 	if action in ["PUNCH", "KICK"]:
 		return _request_normal_attack(action)
@@ -344,6 +415,8 @@ func get_bind_anchor() -> Vector2:
 	return global_position+Vector2(0,-78)
 
 func apply_movement_lock(seconds: float) -> bool:
+	if duel_mode and health <= 0:
+		return false
 	if blink_invulnerable():
 		return false
 	movement_lock.apply(seconds)
@@ -365,7 +438,7 @@ func find_bind_target() -> Node2D:
 	var best: Node2D = null
 	var distance: float = 621.0
 	for candidate: Node in get_tree().get_nodes_in_group("bind_targets"):
-		if candidate == self or not candidate is Node2D or not candidate.has_method("apply_movement_lock") or not candidate.has_method("is_movement_locked"):
+		if candidate == self or (candidate is PhuzashiCharacter and candidate.duel_mode and candidate.health <= 0) or not candidate is Node2D or not candidate.has_method("apply_movement_lock") or not candidate.has_method("is_movement_locked"):
 			continue
 		var aim: Vector2 = candidate.get_bind_anchor() if candidate.has_method("get_bind_anchor") else candidate.global_position
 		var forward: float = (aim.x-global_position.x)*facing
@@ -435,10 +508,18 @@ func _process_attack() -> void:
 	query.collide_with_bodies = false
 	for result: Dictionary in get_world_2d().direct_space_state.intersect_shape(query):
 		var target: Object = result.collider
-		if target.has_method("take_hit") and not struck.has(target.get_instance_id()):
+		if (target.has_method("take_hit") or target.has_method("receive_attack")) and not struck.has(target.get_instance_id()):
+			var inflicted: int = int(config[2])
+			if target.has_method("receive_attack"):
+				if not target.can_be_hit_by(self):
+					continue
+				inflicted = target.receive_attack(int(config[2]),action_name,self)
+				if inflicted < 0:
+					continue
+			else:
+				target.take_hit(int(config[2]), action_name)
 			struck[target.get_instance_id()] = true
-			target.take_hit(int(config[2]), action_name)
-			target_struck.emit(int(config[2]))
+			target_struck.emit(inflicted)
 			if action_name == "PUNCH_3" and specials_enabled:
 				var impact: Node2D = PurpleImpact.new()
 				impact.position = target.global_position + Vector2(-facing*12,-30)
@@ -451,7 +532,7 @@ func receive_training_hit(knockdown: bool) -> void:
 		return
 	if action_name == "FALL":
 		return
-	var blocked: bool = Input.is_action_pressed("guard") and is_on_floor() and action_timer <= 0.0
+	var blocked: bool = pressed("guard") and is_on_floor() and action_timer <= 0.0
 	health = maxf(0.0, health - (2.0 if blocked else (18.0 if knockdown else 8.0)))
 	if blocked:
 		announce("GUARD — impact absorbed (2 chip damage)")
@@ -484,9 +565,11 @@ func announce(text: String) -> void:
 	message_time = 3.0
 
 func reset_training() -> void:
-	global_position = SPAWN
+	global_position = spawn_point
 	velocity = Vector2.ZERO
 	health = 100.0
+	damage_taken = 0
+	last_received = ""
 	energy = 100.0
 	facing = 1
 	action_name = ""

@@ -1,6 +1,8 @@
 # ดาวน์โหลด PHUZASHI — DARK PULSE
 
-รุ่นล่าสุด: [โปรเจกต์ Red Cap (.zip)](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/PHUZASHI_Red_Cap_Normals_Godot.zip?raw=true) · [สไปรต์ชีตแยก](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/RED_CAP_Normal_Spritesheets.zip?raw=true) แตก ZIP → Godot Import `project.godot` → F5 → Tab สลับตัวละคร รอบนี้ไม่มี EXE ใหม่
+รุ่นล่าสุด: [สนามโรงเรียน สองผู้เล่น และโมเดลใหม่ (.zip)](https://github.com/poohkk567-sys/game/blob/codex/school-local-versus/docs/downloads/PHUZASHI_School_2P_Godot.zip?raw=true) เปิด Godot Import `project.godot` → F5 ดู [ปุ่มสองผู้เล่น](../LOCAL_VERSUS_TH.md) ไม่มี EXE ใหม่
+
+รุ่นก่อน: [โปรเจกต์ Red Cap (.zip)](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/PHUZASHI_Red_Cap_Normals_Godot.zip?raw=true) · [สไปรต์ชีตแยก](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/RED_CAP_Normal_Spritesheets.zip?raw=true) แตก ZIP → Godot Import `project.godot` → F5 → Tab สลับตัวละคร รอบนี้ไม่มี EXE ใหม่
 
 ไฟล์ Windows ด้านล่างเป็นรุ่นเก่าก่อนเพิ่ม Red Cap
 
