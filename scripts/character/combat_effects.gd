@@ -8,10 +8,12 @@ func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 func _cell(sheet: Texture2D, index: int, center: Vector2, dimensions: Vector2, opacity: float = 1.0) -> void:
-	var cell: Vector2 = sheet.get_size() / 4.0
 	var col: int = index % 4
 	var row: int = floori(float(index) / 4.0)
-	var region := Rect2(Vector2(col, row) * cell, cell)
+	var size: Vector2 = sheet.get_size()
+	var upper := Vector2(floorf(float(col) * size.x / 4.0), floorf(float(row) * size.y / 4.0))
+	var lower := Vector2(floorf(float(col + 1) * size.x / 4.0), floorf(float(row + 1) * size.y / 4.0))
+	var region := Rect2(upper, lower - upper)
 	draw_texture_rect_region(sheet, Rect2(center - dimensions * 0.5, dimensions), region, Color(1, 1, 1, clampf(opacity, 0.0, 1.0)), false, true)
 
 func _draw() -> void:
