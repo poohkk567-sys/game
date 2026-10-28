@@ -254,7 +254,7 @@ func _test_mountains() -> void:
 
 func _test_skin_topology() -> void:
 	var rig: Node2D = player.rig
-	expect(rig.skin.visible and rig.skin.texture == rig.MASTER, "Continuous skin renders the unchanged original texture")
+	expect(rig.skin.visible != rig.draft_animation.visible and rig.skin.texture == rig.MASTER, "Exactly one renderer is visible and master texture is preserved")
 	var hidden: bool = true
 	for part: String in rig.pieces:
 		hidden = hidden and not rig.pieces[part].visible

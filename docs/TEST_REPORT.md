@@ -6,8 +6,8 @@ The actual Godot project was imported and tested inside the execution environmen
 
 | Engine | Import | Gameplay integration suite |
 | --- | --- | --- |
-| Godot 4.2.2 stable (`15073afe3`) | Pass | **88 checks, 0 failures** |
-| Godot 4.6.3 stable (`7d41c59c4`) | Pass | **88 checks, 0 failures** |
+| Godot 4.2.2 stable (`15073afe3`) | Pass | **105 checks, 0 failures** (88 base + 17 spritesheet trial) |
+| Godot 4.6.3 stable (`7d41c59c4`) | Pass | **105 checks, 0 failures** (88 base + 17 spritesheet trial) |
 
 No project parse errors, missing resources, runtime script errors or leaked-object errors were reported in the final checks. Tests operate on the real main scene and Godot's physics server, rather than reproducing controller calculations outside the engine.
 
@@ -79,3 +79,25 @@ godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/capture_joint_
 ```
 
 CI runs the import and gameplay suite against both engine versions and the rendered regression on Godot 4.6.3 using Xvfb/Mesa. GPU hardware drivers and Windows/macOS packaging were not exercised; the game uses Godot's cross-platform GL Compatibility renderer and has no native extensions.
+
+## Playable spritesheet trial — follow-up
+
+The actual main scene now uses eight illustrated IDLE frames and eight WALK frames by default. Other poses retain the original renderer. Both Godot 4.2.2 and 4.6.3 passed the original 88 checks plus **17 new trial checks**. The import helper is also parse-compatible with 4.2.2.
+
+- Confirmed real AnimatedSprite2D frame advancement from gameplay input, both directions, correct fallback for RUN/attacks and return to illustrated idle.
+- Confirmed F4 changes only artwork, reset restores idle, and pause freezes frame playback.
+- All sixteen AtlasTextures share one canvas and exact feet baseline; one uniform scale is used.
+- **32 rendered frames, 0 failures on each engine**: 16 frames × 2 directions, checking attached silhouettes, integer/fractional placement and floor alignment.
+- Existing mesh regression retained: **216 silhouettes, 0 failures** on 4.6.3.
+- [Idle screenshot](screenshots/spritesheet_idle.png), [walking screenshot](screenshots/spritesheet_walk.png), and [15-second gameplay comparison video](PHUZASHI_Spritesheet_Trial.mp4) were rendered by Godot.
+- The draft has not been promoted to finalized character artwork; only the requested playable idle/walk trial is enabled.
+
+```sh
+# Headless trial checks are included in tools/check.sh.
+# Actual draft-frame rendering, with a working display:
+godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/test_sprite_render.gd
+
+# Record gameplay and F4 comparison:
+godot --path . --audio-driver Dummy --fixed-fps 30 \
+  --write-movie work/sprite_trial.avi --script tests/record_sprite_trial.gd
+```

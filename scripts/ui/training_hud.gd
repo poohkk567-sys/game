@@ -35,7 +35,7 @@ func _draw() -> void:
 	_text(Vector2(42,178), "MOVE / " + ("LEFT" if player.facing < 0 else "RIGHT"), 12, MUTED)
 	_text(Vector2(42,207), player.state_name, 23, WHITE)
 	var phase: String = player.attack_phase()
-	_text(Vector2(42,229), phase, 12, CYAN if phase == "ACTIVE" else PURPLE)
+	_text(Vector2(42,229), player.rig.renderer_name() if phase == "READY" else phase, 12, CYAN if phase == "ACTIVE" else PURPLE)
 	_text(Vector2(42,251), "%d / 12 POSES PRACTICED" % player.visited.size(), 11, MUTED)
 	# Target label and health stay near the target rather than obscuring it.
 	var target_x: float = crystal.position.x
@@ -50,7 +50,7 @@ func _draw() -> void:
 	# Footer is inside the safe screen area, with every control visible.
 	_panel(Rect2(26,646,1228,56), Color("69728c"))
 	_text(Vector2(44,668), "A/D  MOVE     SHIFT  RUN     SPACE  JUMP     S  CROUCH     L  GUARD     J  PUNCH     K  KICK     U  SPECIAL     I  ULTIMATE", 13, WHITE)
-	_text(Vector2(44,690), "H  TEST HIT     N  KNOCKDOWN     R  RESET     F1  MOVE LIST     F2  SHOWCASE     F3  HITBOXES     ESC  PAUSE", 12, MUTED)
+	_text(Vector2(44,690), "H  TEST HIT     N  KNOCKDOWN     R  RESET     F1  MOVE LIST     F2  SHOWCASE     F3  HITBOXES     F4  COMPARE ART     ESC  PAUSE", 12, MUTED)
 	if player.debug_hitboxes:
 		_text(Vector2(1021,627), "HITBOXES ON", 12, CYAN)
 	if stage.show_help:

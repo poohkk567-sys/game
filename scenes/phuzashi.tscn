@@ -19,6 +19,7 @@ floor_snap_length = 6.0
 
 [node name="Rig" type="Node2D" parent="."]
 script = ExtResource("2")
+use_draft_spritesheet = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -72)

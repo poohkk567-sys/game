@@ -3,6 +3,10 @@ extends Node2D
 ## Original texture, rigid face and footwear; joint transitions share vertices.
 ## At the rest pose the pieces reconstruct the approved master exactly.
 
+const DraftAnimation = preload("res://scripts/character/draft_sprite_animation.gd")
+@export var use_draft_spritesheet: bool = false
+var draft_animation: AnimatedSprite2D
+
 const MASTER: Texture2D = preload("res://assets/characters/PHUZASHI_MASTER_SHOES_APPROVED.png")
 const CLIPS: Array[String] = ["IDLE", "WALK", "RUN", "JUMP", "CROUCH", "GUARD", "PUNCH", "KICK", "HIT", "FALL", "SPECIAL", "ULTIMATE"]
 const LENGTHS: Dictionary = {"IDLE": 1.2, "WALK": 0.72, "RUN": 0.48, "JUMP": 0.8, "CROUCH": 0.4, "GUARD": 0.6, "PUNCH": 0.42, "KICK": 0.58, "HIT": 0.48, "FALL": 1.4, "SPECIAL": 0.9, "ULTIMATE": 1.8}
@@ -53,6 +57,10 @@ func _ready() -> void:
 	_build_rig()
 	_build_skin()
 	_build_timelines()
+	draft_animation = AnimatedSprite2D.new()
+	draft_animation.name = "DraftSpriteAnimation"
+	draft_animation.set_script(DraftAnimation)
+	add_child(draft_animation)
 	apply_pose(REST)
 
 static func pixel_owner(x: int, y: int) -> String:
@@ -263,9 +271,23 @@ func apply_pose(pose: Array, plant_on_floor: bool = true) -> void:
 		joints[order[i]].rotation_degrees = float(pose[i + 2])
 
 	_update_skin(plant_on_floor)
+	_sync_presentation()
+
+func set_draft_enabled(enabled: bool) -> void:
+	use_draft_spritesheet = enabled
+	_sync_presentation()
+
+func _sync_presentation() -> void:
+	if not is_instance_valid(draft_animation):
+		return
+	skin.visible = not draft_animation.show_state(current_clip,use_draft_spritesheet)
+
+func renderer_name() -> String:
+	return "SPRITESHEET" if is_instance_valid(draft_animation) and draft_animation.visible else "MASTER RIG"
 
 func reset_pose() -> void:
 	clock = 0.0
 	current_clip = "IDLE"
 	displayed_pose = REST.duplicate()
+	draft_animation.restart()
 	apply_pose(REST)

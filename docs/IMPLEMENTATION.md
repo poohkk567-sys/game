@@ -48,3 +48,11 @@ Melee and ultimate use physics shape queries against collision layer 4. A per-ac
 H applies 8 HP of training damage and 0.48 seconds of hit-stun. N applies 18 HP and a 1.4 second fall/get-up sequence. Held guard reduces either to 2 chip damage. These are explicit practice inputs, not opponent attacks. HP remains depleted until R; target HP refills after depletion. Reset also clears action state, jump buffering and in-flight projectiles.
 
 Esc pauses gameplay while retaining input for resuming and drawing the overlay. F2 cycles every state at 2.4 seconds per demonstration, refills resources and releases its synthetic held actions when stopped. Gameplay key input exits demonstration mode. Losing application focus releases held inputs to avoid stuck movement.
+
+## Playable spritesheet trial
+
+The user requested an in-game trial of the generated idle/walk draft. The main character scene now sets `use_draft_spritesheet=true`; its rig delegates IDLE/WALK to an `AnimatedSprite2D`, while other states continue to use the existing mesh. F4 toggles the comparison without changing gameplay state. The HUD identifies which renderer is visible, and exactly one is visible at a time.
+
+`tools/import_draft_spritesheet.gd` reads the existing draft texture, identifies each cell's opaque bounds at alpha ≥ 0.5, and creates sixteen `AtlasTexture` resources in one `SpriteFrames`. Region margins align the waist and floor inside a common 320×362 virtual canvas with pivot (160,340). Frame artwork is not resampled, repainted, or mesh-deformed. One fixed display scale is used for all frames. The trial shader discards faint stray alpha from the generated draft. The PNGs, including the approved master, remain unchanged.
+
+The atlas is deliberately marked as draft artwork: it is a playable comparison of complete illustrated frames, not a claim that all twelve animation sets or every identity detail have been finalized. `test_sprite_trial.gd` exercises actual playback, input, fallback, F4, reset, combat recovery and pause. `test_sprite_render.gd` renders all sixteen frames in both directions and checks the silhouette and floor alignment.

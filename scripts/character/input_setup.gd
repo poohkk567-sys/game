@@ -8,7 +8,7 @@ static func install() -> void:
 		"guard": [KEY_L], "punch": [KEY_J], "kick": [KEY_K],
 		"special": [KEY_U], "ultimate": [KEY_I], "test_hit": [KEY_H],
 		"test_fall": [KEY_N], "reset": [KEY_R], "help": [KEY_F1],
-		"showcase": [KEY_F2], "hitboxes": [KEY_F3], "pause": [KEY_ESCAPE]
+		"showcase": [KEY_F2], "hitboxes": [KEY_F3], "sprite_trial": [KEY_F4], "pause": [KEY_ESCAPE]
 	}
 	for action: String in bindings:
 		if InputMap.has_action(action):

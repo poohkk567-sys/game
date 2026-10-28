@@ -13,3 +13,8 @@
 รัน `tools/check.sh` หลังแก้ระบบเกม ต้องไม่มี SCRIPT ERROR หรือ ERROR ตรวจ `docs/TEST_REPORT.md` สำหรับวิธีบันทึกภาพและวิดีโอผ่าน Godot โดยตรง
 
 ภูเขาต้องมีลำดับจุด ridge เรียงซ้ายไปขวาและอยู่เหนือฐาน ตรวจ triangulation รวมกรณี peak สูงกว่าค่า base ด้วย ห้ามนำรูปทรงที่เส้นขอบตัดกันกลับมาใช้
+
+
+## Spritesheet trial ปัจจุบัน
+
+ผู้ใช้ขอให้นำร่างยืน–เดินมาลองในเกมจริงแล้ว ฉากหลักเปิด `use_draft_spritesheet=true` ใช้ AnimatedSprite2D สำหรับ IDLE/WALK ท่าละ 8 เฟรม ส่วนท่าอื่นยังใช้ mesh เดิม F4 สลับเทียบโดยไม่เปลี่ยน physics ภาพร่างอยู่ใน assets/characters/drafts/ และยังไม่ใช่ชุดอาร์ตสุดท้าย อ่าน docs/art_review/SPRITESHEET_PLAN_TH.md และอย่าอ้างว่ามี spritesheet ครบทั้ง 12 ท่า

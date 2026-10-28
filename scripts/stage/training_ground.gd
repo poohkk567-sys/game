@@ -29,9 +29,12 @@ func _input(event: InputEvent) -> void:
 		show_help = not show_help
 	if event.is_action_pressed("hitboxes") and not event.is_echo():
 		phuzashi.debug_hitboxes = not phuzashi.debug_hitboxes
+	if event.is_action_pressed("sprite_trial") and not event.is_echo():
+		phuzashi.rig.set_draft_enabled(not phuzashi.rig.use_draft_spritesheet)
+		phuzashi.announce("SPRITESHEET TRIAL: IDLE / WALK" if phuzashi.rig.use_draft_spritesheet else "Original master animation")
 	if event.is_action_pressed("showcase") and not event.is_echo():
 		set_showcase(not showcase)
-	elif showcase and event is InputEventKey and event.pressed and not event.echo and not event.is_action("pause") and not event.is_action("help") and not event.is_action("hitboxes"):
+	elif showcase and event is InputEventKey and event.pressed and not event.echo and not event.is_action("pause") and not event.is_action("help") and not event.is_action("hitboxes") and not event.is_action("sprite_trial"):
 		set_showcase(false)
 
 func _physics_process(delta: float) -> void:
