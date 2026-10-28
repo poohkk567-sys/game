@@ -13,6 +13,7 @@ engine="${GODOT_BIN:-godot}"
 "$engine" --headless --path . --fixed-fps 60 --script tests/test_combat_combos.gd 2>&1 | tee work/combat-combos-check.log
 "$engine" --headless --path . --fixed-fps 60 --script tests/test_combo_poses.gd 2>&1 | tee work/combo-poses-check.log
 "$engine" --headless --path . --fixed-fps 60 --script tests/test_demon_bind.gd 2>&1 | tee work/demon-bind-check.log
-if rg -n '(^|[[:space:]])(SCRIPT ERROR:|ERROR:|FAIL )' work/import-check.log work/test-check.log work/sprite-trial-check.log work/vfx-check.log work/blink-check.log work/blink-vfx-check.log work/combat-combos-check.log work/combo-poses-check.log work/demon-bind-check.log; then
+"$engine" --headless --path . --fixed-fps 60 --script tests/test_red_cap.gd 2>&1 | tee work/red-cap-check.log
+if rg -n '(^|[[:space:]])(SCRIPT ERROR:|ERROR:|FAIL )' work/import-check.log work/test-check.log work/sprite-trial-check.log work/vfx-check.log work/blink-check.log work/blink-vfx-check.log work/combat-combos-check.log work/combo-poses-check.log work/demon-bind-check.log work/red-cap-check.log; then
   exit 1
 fi

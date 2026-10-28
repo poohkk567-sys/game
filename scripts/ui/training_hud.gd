@@ -14,7 +14,7 @@ func _process(_delta: float) -> void:
 func _draw() -> void:
 	# Header and health card.
 	_panel(Rect2(26,24,390,113), PURPLE)
-	_text(Vector2(44,51), "PHUZASHI", 25, WHITE)
+	_text(Vector2(44,51), player.display_name, 25, WHITE)
 	_text(Vector2(208,50), "D A R K   P U L S E", 13, PURPLE)
 	_bar(Vector2(79,70), 311, player.health, Color("e69b9e"))
 	_text(Vector2(44,83), "HP", 13, MUTED)
@@ -46,10 +46,11 @@ func _draw() -> void:
 	else:
 		var practiced: Dictionary = {}
 		for move: String in player.visited:
-			var base: String = move.trim_prefix("AIR_").get_slice("_",0)
-			if base in player.rig.CLIPS:
+			var base: String = move.trim_prefix("AIR_").get_slice("_",0) if player.specials_enabled else move
+			var counted: bool = base in player.rig.CLIPS if player.specials_enabled else base != "BOUND"
+			if counted:
 				practiced[base] = true
-		_text(Vector2(42,251), "%d / 12 POSES PRACTICED" % practiced.size(), 11, MUTED)
+		_text(Vector2(42,251), "%d / %d POSES PRACTICED" % [practiced.size(),12 if player.specials_enabled else 16], 11, MUTED)
 	# Target label and health stay near the target rather than obscuring it.
 	var target_x: float = crystal.position.x
 	_text(Vector2(target_x-57,403), "PRACTICE TARGET", 11, Color("293c59"))
@@ -65,8 +66,9 @@ func _draw() -> void:
 		_text(Vector2(463,232), "SHOWCASE  %02d / %02d   %s" % [stage.showcase_index+1, stage.SEQUENCE.size(), stage.SEQUENCE[maxi(0,stage.showcase_index)].replace("_", " ")], 16, WHITE)
 	# Footer is inside the safe screen area, with every control visible.
 	_panel(Rect2(26,646,1228,56), Color("69728c"))
-	_text(Vector2(44,668), "A/D MOVE   SHIFT RUN   SPACE JUMP   J/J/J PUNCH COMBO   K/K/K KICK COMBO   SPACE+J/K AIR   S+J DEMON BIND 25MP   U/I SKILLS", 12, WHITE)
-	_text(Vector2(44,690), "A+A/D+D BLINK 15MP   S CROUCH   L GUARD   H/N TEST HIT/FALL   R RESET   F1 HELP   F2 DEMO   F3 BOXES   F4 ART   ESC PAUSE", 12, MUTED)
+	var normal_controls: String = "A/D MOVE   SHIFT RUN   SPACE JUMP   J/J/J PUNCH COMBO   K/K/K KICK COMBO   SPACE+J/K AIR"
+	_text(Vector2(44,668),normal_controls + ("   S+J BIND 25MP   U/I SKILLS" if player.specials_enabled else "   NORMAL MOVES / NO SPECIAL SKILLS"),12,WHITE)
+	_text(Vector2(44,690),"TAB SWITCH   S CROUCH   L GUARD   H/N HIT/FALL   R RESET   F1 HELP   F2 DEMO   F3 BOXES   F4 ART   ESC PAUSE" + ("   AA/DD BLINK" if player.specials_enabled else ""),12,MUTED)
 	if player.debug_hitboxes:
 		_text(Vector2(1021,627), "HITBOXES ON", 12, CYAN)
 	if stage.show_help:
@@ -78,7 +80,7 @@ func _draw() -> void:
 
 func _draw_move_list() -> void:
 	_panel(Rect2(343,174,594,444), PURPLE)
-	_text(Vector2(367,210), "MOVE LIST / PHUZASHI", 23, WHITE)
+	_text(Vector2(367,210), "MOVE LIST / " + player.display_name, 23, WHITE)
 	var rows: Array = [
 		["A / D", "Walk · Shift to run", "—"], ["A+A / D+D", "Shadow Blink 130px", "15 MP"], ["SPACE", "Jump · control direction in the air", "—"],
 		["SPACE + J", "Jump punch · keep moving in the air", "9 DMG"],
@@ -90,8 +92,11 @@ func _draw_move_list() -> void:
 		["I", "Ultimate · violet dragon", "60 MP / 60 DMG"],
 		["H / N", "Test hit / fall + automatic recovery", "—"], ["R", "Reset position, HP, MP and target", "—"]
 	]
+	if not player.specials_enabled:
+		rows = rows.filter(func(row: Array) -> bool: return row[0] not in ["A+A / D+D","S + J","U","I"])
+	rows.append(["TAB","Switch PHUZASHI / Red Cap","—"])
 	for i in range(rows.size()):
-		var y: float = 241+i*26
+		var y: float = 241+i*24
 		_text(Vector2(368,y), rows[i][0], 13, PURPLE)
 		_text(Vector2(472,y), rows[i][1], 12, WHITE)
 		_text(Vector2(787,y), rows[i][2], 11, CYAN)

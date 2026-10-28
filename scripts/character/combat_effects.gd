@@ -30,6 +30,9 @@ func _draw() -> void:
 	var p: float = clampf(fighter.action_progress(), 0.0, 1.0)
 	var envelope: float = sin(p * PI)
 	match fighter.action_name:
+		"PUNCH_3":
+			if not fighter.specials_enabled and p > 0.20 and p < 0.70:
+				draw_arc(Vector2(d*35,-98),57,-0.4 if d > 0 else PI-2.0,1.5 if d > 0 else PI-0.1,20,Color(1,0.94,0.78,envelope*0.85),5,false)
 		"PUNCH", "PUNCH_2", "AIR_PUNCH":
 			var strike_y: float = -80.0 if fighter.is_air_attack() else -104.0
 			if p > 0.20 and p < 0.7:
@@ -58,9 +61,10 @@ func _draw() -> void:
 			draw_set_transform(Vector2.ZERO)
 
 func _finisher(center: Vector2, progress: float) -> void:
+	var accent: Color = Color(0.78,0.43,1,0.8) if fighter.specials_enabled else Color(1,0.92,0.75,0.8)
 	for i in range(8):
 		var ray := Vector2.from_angle(float(i) * TAU / 8.0 + progress * 3.0)
-		draw_line(center + ray * 10, center + ray * (24 + progress * 20), Color(0.78, 0.43, 1, 0.8), 4, false)
+		draw_line(center + ray * 10, center + ray * (24 + progress * 20), accent, 4, false)
 		draw_line(center + ray * 11, center + ray * (20 + progress * 18), Color(0.96, 0.84, 1, 0.95), 1.5, false)
 
 func _special(p: float, t: float) -> void:
