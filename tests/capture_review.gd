@@ -24,6 +24,11 @@ func run() -> void:
 	await capture("res://work/training.png")
 	var fighter: PhuzashiCharacter = stage.get_node("PHUZASHI")
 	fighter.position.x = 800
+	Input.action_press("guard")
+	await frames(30)
+	await capture("res://work/guard.png")
+	Input.action_release("guard")
+	await frames(10)
 	fighter.start_action("KICK")
 	await frames(18)
 	await capture("res://work/kick.png")

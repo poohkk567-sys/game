@@ -45,7 +45,9 @@ godot --path .
 
 **IDLE, WALK, RUN, JUMP, CROUCH, GUARD, PUNCH, KICK, HIT, FALL, SPECIAL, ULTIMATE** มี keyframe timeline แยกกัน ท่ากระโดดใช้ความเร็วแนวตั้งกำหนดช่วงขึ้น/ลง ส่วน FALL เป็นท่าล้มและลุก ไม่ใช่สถานะตกกลางอากาศ
 
-ต้นฉบับใน Repository มีภาพโปร่งใส **64×64 เพียงเฟรมเดียว** จึงใช้แอนิเมชัน **cutout rig**: แยกพิกเซลเดิมเป็นข้อต่อ แล้วหมุน/ย้ายชิ้นส่วนแบบ nearest-neighbor ไม่มีการวาดใบหน้า ชุด ลายกะโหลก หรือรองเท้าใหม่ ไม่มีการยืดชิ้นส่วนหรือเปลี่ยนสี เอฟเฟกต์พลังแสดงแยกจากตัวละคร นี่เป็นการอนิเมตชิ้นส่วนต้นฉบับ ไม่ใช่ sprite sheet ที่วาดใหม่ทุกเฟรมตามภาพตัวอย่าง
+ต้นฉบับใน Repository มีภาพโปร่งใส **64×64 เพียงเฟรมเดียว** จึงใช้ rig 10 ข้อต่อขับ **mesh ต่อเนื่องที่ใช้ texture ต้นฉบับ** ขอบภาพตรงข้อต่อใช้จุดร่วมกันและผสมน้ำหนักเฉพาะบริเวณข้อต่อ เพื่อไม่ให้ภาพขาดเมื่อแขนขาหมุน ใบหน้า/ผมและรองเท้าเคลื่อนเป็นส่วนแข็งโดยไม่ยืดรูป ไม่วาดดีไซน์ใหม่หรือเปลี่ยนสี เอฟเฟกต์พลังแสดงแยกจากตัวละคร นี่เป็นแอนิเมชันจากภาพเดิม ไม่ใช่ sprite sheet ที่วาดใหม่ทุกเฟรมตามภาพตัวอย่าง
+
+![Joint seam fix before and after](docs/screenshots/joint_fix_comparison.png)
 
 ไฟล์ `assets/characters/PHUZASHI_MASTER_SHOES_APPROVED.png` คงเดิมทุกไบต์:
 
@@ -79,6 +81,6 @@ tools/check.sh
 GODOT_BIN=/path/to/godot tools/check.sh
 ```
 
-ทดสอบด้วย physics server จริง ตรวจ movement, jump/landing, facing, arena bounds, crouch/guard, hit windows, damage, MP, projectile lifecycle, hit/fall recovery, pause, reset, ความคงเดิมของพิกเซล และโหมดสาธิตครบ 12 สถานะ มี CI บน Godot 4.2.2 และ 4.6.3
+ทดสอบด้วย physics server จริง ตรวจ movement, jump/landing, facing, arena bounds, crouch/guard, hit windows, damage, MP, projectile lifecycle, hit/fall recovery, pause, reset, ความคงเดิมของพิกเซล การเชื่อม mesh และโหมดสาธิตครบ 12 สถานะ เพิ่มการทดสอบภาพเรนเดอร์ 216 ภาพสำหรับป้องกันแขนขาขาดจากตัว มี CI บน Godot 4.2.2 และ 4.6.3
 
 ดู [รายงานการทดสอบ](docs/TEST_REPORT.md) และ [รายละเอียดระบบ](docs/IMPLEMENTATION.md)

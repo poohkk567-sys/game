@@ -6,7 +6,7 @@ The uploaded Godot scenes referenced `res://scenes/`, `res://scripts/` and `res:
 
 - `input_setup.gd`: installs named InputMap actions without overwriting existing remaps.
 - `phuzashi.gd`: movement, state priority, attack timing, resource costs, physics queries, and training reset.
-- `phuzashi_rig.gd`: original-pixel cutouts, joint hierarchy and 12 authored keyframe timelines.
+- `phuzashi_rig.gd`: continuous original-texture skin, joint hierarchy and 12 authored keyframe timelines.
 - `dark_pulse.gd`: finite-lifetime traveling special projectile, one collision per projectile.
 - `combat_effects.gd`: guard shield, attack trails, charge effects and the violet dragon.
 - `stage_art.gd`: static environment, generated once rather than redrawn every gameplay frame.
@@ -28,9 +28,11 @@ The repository supplies one approved 64×64 frame. The reference image describes
 
 The approved PNG is moved without modification. Its original face, hair, outfit, colors, skull motif, trousers and shoes are retained. At load time each visible source pixel is assigned exactly once to one of ten rigid pieces: torso, head, two upper arms, two forearms, two thighs and two lower legs including the original shoes. The generated in-memory textures copy their colors directly from the master. They are not painted or saved over the source image.
 
-The rig rotates and translates these pieces at uniform 3× display scale with nearest filtering. Each clip has its own timeline, with anticipation/contact/recovery keys for combat moves. No per-limb scaling or character recoloring is applied. This is a cutout animation implementation; it does not claim to provide newly illustrated, frame-by-frame sprites or unseen surfaces from the single source image.
+The joint hierarchy drives one indexed `ArrayMesh` rendered by `MeshInstance2D` with the unchanged master texture and nearest filtering. Each visible source pixel contributes two triangles. Vertices at anatomical seams are shared, so adjacent triangles cannot move apart when the joint rotates. Skin weights blend only near real neck, shoulder, elbow, hip and knee joints. Face/hair vertices and shoe vertices retain a single rigid transform. The source-piece sprites remain hidden for ownership/reconstruction checks; they no longer render independently.
 
-A convex hull of the opaque pixels of each piece provides a support bound after rotation. Grounded animation poses are shifted vertically until their lowest visible pixel meets the floor. Jump poses retain their airborne offset. This fixes footwear and knockdown art sinking into the platform. Tests sample 21 phases of each grounded clip and recompute its actual transformed support bound.
+This corrects the visible gaps reported during movement and guard: exact source-pixel ownership did not guarantee a continuous animated silhouette. Incidental contacts must also remain separate: a fist touching trousers in the original pose must not drag the trousers when raised. Those borders have independent vertices. This is skeletal animation from the original image, not newly illustrated frame-by-frame sprites or reconstructed unseen surfaces.
+
+Ground planting now uses the actual rendered mesh vertices, rather than support hulls of the hidden rigid pieces. The integration suite checks all grounded clips at 21 phases and verifies that the face and footwear remain rigid at every sampled phase, including jump. A display-required regression renders 216 silhouettes across all twelve clips, both directions and fractional screen positions, and checks for detached body regions. The same regression detects 23 failures with the old renderer and zero with the corrected renderer.
 
 ## Combat and training
 

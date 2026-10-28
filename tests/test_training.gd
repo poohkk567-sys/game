@@ -46,6 +46,7 @@ func run() -> void:
 	expect(FileAccess.get_sha256("res://assets/characters/PHUZASHI_MASTER_SHOES_APPROVED.png") == "d0d6156d5114d612c1d04e39781fcd5c783eb09b0ba1268fc8b42c9779e6be06", "Approved master remains byte-identical")
 	_test_original_pixels()
 	_test_mountains()
+	_test_skin_topology()
 
 	Input.action_press("move_right")
 	await frames(35)
@@ -188,18 +189,25 @@ func run() -> void:
 	for clip: String in player.rig.CLIPS:
 		var pose: Array = player.rig.sample_pose(clip, 0.5)
 		expect(pose.size() == 13 and pose != player.rig.REST, "Authored animation exists: " + clip)
-		if clip != "JUMP":
-			var planted: bool = true
-			for step in range(21):
-				player.rig.apply_pose(player.rig.sample_pose(clip, step/20.0))
-				var actual_bottom: float = -INF
-				var inverse: Transform2D = player.rig.global_transform.affine_inverse()
-				for part: String in player.rig.pieces:
+		var rigid: bool = true
+		var planted: bool = true
+		for step in range(21):
+			player.rig.apply_pose(player.rig.sample_pose(clip,step/20.0),clip != "JUMP")
+			var inverse: Transform2D = player.rig.global_transform.affine_inverse()
+			var actual_bottom: float = -INF
+			for i in range(player.rig.source_vertices.size()):
+				var source: Vector2 = player.rig.source_vertices[i]
+				var destination: Vector2 = player.rig.skin_vertices[i]
+				actual_bottom = maxf(actual_bottom,destination.y)
+				if source.y <= 27 or source.y >= 54:
+					var part: String = "head" if source.y <= 27 else ("back_shin" if source.x < 33 else "front_shin")
 					var transform: Transform2D = inverse * player.rig.pieces[part].global_transform
-					for point: Vector2 in player.rig.support_hulls[part]:
-						actual_bottom = maxf(actual_bottom, (transform * point).y)
-				planted = planted and absf(actual_bottom) < 0.001
-			expect(planted, "Opaque pixels stay above the floor across clip: " + clip)
+					rigid = rigid and destination.distance_to(transform * source) < 0.001
+			planted = planted and absf(actual_bottom) < 0.001
+		if clip != "JUMP":
+			expect(planted,"Rendered skin stays above the floor across clip: " + clip)
+		expect(rigid,"Face and footwear remain rigid across clip: " + clip)
+
 	player.visited = {"IDLE": true}
 	stage.set_showcase(true)
 	await frames(1770)
@@ -243,3 +251,50 @@ func _test_mountains() -> void:
 		var triangles: PackedInt32Array = Geometry2D.triangulate_polygon(polygon)
 		valid = valid and triangles.size() == (polygon.size()-2)*3
 	expect(valid, "Mountain geometry triangulates for all peaks, including old error cases")
+
+func _test_skin_topology() -> void:
+	var rig: Node2D = player.rig
+	expect(rig.skin.visible and rig.skin.texture == rig.MASTER, "Continuous skin renders the unchanged original texture")
+	var hidden: bool = true
+	for part: String in rig.pieces:
+		hidden = hidden and not rig.pieces[part].visible
+	expect(hidden,"Independently cut sprites cannot leave visible seams")
+	expect(rig.skin_indices.size() == rig.pixel_count*6,"Every opaque source pixel has both rendered triangles")
+	var normalized: bool = true
+	var uv_preserved: bool = true
+	for i in range(rig.source_vertices.size()):
+		var weight: float = 0.0
+		for part: String in rig.skin_weights[i]:
+			weight += float(rig.skin_weights[i][part])
+		normalized = normalized and absf(weight-1.0) < 0.00001
+		uv_preserved = uv_preserved and rig.skin_uvs[i].distance_to(rig.source_vertices[i]/64.0) < 0.00001
+	expect(normalized and uv_preserved,"Skin weights sum to one and preserve source UVs")
+	# Inspect the ACTUAL index buffer at original-pixel borders. Sharing the
+	# source coordinates alone did not prevent the old independent-sprite gaps.
+	var source: Image = rig.MASTER.get_image()
+	var corners: Dictionary = {}
+	var quad: int = 0
+	for y in range(64):
+		for x in range(64):
+			if source.get_pixel(x,y).a <= 0.0:
+				continue
+			var owner: String = rig.pixel_owner(x,y)
+			var offsets: Array = [Vector2i(0,0),Vector2i(1,0),Vector2i(1,1),Vector2i(0,1)]
+			var slots: Array = [0,1,2,5]
+			for corner in range(4):
+				var point: Vector2i = Vector2i(x,y)+offsets[corner]
+				if not corners.has(point):
+					corners[point] = {}
+				corners[point][owner] = rig.skin_indices[quad*6+slots[corner]]
+			quad += 1
+	var shared: bool = true
+	for link: Array in rig.LINKS:
+		var joined: int = 0
+		for point: Vector2i in corners:
+			if corners[point].has(link[0]) and corners[point].has(link[1]) and Vector2(point).distance_to(link[2]) <= float(link[3]) and point.y > 27 and point.y < 54:
+				shared = shared and corners[point][link[0]] == corners[point][link[1]]
+				joined += 1
+		shared = shared and joined > 0
+	expect(shared,"Rendered triangles share vertices across every anatomical joint")
+	var contact: Dictionary = corners[Vector2i(38,43)]
+	expect(contact.has("front_hand") and contact.has("front_thigh") and contact.front_hand != contact.front_thigh,"Fists touching trousers have independent rendered vertices")

@@ -1,6 +1,6 @@
 extends Node2D
-## Cutout animation: every visible source pixel belongs to exactly one joint.
-## No repaint, recolor, limb stretching, replacement face or replacement shoes.
+## A welded textured skin follows the original-pixel joint rig without cut seams.
+## Original texture, rigid face and footwear; joint transitions share vertices.
 ## At the rest pose the pieces reconstruct the approved master exactly.
 
 const MASTER: Texture2D = preload("res://assets/characters/PHUZASHI_MASTER_SHOES_APPROVED.png")
@@ -24,12 +24,34 @@ var current_clip: String = "IDLE"
 var displayed_pose: Array = REST.duplicate()
 var pixel_count: int = 0
 var timelines: Dictionary = {}
-var support_hulls: Dictionary = {}
 var lowest_point: float = 0.0
+var skin: MeshInstance2D
+var skin_mesh := ArrayMesh.new()
+var source_vertices := PackedVector2Array()
+var skin_vertices := PackedVector2Array()
+var skin_uvs := PackedVector2Array()
+var skin_indices := PackedInt32Array()
+var skin_weights: Array[Dictionary] = []
+var vertex_lookup: Dictionary = {}
+var vertex_groups: Array[Array] = []
+# Weld actual anatomical joints only. A fist touching trousers in the source
+# must be free to move away; joining those contact edges would stretch clothing.
+const LINKS: Array = [
+	["torso", "head", Vector2(32,28), 5.0],
+	["torso", "back_arm", Vector2(27,30), 3.6],
+	["back_arm", "back_hand", Vector2(24,36), 4.0],
+	["torso", "front_arm", Vector2(37,31), 3.6],
+	["front_arm", "front_hand", Vector2(38,36), 4.0],
+	["torso", "back_thigh", Vector2(29,43), 4.0],
+	["back_thigh", "back_shin", Vector2(25,49), 5.0],
+	["torso", "front_thigh", Vector2(36,43), 4.0],
+	["front_thigh", "front_shin", Vector2(39,49), 5.0]
+]
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_build_rig()
+	_build_skin()
 	_build_timelines()
 	apply_pose(REST)
 
@@ -61,22 +83,13 @@ func _build_rig() -> void:
 				images[pixel_owner(x, y)].set_pixel(x, y, color)
 				pixel_count += 1
 	for part: String in PIVOTS:
-		var support := PackedVector2Array()
-		var part_image: Image = images[part]
-		for y in range(64):
-			for x in range(64):
-				if part_image.get_pixel(x, y).a > 0.0:
-					support.append(Vector2(x, y))
-					support.append(Vector2(x + 1, y))
-					support.append(Vector2(x, y + 1))
-					support.append(Vector2(x + 1, y + 1))
-		support_hulls[part] = Geometry2D.convex_hull(support)
 		var joint := Node2D.new()
 		joint.name = part
 		joints[part] = joint
 		var picture := Sprite2D.new()
 		picture.name = "OriginalPixels"
 		picture.texture = ImageTexture.create_from_image(images[part])
+		picture.visible = false # Source ownership/debug only; render the welded skin.
 		picture.centered = false
 		picture.position = -PIVOTS[part]
 		joint.add_child(picture)
@@ -93,6 +106,101 @@ func _build_rig() -> void:
 	_attach("front_shin", "front_thigh", PIVOTS.front_thigh)
 	_attach("front_arm", "torso", PIVOTS.torso)
 	_attach("front_hand", "front_arm", PIVOTS.front_arm)
+
+func _build_skin() -> void:
+	# One indexed mesh replaces independently clipped sprites. Anatomical seam
+	# corners share one destination; incidental hand/trouser contacts stay free.
+	skin = MeshInstance2D.new()
+	skin.name = "ContinuousOriginalSkin"
+	skin.texture = MASTER
+	skin.mesh = skin_mesh
+	add_child(skin)
+	var source: Image = MASTER.get_image()
+	for y in range(64):
+		for x in range(64):
+			if source.get_pixel(x, y).a <= 0.0:
+				continue
+			var owner: String = pixel_owner(x,y)
+			var quad := PackedInt32Array()
+			for offset: Vector2i in [Vector2i(0,0), Vector2i(1,0), Vector2i(1,1), Vector2i(0,1)]:
+				var point := Vector2i(x,y) + offset
+				var group: Array = joint_group(point, owner)
+				var key := Vector3i(point.x, point.y, PIVOTS.keys().find(group[0]))
+				if not vertex_lookup.has(key):
+					vertex_lookup[key] = source_vertices.size()
+					vertex_groups.append(group)
+					source_vertices.append(Vector2(point))
+					skin_uvs.append(Vector2(point) / 64.0)
+					skin_weights.append(_weights_at(point, source, group))
+				quad.append(vertex_lookup[key])
+			skin_indices.append_array(PackedInt32Array([quad[0],quad[1],quad[2],quad[0],quad[2],quad[3]]))
+
+func joint_group(point: Vector2i, owner: String) -> Array:
+	var group: Array = [owner]
+	if point.y <= 27 or point.y >= 54:
+		return group
+	for _iteration in range(LINKS.size()):
+		for link: Array in LINKS:
+			if Vector2(point).distance_to(link[2]) > float(link[3]):
+				continue
+			if group.has(link[0]) and not group.has(link[1]):
+				group.append(link[1])
+			if group.has(link[1]) and not group.has(link[0]):
+				group.append(link[0])
+	group.sort()
+	return group
+
+func _weights_at(point: Vector2i, source: Image, group: Array) -> Dictionary:
+	if group.size() == 1:
+		return {group[0]: 1.0}
+	var weights: Dictionary = {}
+	var total: float = 0.0
+	for dy in range(-2, 2):
+		for dx in range(-2, 2):
+			var x: int = clampi(point.x + dx, 0, 63)
+			var y: int = clampi(point.y + dy, 0, 63)
+			var part: String = pixel_owner(x,y)
+			if source.get_pixel(x,y).a <= 0.0 or not group.has(part):
+				continue
+			var distance: float = Vector2(dx + 0.5, dy + 0.5).length()
+			var weight: float = maxf(0.0, 2.5 - distance)
+			weights[part] = float(weights.get(part, 0.0)) + weight
+			total += weight
+	if total <= 0.0:
+		return {group[0]: 1.0}
+	for part: String in weights:
+		weights[part] /= total
+	return weights
+
+func _update_skin(plant_on_floor: bool) -> void:
+	var transforms: Dictionary = {}
+	var inverse: Transform2D = global_transform.affine_inverse()
+	for part: String in pieces:
+		transforms[part] = inverse * pieces[part].global_transform
+	skin_vertices.resize(source_vertices.size())
+	lowest_point = -INF
+	for i in range(source_vertices.size()):
+		var point := Vector2.ZERO
+		for part: String in skin_weights[i]:
+			point += (transforms[part] * source_vertices[i]) * float(skin_weights[i][part])
+		skin_vertices[i] = point
+		lowest_point = maxf(lowest_point, point.y)
+	if plant_on_floor:
+		for i in range(skin_vertices.size()):
+			skin_vertices[i].y -= lowest_point
+		hip.position.y -= lowest_point
+		lowest_point = 0.0
+	var vertices := PackedVector3Array()
+	vertices.resize(skin_vertices.size())
+	for i in range(skin_vertices.size()):
+		vertices[i] = Vector3(skin_vertices[i].x, skin_vertices[i].y, 0.0)
+	var arrays: Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = vertices
+	arrays[Mesh.ARRAY_TEX_UV] = skin_uvs
+	arrays[Mesh.ARRAY_INDEX] = skin_indices
+	skin_mesh.clear_surfaces()
+	skin_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 
 func _attach(part: String, parent_part: String, parent_pivot: Vector2) -> void:
 	var parent_node: Node2D = hip if parent_part.is_empty() else joints[parent_part]
@@ -154,17 +262,7 @@ func apply_pose(pose: Array, plant_on_floor: bool = true) -> void:
 	for i in range(order.size()):
 		joints[order[i]].rotation_degrees = float(pose[i + 2])
 
-	# Anchor actual opaque pixels, not the 64x64 transparent canvas. This keeps
-	# shoes and the knockdown pose above the floor without stretching the art.
-	lowest_point = -INF
-	var inverse: Transform2D = global_transform.affine_inverse()
-	for part: String in pieces:
-		var relative: Transform2D = inverse * pieces[part].global_transform
-		for point: Vector2 in support_hulls[part]:
-			lowest_point = maxf(lowest_point, (relative * point).y)
-	if plant_on_floor:
-		hip.position.y -= lowest_point
-		lowest_point = 0.0
+	_update_skin(plant_on_floor)
 
 func reset_pose() -> void:
 	clock = 0.0

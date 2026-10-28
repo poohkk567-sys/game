@@ -6,8 +6,8 @@ The actual Godot project was imported and tested inside the execution environmen
 
 | Engine | Import | Gameplay integration suite |
 | --- | --- | --- |
-| Godot 4.2.2 stable (`15073afe3`) | Pass | **70 checks, 0 failures** |
-| Godot 4.6.3 stable (`7d41c59c4`) | Pass | **70 checks, 0 failures** |
+| Godot 4.2.2 stable (`15073afe3`) | Pass | **88 checks, 0 failures** |
+| Godot 4.6.3 stable (`7d41c59c4`) | Pass | **88 checks, 0 failures** |
 
 No project parse errors, missing resources, runtime script errors or leaked-object errors were reported in the final checks. Tests operate on the real main scene and Godot's physics server, rather than reproducing controller calculations outside the engine.
 
@@ -26,17 +26,23 @@ Coverage includes:
 - Reset clearing action state, resources and in-flight projectiles.
 - Focus loss releasing held inputs without resetting manual training progress.
 - A distinct authored timeline for every one of the twelve states.
-- Floor support sampled at 21 phases of each grounded clip.
+- Rendered-mesh floor support sampled at 21 phases of each grounded clip.
+- Rigid face/hair and footwear verified across 21 phases of all twelve clips.
+- Actual index-buffer continuity at anatomical seams, original UVs, normalized skin weights, and independent fist/trouser contacts.
 - All twelve showcase states reached from a cleared history and held demo input released on exit.
 
 ## Visual review in Godot
 
 Rendered with Godot 4.6.3's GL Compatibility renderer on an Xorg dummy display using Mesa llvmpipe. Reviewed the actual viewport output for the training ground, contact kick, active ultimate, knockdown, move list, and a twelve-pose gallery.
 
-The review found footwear and knockdown poses crossing the platform. The rig now plants transformed opaque-pixel bounds on the floor, with an integration regression for every grounded timeline. The fall pose was also adjusted to lie horizontally before getting up.
+The first version's independent cutout sprites left visible gaps at rotating joints, as reported in the guard screenshot. The corrected renderer uses one original-texture mesh with shared anatomical seam vertices and local joint weights. The face/hair and shoes stay rigid. Ground support now uses rendered vertices. The former floor alignment and horizontal fall pose corrections are retained.
+
+**Rendered regression: 216 silhouettes, 0 failures** on Godot 4.6.3. It samples nine phases of all twelve clips, both facing directions, with integer and fractional screen positions. The same test against the original `84cdf1f` renderer reports **23 failures**, so the regression detects the original detached-body defect. This supplements the headless checks, which did not originally detect visible seams.
 
 Saved review images:
 
+- [Joint repair comparison](screenshots/joint_fix_comparison.png)
+- [Guard in game](screenshots/guard.png)
 - [Training ground](screenshots/training.png)
 - [Twelve-pose gallery](screenshots/pose_gallery.png)
 - [Ultimate in game](screenshots/ultimate.png)
@@ -62,4 +68,14 @@ godot --path . --audio-driver Dummy --fixed-fps 30 \
   --write-movie work/showcase.avi --script tests/record_showcase.gd
 ```
 
-CI runs the import and gameplay suite against both engine versions on pushes and pull requests. GPU hardware drivers and Windows/macOS packaging were not exercised; the game uses Godot's cross-platform GL Compatibility renderer and has no native extensions.
+For rendered checks, run with a display:
+
+```sh
+godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/test_skin_render.gd
+
+# Optional before/after comparison against the initial PR commit:
+git show 84cdf1f:scripts/character/phuzashi_rig.gd > work/old_rig.gd
+godot --path . --audio-driver Dummy --fixed-fps 60 --script tests/capture_joint_fix.gd
+```
+
+CI runs the import and gameplay suite against both engine versions and the rendered regression on Godot 4.6.3 using Xvfb/Mesa. GPU hardware drivers and Windows/macOS packaging were not exercised; the game uses Godot's cross-platform GL Compatibility renderer and has no native extensions.

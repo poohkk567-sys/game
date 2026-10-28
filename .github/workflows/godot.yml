@@ -23,3 +23,16 @@ jobs:
         env:
           GODOT_VERSION: ${{ matrix.godot }}
         run: GODOT_BIN="$PWD/work/engine/Godot_v${GODOT_VERSION}-stable_linux.x86_64" tools/check.sh
+
+      - name: Render joint continuity regression (216 silhouettes)
+        if: matrix.godot == '4.6.3'
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          if ! command -v xvfb-run >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y xvfb libgl1-mesa-dri
+          fi
+          set -o pipefail
+          xvfb-run -a -s "-screen 0 1280x720x24" work/engine/Godot_v4.6.3-stable_linux.x86_64 --path . --audio-driver Dummy --fixed-fps 60 --script tests/test_skin_render.gd 2>&1 | tee work/render-check.log
+          if rg 'SCRIPT ERROR:|ERROR:' work/render-check.log; then exit 1; fi
