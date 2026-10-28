@@ -11,6 +11,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-name", default="PHUZASHI_Air_Combos_Godot.zip")
     parser.add_argument("--folder-name", default="PHUZASHI_Air_Combos")
+    parser.add_argument("--review-prefix", help="Include only matching screenshot filenames")
+    parser.add_argument("--video-name", help="Include only this review video from docs")
+    parser.add_argument("--extra-review-file", action="append", default=[])
     args = parser.parse_args()
     output = root / "docs/downloads" / args.output_name
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -19,9 +22,20 @@ def main() -> None:
         paths.update(
             path for path in (root / folder).rglob("*")
             if path.is_file() and "__pycache__" not in path.parts
+            and (folder != "docs/screenshots" or not args.review_prefix
+                 or path.name.startswith(args.review_prefix))
         )
     paths.update((root / "docs").glob("*.md"))
-    paths.update((root / "docs").glob("*.mp4"))
+    if args.video_name:
+        video = root / "docs" / args.video_name
+        assert video.is_file(), video
+        paths.add(video)
+    else:
+        paths.update((root / "docs").glob("*.mp4"))
+    for name in args.extra_review_file:
+        path = (root / name).resolve()
+        assert path.is_relative_to(root) and path.is_file(), path
+        paths.add(path)
     paths.update(root / name for name in (
         "project.godot", "README.md", "README_TH.md", "START_HERE_TH.txt"
     ))

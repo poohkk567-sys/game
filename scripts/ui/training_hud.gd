@@ -47,7 +47,7 @@ func _draw() -> void:
 		var practiced: Dictionary = {}
 		for move: String in player.visited:
 			var base: String = move.trim_prefix("AIR_").get_slice("_",0) if player.specials_enabled else move
-			var counted: bool = base in player.rig.CLIPS if player.specials_enabled else base != "BOUND"
+			var counted: bool = base in player.rig.CLIPS if player.specials_enabled else base not in ["BOUND","TRANSFORM"]
 			if counted:
 				practiced[base] = true
 		_text(Vector2(42,251), "%d / %d POSES PRACTICED" % [practiced.size(),12 if player.specials_enabled else 16], 11, MUTED)
@@ -67,7 +67,7 @@ func _draw() -> void:
 	# Footer is inside the safe screen area, with every control visible.
 	_panel(Rect2(26,646,1228,56), Color("69728c"))
 	var normal_controls: String = "A/D MOVE   SHIFT RUN   SPACE JUMP   J/J/J PUNCH COMBO   K/K/K KICK COMBO   SPACE+J/K AIR"
-	_text(Vector2(44,668),normal_controls + ("   S+J BIND 25MP   U/I SKILLS" if player.specials_enabled else "   NORMAL MOVES / NO SPECIAL SKILLS"),12,WHITE)
+	_text(Vector2(44,668),normal_controls + ("   S+J BIND 25MP   U/I SKILLS" if player.specials_enabled else ("   AWAKENED" if player.red_awakened else "   I ULTIMATE 100MP")),12,WHITE)
 	_text(Vector2(44,690),"TAB SWITCH   S CROUCH   L GUARD   H/N HIT/FALL   R RESET   F1 HELP   F2 DEMO   F3 BOXES   F4 ART   ESC PAUSE" + ("   AA/DD BLINK" if player.specials_enabled else ""),12,MUTED)
 	if player.debug_hitboxes:
 		_text(Vector2(1021,627), "HITBOXES ON", 12, CYAN)
@@ -94,6 +94,7 @@ func _draw_move_list() -> void:
 	]
 	if not player.specials_enabled:
 		rows = rows.filter(func(row: Array) -> bool: return row[0] not in ["A+A / D+D","S + J","U","I"])
+		rows.append(["I","Cap Off: hat / yellow sauce / shirt","100 MP"])
 	rows.append(["TAB","Switch PHUZASHI / Red Cap","—"])
 	for i in range(rows.size()):
 		var y: float = 241+i*24

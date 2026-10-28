@@ -5,6 +5,8 @@ signal attack_started(action: String)
 signal state_changed(state: String)
 signal target_struck(damage: int)
 
+const RED_TRANSFORM_COST: float = 100.0
+const RED_TRANSFORM_DURATION: float = 3.2
 const WALK_SPEED: float = 190.0
 const RUN_SPEED: float = 340.0
 const AIR_SPEED: float = 220.0
@@ -78,6 +80,7 @@ var demon_spawned: bool = false
 var fighter_profile: String = "PHUZASHI"
 var display_name: String = "PHUZASHI"
 var specials_enabled: bool = true
+var red_awakened: bool = false
 @export var input_prefix: String = ""
 var duel_mode: bool = false
 var controls_enabled: bool = true
@@ -142,7 +145,7 @@ func select_fighter(profile: String) -> bool:
 	rig.set_character_profile(profile)
 	visited = {"IDLE":true}
 	reset_training()
-	announce(display_name + (" / Normal moves only · special skills coming later" if not specials_enabled else " / Dark Pulse"))
+	announce(display_name + (" / I: Cap Off Ultimate 100 MP" if not specials_enabled else " / Dark Pulse"))
 	return true
 
 func _ready() -> void:
@@ -175,7 +178,8 @@ func _physics_process(delta: float) -> void:
 	if duel_mode and is_instance_valid(opponent) and action_timer <= 0.0 and blink_timer <= 0.0 and absf(opponent.position.x-position.x) > 2.0:
 		facing = 1 if opponent.position.x > position.x else -1
 	message_time = maxf(0.0, message_time - delta)
-	energy = minf(100.0, energy + delta * 9.0)
+	if action_name != "TRANSFORM":
+		energy = minf(100.0, energy + delta * 9.0)
 	blink_cooldown = maxf(0.0, blink_cooldown - delta)
 	if action_timer <= 0.0 and combo_grace > 0.0:
 		combo_grace = maxf(0.0, combo_grace - delta)
@@ -266,6 +270,8 @@ func _physics_process(delta: float) -> void:
 			combo_step += 1
 			_begin_attack(_combo_clip())
 		elif action_timer <= 0.0:
+			if action_name == "TRANSFORM":
+				_finish_red_transform()
 			action_name = ""
 			if combo_step > 0 and combo_step < 3:
 				combo_grace = COMBO_GRACE
@@ -345,6 +351,8 @@ func _step_blink(delta: float) -> void:
 		_set_state("IDLE")
 
 func start_action(action: String) -> bool:
+	if fighter_profile == "RED_CAP" and action == "ULTIMATE":
+		return _start_red_transform()
 	if duel_mode and (not controls_enabled or health <= 0):
 		return false
 	if not specials_enabled and action in ["SPECIAL","ULTIMATE","DEMON_BIND"]:
@@ -366,6 +374,45 @@ func start_action(action: String) -> bool:
 	_clear_combo()
 	_begin_attack(action)
 	return true
+
+func _start_red_transform() -> bool:
+	if red_awakened or action_timer > 0.0 or is_movement_locked() or blink_timer > 0.0 or health <= 0:
+		return false
+	if duel_mode and not controls_enabled:
+		return false
+	if not is_on_floor() or velocity.y < 0 or pressed("crouch") or pressed("guard"):
+		return false
+	if energy < RED_TRANSFORM_COST:
+		announce("CAP OFF / Requires 100 MP")
+		return false
+	energy -= RED_TRANSFORM_COST
+	_clear_combo()
+	struck.clear()
+	velocity = Vector2.ZERO
+	jump_buffer = 0.0
+	action_name = "TRANSFORM"
+	action_duration = RED_TRANSFORM_DURATION
+	action_timer = action_duration
+	_set_state("TRANSFORM")
+	attack_started.emit("TRANSFORM")
+	announce("CAP OFF / YELLOW SAUCE / 100 MP")
+	return true
+
+func _finish_red_transform() -> void:
+	red_awakened = true
+	rig.set_red_awakened(true)
+	announce("AWAKENED / BALD & SHIRTLESS")
+
+func red_transform_phase() -> String:
+	if action_name != "TRANSFORM" or action_timer <= 0:
+		return ""
+	var progress: float = action_progress()
+	if progress < 5.0/16.0:
+		return "CAP OFF"
+	if progress < 10.0/16.0:
+		return "YELLOW SAUCE"
+	return "SHIRT OFF"
+
 
 func _request_normal_attack(family: String) -> bool:
 	if action_timer > 0.0:
@@ -466,6 +513,8 @@ func action_progress() -> float:
 	return 1.0 - action_timer / maxf(action_duration, 0.001)
 
 func attack_phase() -> String:
+	if action_name == "TRANSFORM" and action_timer > 0:
+		return red_transform_phase()
 	if not ATTACKS.has(action_name) or action_timer <= 0.0:
 		return "READY"
 	var config: Array = ATTACKS[action_name]
@@ -565,6 +614,10 @@ func announce(text: String) -> void:
 	message_time = 3.0
 
 func reset_training() -> void:
+	if red_awakened:
+		red_awakened = false
+		display_name = "RED CAP" if fighter_profile == "RED_CAP" else "PHUZASHI"
+		rig.set_red_awakened(false)
 	global_position = spawn_point
 	velocity = Vector2.ZERO
 	health = 100.0

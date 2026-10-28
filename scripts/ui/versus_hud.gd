@@ -18,7 +18,7 @@ func _draw() -> void:
 	_bar(Vector2(42,91),462,stage.p1.energy,VIOLET,false,9)
 	_bar(Vector2(776,91),462,stage.p2.energy,GOLD,true,9)
 	_text(Vector2(43,116),"HP %03d    MP %03d" % [stage.p1.health,stage.p1.energy],11,MUTED)
-	_text(Vector2(777,116),"HP %03d    MP %03d" % [stage.p2.health,stage.p2.energy],11,MUTED)
+	_text(Vector2(777,116),("HP %03d    MP %03d" % [stage.p2.health,stage.p2.energy]) + ("   AWAKENED" if stage.p2.red_awakened else "   ULTIMATE 100 MP"),11,MUTED)
 	_card(Rect2(545,20,190,102),Color("69758b"))
 	_center(640,47,"LOCAL VERSUS",13,MUTED)
 	_center(640,88,"%02d" % ceili(stage.remaining),40,WHITE)
@@ -35,7 +35,7 @@ func _draw() -> void:
 		_banner(stage.result,"MATCH COMPLETE  /  R REMATCH" if stage.phase == "MATCH_OVER" else "NEXT ROUND",VIOLET if stage.winner == 0 else GOLD)
 	_card(Rect2(24,632,1232,67),Color("687184"))
 	_text(Vector2(40,653),"P1  A/D MOVE   SPACE/W JUMP   SHIFT RUN   S CROUCH   J PUNCH   K KICK   L GUARD   U/I SKILLS   S+J BIND   AA/DD BLINK",12,WHITE)
-	_text(Vector2(40,674),"P2  ARROWS MOVE/JUMP/CROUCH   CTRL RUN   NUM 1/2/3 or , . / = PUNCH/KICK/GUARD   |   TAP J/K OR 1/2 THREE TIMES FOR COMBOS",11,GOLD)
+	_text(Vector2(40,674),"P2  ARROWS MOVE/JUMP/CROUCH   CTRL RUN   NUM 1/2/3 or , . / = PUNCH/KICK/GUARD   NUM 5 or ; = CAP OFF ULTIMATE 100MP",11,GOLD)
 	_text(Vector2(40,691),"F1 CONTROLS    F3 HITBOXES    R RESTART MATCH    ESC PAUSE    F6 SOLO TRAINING",10,MUTED)
 	if stage.show_help:
 		_help()
@@ -45,7 +45,9 @@ func _draw() -> void:
 		_center(640,370,"ESC TO RESUME   /   R RESTART",16,GOLD)
 
 func _label_fighter(fighter: PhuzashiCharacter, label: String, color: Color) -> void:
-	_center(fighter.position.x,616,label,12,color)
+	_center(fighter.position.x,616,label+(" / AWAKENED" if fighter.red_awakened else ""),12,color)
+	if fighter.action_name == "TRANSFORM" and fighter.action_timer > 0:
+		_center(fighter.position.x,fighter.position.y-195,fighter.red_transform_phase(),14,GOLD)
 	if fighter.is_movement_locked():
 		_center(fighter.position.x,fighter.position.y-175,"BOUND %.2fs" % fighter.movement_lock.remaining,14,VIOLET)
 
@@ -65,7 +67,7 @@ func _help() -> void:
 	 ["J J J / K K K : three-stage combos","Num 1 1 1 / Num 2 2 2 : three-stage combos"],
 	 ["Space + J/K : aerial punch/kick","Up + Num 1/2 : aerial punch/kick"],
 	 ["U : Dark Pulse     I : dragon ultimate","Laptop keys: comma / period / slash"],
-	 ["S+J : Demon Bind 25 MP / 0.7 seconds","Normal moves only; special skills not assigned"],
+	 ["S+J : Demon Bind 25 MP / 0.7 seconds","Num 5 or ; : CAP OFF ULTIMATE / 100 MP"],
 	 ["A A / D D : Shadow Blink 15 MP","Hold guard facing opponent to block attacks"]
 	]
 	for i in range(rows.size()):
