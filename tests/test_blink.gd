@@ -37,6 +37,7 @@ func run() -> void:
 	await tap("move_right")
 	await tap("move_right")
 	check(actor.blink_timer > 0.0, "D double tap activates blink")
+	x = actor.blink_origin
 	check(actor.energy >= 84.0 and actor.energy < 87.0, "Blink costs 15 MP")
 	await frames(9)
 	check(actor.blink_invulnerable(), "Blink has intangible frames")
@@ -51,6 +52,7 @@ func run() -> void:
 	await tap("move_left")
 	await tap("move_left")
 	check(actor.blink_timer > 0.0, "A double tap activates blink")
+	x = actor.blink_origin
 	await frames(28)
 	check(absf(actor.position.x - (x - 130.0)) < 3.0, "Left blink travels 130px")
 	actor.reset_training()
