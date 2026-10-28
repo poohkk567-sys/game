@@ -24,7 +24,6 @@ func _draw() -> void:
 	if fighter.state_name == "GUARD":
 		draw_arc(Vector2(d * 20, -87), 66, -1.3 if d > 0 else PI - 1.3, 1.3 if d > 0 else PI + 1.3, 24, Color(0.66, 0.45, 1, 0.7), 3, false)
 	if fighter.blink_timer > 0.0:
-		_blink_fx(float(fighter.facing), fighter.blink_progress(), t)
 		return
 	if fighter.action_timer <= 0.0:
 		return
@@ -98,33 +97,3 @@ func _ultimate(p: float, t: float) -> void:
 	else:
 		var q: float = (p - 0.80) / 0.20
 		_cell(DRAGON, 12 + mini(3, floori(q * 4)), Vector2(395, -155), Vector2(620, 345), 1.0 - q * 0.25)
-
-# Rendered behind the complete figure, separate from character sprites.
-func _blink_fx(d: float, progress: float, seconds: float) -> void:
-	var index: int = mini(11, floori(clampf(progress, 0.0, 0.99999) * 12.0))
-	var bright := Color(0.86, 0.54, 1, 0.85)
-	var violet := Color(0.54, 0.11, 0.95, 0.82)
-	if index in [1,2,3]:
-		for i in range(6 + index * 3):
-			var x: float = sin(i * 8.1) * (28 + index * 8)
-			var y: float = -6 - absf(cos(i * 3.7)) * (12 + index * 5)
-			draw_rect(Rect2(x,y,4,4),violet)
-		draw_arc(Vector2.ZERO, 35 + index * 11, 3.3, 6.0, 24, bright, 3, false)
-	elif index in [4,5,6,7]:
-		for i in range(9):
-			var y: float = -143 + i * 16
-			var x: float = -d * (30 + i * 9)
-			draw_line(Vector2(x,y),Vector2(x+d*(85+index*14),y+sin(seconds*25+i)*12),violet,5, false)
-			if i % 2 == 0:
-				draw_line(Vector2(x,y-3),Vector2(x+d*(65+index*9),y-3),bright,2,false)
-		for j in range(16):
-			var px: float = sin(j * 8.11) * 99
-			var py: float = -24 - absf(sin(j * 2.9 + seconds * 8)) * 99
-			draw_rect(Rect2(px,py,3,3),violet)
-	elif index in [8,9,10]:
-		var fade: float = 1.0 - (index - 8.0) / 3.0
-		for i in range(18):
-			var px: float = sin(i * 7.11) * 65
-			var py: float = -9 - absf(cos(i * 3.9)) * 38
-			draw_rect(Rect2(px,py,4,4),Color(0.65,0.21,1,fade*0.75))
-		draw_arc(Vector2.ZERO,58-(index-8)*13,PI,TAU,32,Color(0.92,0.64,1,fade),3,false)

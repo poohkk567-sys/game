@@ -27,6 +27,7 @@ const ATTACKS: Dictionary = {
 }
 const Pulse = preload("res://scripts/character/dark_pulse.gd")
 const Effects = preload("res://scripts/character/combat_effects.gd")
+const ShadowBlinkVFX = preload("res://scripts/effects/shadow_blink_vfx.gd")
 
 @onready var rig: Node2D = $Rig
 @onready var body_shape: CollisionShape2D = $CollisionShape2D
@@ -167,6 +168,11 @@ func _start_blink(direction: int) -> bool:
 	jump_buffer = 0.0
 	_set_state("BLINK")
 	announce("SHADOW BLINK / 15 MP")
+	var blink_effect: Node2D = ShadowBlinkVFX.new()
+	blink_effect.configure(self)
+	get_parent().add_child(blink_effect)
+	# Behind the intact fighter, above the stage art; never follows the actor.
+	get_parent().move_child(blink_effect, get_index())
 	return true
 
 func blink_progress() -> float:
@@ -307,6 +313,7 @@ func reset_training() -> void:
 	rig.reset_pose()
 	_update_body_shape()
 	get_tree().call_group("dark_pulses", "queue_free")
+	get_tree().call_group("shadow_blink_effects", "queue_free")
 	announce("Training reset")
 
 func _draw() -> void:

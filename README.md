@@ -6,6 +6,12 @@
 
 [ชมวิดีโอทุกท่าจากเกมจริง](docs/PHUZASHI_All_Moves.mp4)
 
+## ล่าสุด: Shadow Blink พร้อมเอฟเฟกต์รอยแยก 16 เฟรม
+
+[ดาวน์โหลดโปรเจกต์ทดสอบ Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/shadow-blink-enhanced-vfx/docs/downloads/PHUZASHI_Shadow_Blink_FX_Godot.zip?raw=true) — แตก ZIP → Import `project.godot` → F5 → แตะ A หรือ D สองครั้งเพื่อพุ่งหลบ
+
+เพิ่มรอยแยกต้นทาง เส้นพลังสายฟ้า เงาร่างตามหลัง และวงระเบิดปลายทาง ใช้ภาพที่ผู้ใช้เลือก ดู [รายละเอียดและภาพในเกม](docs/SHADOW_BLINK_TH.md) หรือ [วิดีโอพุ่งซ้าย–ขวา](docs/PHUZASHI_Shadow_Blink_FX.mp4) รอบนี้ไม่มี EXE ใหม่
+
 ## ดาวน์โหลดไฟล์เล่นบน Windows
 
 [ดาวน์โหลด PHUZASHI สำหรับ Windows 64-bit (.zip)](https://github.com/poohkk567-sys/game/blob/codex/phuzashi-training-complete/docs/downloads/PHUZASHI_Windows_x64.zip?raw=true)
