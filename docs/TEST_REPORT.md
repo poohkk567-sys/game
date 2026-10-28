@@ -2,12 +2,22 @@
 
 ## Current result
 
-| Engine | Import and gameplay | Actual spritesheet rendering |
+| Engine | Import and gameplay | Red Cap rendered frames |
 | --- | --- | --- |
-| Godot 4.2.2 stable (`15073afe3`) | **163 checks, 0 failures** | **192 frames, 0 failures** |
-| Godot 4.6.3 stable (`7d41c59c4`) | **163 checks, 0 failures** | **192 frames, 0 failures** |
+| Godot 4.2.2 stable (`15073afe3`) | **459 checks, 0 failures** | **224 frames, 0 failures** |
+| Godot 4.6.3 stable (`7d41c59c4`) | **459 checks, 0 failures** | **224 frames, 0 failures** |
 
-Gameplay checks comprise 88 existing physics/source-art checks and 75 spritesheet checks. They run inside Godot against the real main scene and physics server. The final resource was generated with the oldest supported engine and loaded successfully on both versions.
+Current gameplay coverage is Training 88 + Sprite Trial 75 + VFX 11 + Blink 13 + Blink VFX 20 + Combat Combos 90 + Combo Poses 30 + Demon Bind 55 + Red Cap 77 = **459 checks per engine**. The tests load the real main scene and exercise actual physics and combat queries. The original PHUZASHI suites remain unchanged.
+
+The new Red Cap bank contains fourteen clips of eight complete drawings (112 total), including distinct hook, uppercut, spinning kick and axe kick. Aerial attacks reuse this character's own normal artwork. All drawings follow the approved hairless red-cap reference. The PHUZASHI master retains its original SHA-256, and original PNGs/resources remain byte-identical.
+
+Red Cap checks cover real Tab switching, normal locomotion and facing, crouch/guard holding, HIT/FALL recovery, three-stage combos and aerial damage in both directions, MP preservation, demo coverage, pause/reset, switching during attacks, and removal of old effects. They verify that Red Cap has no PHUZASHI skill animations or powered-fist effects, and switching back restores Dark Pulse.
+
+Godot 4.2 headless does not forward parsed keyboard events to the Viewport input handler. The headless key helper sends matching key events to the stage input handler; windowed tests use `Input.parse_input_event`. Native Godot 4.2 Tab dispatch was also checked successfully.
+
+Native GL Compatibility rendering also passed the retained PHUZASHI mesh (216 silhouettes), original sprite bank (192 frames), and distinct combo bank (64 frames) on Godot 4.6.3. Alongside the new 224 Red Cap frames, the current render regression covers **696 samples**, all passing. Godot 4.2.2 independently rendered all 224 Red Cap samples successfully. The only renderer warning was unsupported VSync on the virtual display.
+
+The new binary SpriteFrames resource was saved with **Godot 4.2.2** and loaded on both versions.
 
 ## Coverage
 

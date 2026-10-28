@@ -75,6 +75,21 @@ var effects: Node2D
 var purple_fist: Node2D
 var movement_lock: Node
 var demon_spawned: bool = false
+var fighter_profile: String = "PHUZASHI"
+var display_name: String = "PHUZASHI"
+var specials_enabled: bool = true
+
+func select_fighter(profile: String) -> bool:
+	if profile not in ["PHUZASHI","RED_CAP"]:
+		return false
+	fighter_profile = profile
+	display_name = "RED CAP" if profile == "RED_CAP" else "PHUZASHI"
+	specials_enabled = profile == "PHUZASHI"
+	rig.set_character_profile(profile)
+	visited = {"IDLE":true}
+	reset_training()
+	announce(display_name + (" / Normal moves only · special skills coming later" if not specials_enabled else " / Dark Pulse"))
+	return true
 
 func _ready() -> void:
 	add_to_group("bind_targets")
@@ -212,6 +227,8 @@ func _physics_process(delta: float) -> void:
 	effects.queue_redraw()
 
 func _start_blink(direction: int) -> bool:
+	if not specials_enabled:
+		return false
 	if is_movement_locked() or blink_timer > 0.0 or blink_cooldown > 0.0 or action_timer > 0.0:
 		return false
 	if not is_on_floor() or Input.is_action_pressed("crouch") or Input.is_action_pressed("guard"):
@@ -259,6 +276,9 @@ func _step_blink(delta: float) -> void:
 		_set_state("IDLE")
 
 func start_action(action: String) -> bool:
+	if not specials_enabled and action in ["SPECIAL","ULTIMATE","DEMON_BIND"]:
+		announce("RED CAP / Special skills are not assigned yet")
+		return false
 	if is_movement_locked() or blink_timer > 0.0:
 		return false
 	if Input.is_action_pressed("guard") or (Input.is_action_pressed("crouch") and action != "DEMON_BIND"):
@@ -419,7 +439,7 @@ func _process_attack() -> void:
 			struck[target.get_instance_id()] = true
 			target.take_hit(int(config[2]), action_name)
 			target_struck.emit(int(config[2]))
-			if action_name == "PUNCH_3":
+			if action_name == "PUNCH_3" and specials_enabled:
 				var impact: Node2D = PurpleImpact.new()
 				impact.position = target.global_position + Vector2(-facing*12,-30)
 				impact.direction = facing

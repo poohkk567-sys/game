@@ -4,6 +4,8 @@ extends Node2D
 ## At the rest pose the pieces reconstruct the approved master exactly.
 
 const DraftAnimation = preload("res://scripts/character/draft_sprite_animation.gd")
+const RedCapAnimation = preload("res://scripts/character/red_cap_animation.gd")
+var fighter_profile: String = "PHUZASHI"
 @export var use_draft_spritesheet: bool = false
 var draft_animation: AnimatedSprite2D
 
@@ -277,13 +279,26 @@ func apply_pose(pose: Array, plant_on_floor: bool = true) -> void:
 	_sync_presentation()
 
 func set_draft_enabled(enabled: bool) -> void:
-	use_draft_spritesheet = enabled
+	use_draft_spritesheet = enabled or fighter_profile == "RED_CAP"
 	_sync_presentation()
+
+func set_character_profile(profile: String) -> void:
+	fighter_profile = profile
+	var old: AnimatedSprite2D = draft_animation
+	remove_child(old)
+	old.queue_free()
+	draft_animation = AnimatedSprite2D.new()
+	draft_animation.name = "DraftSpriteAnimation"
+	draft_animation.set_script(RedCapAnimation if profile == "RED_CAP" else DraftAnimation)
+	add_child(draft_animation)
+	use_draft_spritesheet = true
+	reset_pose()
 
 func _sync_presentation() -> void:
 	if not is_instance_valid(draft_animation):
 		return
-	skin.visible = not draft_animation.show_state(current_clip,use_draft_spritesheet,animation_progress)
+	var supported: bool = draft_animation.show_state(current_clip,use_draft_spritesheet,animation_progress)
+	skin.visible = not supported and fighter_profile == "PHUZASHI"
 
 func renderer_name() -> String:
 	return "SPRITESHEET" if is_instance_valid(draft_animation) and draft_animation.visible else "MASTER RIG"

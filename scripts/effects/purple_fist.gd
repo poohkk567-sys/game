@@ -21,7 +21,7 @@ func clear() -> void:
 
 func _process(delta: float) -> void:
 	clock += delta
-	active = fighter.action_name == "PUNCH_3" and fighter.action_timer > 0.0
+	active = fighter.specials_enabled and fighter.action_name == "PUNCH_3" and fighter.action_timer > 0.0
 	if not active:
 		if not trail.is_empty():
 			clear()

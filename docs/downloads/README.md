@@ -1,5 +1,9 @@
 # ดาวน์โหลด PHUZASHI — DARK PULSE
 
+รุ่นล่าสุด: [โปรเจกต์ Red Cap (.zip)](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/PHUZASHI_Red_Cap_Normals_Godot.zip?raw=true) · [สไปรต์ชีตแยก](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/RED_CAP_Normal_Spritesheets.zip?raw=true) แตก ZIP → Godot Import `project.godot` → F5 → Tab สลับตัวละคร รอบนี้ไม่มี EXE ใหม่
+
+ไฟล์ Windows ด้านล่างเป็นรุ่นเก่าก่อนเพิ่ม Red Cap
+
 - [Windows 64-bit: เปิดเล่นได้เลย](https://github.com/poohkk567-sys/game/blob/codex/phuzashi-training-complete/docs/downloads/PHUZASHI_Windows_x64.zip?raw=true)
 - [โปรเจกต์ Godot: เปิดแก้ไข](https://github.com/poohkk567-sys/game/blob/codex/phuzashi-training-complete/docs/downloads/PHUZASHI_Godot_Source.zip?raw=true)
 

@@ -1,12 +1,20 @@
 # PHUZASHI — DARK PULSE
 
-เกมต่อสู้ 2D มุมมองด้านข้าง ฉากฝึกตัวละคร PHUZASHI ตัวเดียว สำหรับ Godot **4.2.2+** มีภาพเต็มตัว **128 เฟรม** รวม 12 ท่าหลัก 96 เฟรมและคอมโบท่าใหม่ 32 เฟรม พร้อมโจมตีกลางอากาศ
+เกมต่อสู้ 2D มุมมองด้านข้าง ฉากฝึกสลับเล่น PHUZASHI / RED CAP ทีละตัว สำหรับ Godot **4.2.2+** มีภาพเต็มตัว **240 เฟรม**: PHUZASHI 128 เฟรม และ RED CAP 112 เฟรม พร้อมโจมตีกลางอากาศและคอมโบสามจังหวะ
 
 ![Twelve illustrated moves](docs/screenshots/pose_gallery.png)
 
 [ชมวิดีโอทุกท่าจากเกมจริง](docs/PHUZASHI_All_Moves.mp4)
 
-## ล่าสุด: S + J เรียกปีศาจล็อกเป้า
+## ล่าสุด: ตัวหมวกแดงไม่มีผม พร้อมท่าปกติและคอมโบ
+
+[ดาวน์โหลดเกมทดสอบ Red Cap (.zip)](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/PHUZASHI_Red_Cap_Normals_Godot.zip?raw=true) · [สไปรต์ชีต 112 เฟรม](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/RED_CAP_Normal_Spritesheets.zip?raw=true)
+
+แตก ZIP → Godot Import `project.godot` → F5 → **Tab สลับตัวละคร** มีเดิน วิ่ง กระโดด หมอบ ป้องกัน กระโดดต่อย/เตะ และคอมโบ J–J–J / K–K–K ของตัวใหม่ครบ รวม 16 สถานะท่าปกติ ไม่มีผมโผล่ใต้หมวกแดง สกิลพิเศษของตัวใหม่ยังเว้นไว้ตามที่ขอ
+
+[วิธีเล่นและภาพในเกม](docs/RED_CAP_NORMAL_MOVES_TH.md) · [วิดีโอ](docs/PHUZASHI_Red_Cap_Normals.mp4) ไม่มี EXE ใหม่ในรอบนี้
+
+## S + J เรียกปีศาจล็อกเป้า (PHUZASHI)
 
 [ดาวน์โหลดเกมทดสอบ Demon Bind (.zip)](https://github.com/poohkk567-sys/game/blob/codex/demon-bind-skill/docs/downloads/PHUZASHI_Demon_Bind_Godot.zip?raw=true) — แตก ZIP → Godot Import `project.godot` → F5
 
@@ -54,7 +62,9 @@ godot --path .
 
 ## ท่าทั้งหมด
 
-เพิ่มใหม่ **80 เฟรมใน 5 แผ่น** ต่อจากยืน–เดิน 16 เฟรมที่ผู้ใช้เลือก รูปลักษณ์อ้างอิงตัวละครชุดเดียวกัน ไม่มีตัวละครที่สอง
+ตารางนี้เป็นท่าต้นฉบับ PHUZASHI; ตัวหมวกแดงมีสไปรต์ของตัวเองเพิ่มอีก 112 เฟรมตามลิงก์ด้านบน
+
+เพิ่มใหม่ **80 เฟรมใน 5 แผ่น** ต่อจากยืน–เดิน 16 เฟรมที่ผู้ใช้เลือก รูปลักษณ์อ้างอิง PHUZASHI ชุดเดียวกัน
 
 | ท่า | เฟรม | การเล่น | ภาพต้นทาง |
 | --- | --- | --- | --- |
