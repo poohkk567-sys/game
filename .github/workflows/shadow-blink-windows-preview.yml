@@ -1,0 +1,59 @@
+name: PHUZASHI Shadow Blink Windows preview
+
+on:
+  push:
+    branches:
+      - codex/shadow-blink-art-12f
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preview-exe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Godot 4.6.3 and export templates
+        run: |
+          set -euo pipefail
+          mkdir -p work/engine
+          curl -fL --retry 3 "https://github.com/godotengine/godot/releases/download/4.6.3-stable/Godot_v4.6.3-stable_linux.x86_64.zip" -o work/engine/godot.zip
+          curl -fL --retry 3 "https://github.com/godotengine/godot/releases/download/4.6.3-stable/Godot_v4.6.3-stable_export_templates.tpz" -o work/engine/templates.tpz
+          unzip -q work/engine/godot.zip -d work/engine
+          unzip -q work/engine/templates.tpz -d work/engine
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.6.3.stable"
+          cp work/engine/templates/* "$HOME/.local/share/godot/export_templates/4.6.3.stable/"
+      - name: Import project
+        run: |
+          set -euo pipefail
+          touch work/.gdignore
+          work/engine/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --editor --import --quit
+      - name: Export Windows preview
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          work/engine/Godot_v4.6.3-stable_linux.x86_64 --headless --path . --export-release Windows build/PHUZASHI.exe
+          test -s build/PHUZASHI.exe
+          file build/PHUZASHI.exe
+          echo "Windows EXE was exported on Linux; run-time on Windows is NOT verified." > build/README_FIRST.txt
+          cd build
+          zip -q PHUZASHI_SHADOW_BLINK_WIN64.zip PHUZASHI.exe README_FIRST.txt
+      - name: Package Godot source project
+        run: |
+          zip -q -r build/PHUZASHI_SHADOW_BLINK_SOURCE.zip project.godot scenes scripts assets tests tools README.md README_TH.md docs/SHADOW_BLINK_TH.md
+          test -s build/PHUZASHI_SHADOW_BLINK_SOURCE.zip
+      - name: Upload Godot source project
+        uses: actions/upload-artifact@v4
+        with:
+          name: PHUZASHI-SHADOW-BLINK-Godot-Source
+          path: build/PHUZASHI_SHADOW_BLINK_SOURCE.zip
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload downloadable Windows ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: PHUZASHI-SHADOW-BLINK-Windows-Preview
+          path: build/PHUZASHI_SHADOW_BLINK_WIN64.zip
+          if-no-files-found: error
+          retention-days: 14
