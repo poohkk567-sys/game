@@ -213,7 +213,7 @@ func run() -> void:
 	await frames(ceili(stage.SEQUENCE.size() * 2.4 * 60.0) + 10)
 	stage.set_showcase(false)
 	var demonstrated: bool = true
-	for move: String in player.rig.CLIPS + ["AIR_PUNCH", "AIR_KICK", "PUNCH_2", "PUNCH_3", "KICK_2", "KICK_3", "BLINK"]:
+	for move: String in player.rig.CLIPS + ["AIR_PUNCH", "AIR_KICK", "PUNCH_2", "PUNCH_3", "KICK_2", "KICK_3", "BLINK", "DEMON_BIND"]:
 		demonstrated = demonstrated and player.visited.has(move)
 	expect(demonstrated, "Automatic showcase exercises base moves, aerial attacks, combo stages and Blink")
 	expect(not Input.is_action_pressed("run") and not Input.is_action_pressed("move_right"), "Leaving showcase releases synthetic input")

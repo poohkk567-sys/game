@@ -60,7 +60,7 @@ func run() -> void:
 			check(imported.get_image().get_data() == sprite.FRAMES.get_frame_texture(source,3).get_image().get_data(), "Existing aerial body art is unchanged: " + clip)
 		var config: Array = actor.ATTACKS[clip]
 		var contact_frame: int = sprite.frame_at_progress(clip, float(config[3]) + 0.03)
-		var allowed: Array = [3,4,5] if clip == "KICK_2" or source == "PUNCH" else [4,5]
+		var allowed: Array = [4,5] if source == "KICK" and clip != "KICK_2" else [3,4,5]
 		check(contact_frame in allowed, "Extended strike drawing matches actual hit timing: " + clip)
 
 	for left: bool in [false, true]:

@@ -1,6 +1,8 @@
 extends Area2D
 ## Inanimate practice target; not a fighter or a second character.
 signal struck(damage: int, move_name: String)
+const MovementLock = preload("res://scripts/combat/movement_lock.gd")
+var movement_lock: Node
 var health: int = 100
 var total_damage: int = 0
 var last_damage: int = 0
@@ -14,6 +16,10 @@ var refill_clock: float = 0.0
 
 func _ready() -> void:
 	add_to_group("training_target")
+	add_to_group("bind_targets")
+	movement_lock = MovementLock.new()
+	movement_lock.name = "MovementLock"
+	add_child(movement_lock)
 	var collision := CollisionShape2D.new()
 	var shape := RectangleShape2D.new()
 	shape.size = Vector2(64, 136)
@@ -21,7 +27,8 @@ func _ready() -> void:
 	add_child(collision)
 
 func _process(delta: float) -> void:
-	elapsed += delta
+	if not is_movement_locked():
+		elapsed += delta
 	flash = maxf(0.0, flash - delta)
 	combo_clock = maxf(0.0, combo_clock - delta)
 	if combo_clock <= 0:
@@ -45,6 +52,7 @@ func take_hit(damage: int, move_name: String) -> void:
 	struck.emit(damage, move_name)
 
 func reset_target() -> void:
+	movement_lock.clear()
 	health = 100
 	total_damage = 0
 	last_damage = 0
@@ -55,9 +63,21 @@ func reset_target() -> void:
 	flash = 0.0
 	refill_clock = 0.0
 
+func get_bind_anchor() -> Vector2:
+	return global_position
+
+func is_movement_locked() -> bool:
+	return movement_lock.is_locked()
+
+func apply_movement_lock(seconds: float) -> bool:
+	movement_lock.apply(seconds)
+	last_move = "DEMON_BIND"
+	last_damage = 0
+	return true
+
 func _draw() -> void:
 	var bob: float = sin(elapsed * 2) * 4
-	var shake: float = sin(elapsed * 90) * flash * 14
+	var shake: float = 0.0 if is_movement_locked() else sin(elapsed * 90) * flash * 14
 	draw_set_transform(Vector2(0, 75), 0, Vector2(1,0.23))
 	draw_circle(Vector2.ZERO, 45, Color(0.04,0.06,0.13,0.23))
 	draw_arc(Vector2.ZERO, 42, 0, TAU, 32, Color("bcb7e0"), 3)

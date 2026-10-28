@@ -30,11 +30,12 @@ func _draw() -> void:
 	var last_move_label: String = crystal.last_move.replace("AIR_", "JUMP ").replace("_", " ")
 	_text(Vector2(970,72), "LAST  %s  /  %d DMG" % [last_move_label,crystal.last_damage], 13, PURPLE)
 	_text(Vector2(970,94), "TOTAL  %03d    HITS  %02d" % [crystal.total_damage,crystal.hit_count], 13, MUTED)
-	_text(Vector2(970,116), "COMBO  %02d" % crystal.combo, 13, CYAN)
+	var target_bound: bool = crystal.is_movement_locked()
+	_text(Vector2(970,116), "BOUND  %.2f s" % crystal.movement_lock.remaining if target_bound else "COMBO  %02d" % crystal.combo, 13, PURPLE if target_bound else CYAN)
 	# Compact state card keeps the center of the arena open.
 	_panel(Rect2(26,155,207,117), Color("677eaa"))
 	_text(Vector2(42,178), "MOVE / " + ("LEFT" if player.facing < 0 else "RIGHT"), 12, MUTED)
-	var move_label: String = player.state_name.replace("AIR_", "JUMP ")
+	var move_label: String = player.state_name.replace("AIR_", "JUMP ").replace("_", " ")
 	if player.combo_step > 0 and player.action_timer > 0.0:
 		move_label = "%s %d/3" % [player.combo_family, player.combo_step]
 	_text(Vector2(42,207), move_label, 23, WHITE)
@@ -52,6 +53,9 @@ func _draw() -> void:
 	# Target label and health stay near the target rather than obscuring it.
 	var target_x: float = crystal.position.x
 	_text(Vector2(target_x-57,403), "PRACTICE TARGET", 11, Color("293c59"))
+	if target_bound:
+		_panel(Rect2(target_x-78,334,156,29),PURPLE)
+		_text(Vector2(target_x-66,354),"BOUND  %.2f s" % crystal.movement_lock.remaining,15,WHITE)
 	draw_rect(Rect2(target_x-42,414,84,4), Color("344b61"))
 	draw_rect(Rect2(target_x-42,414,84*crystal.health/100.0,4), Color("d6bfef"))
 	if player.message_time > 0.0:
@@ -61,7 +65,7 @@ func _draw() -> void:
 		_text(Vector2(463,232), "SHOWCASE  %02d / %02d   %s" % [stage.showcase_index+1, stage.SEQUENCE.size(), stage.SEQUENCE[maxi(0,stage.showcase_index)].replace("_", " ")], 16, WHITE)
 	# Footer is inside the safe screen area, with every control visible.
 	_panel(Rect2(26,646,1228,56), Color("69728c"))
-	_text(Vector2(44,668), "A/D MOVE   SHIFT RUN   SPACE JUMP   J/J/J PUNCH COMBO   K/K/K KICK COMBO   SPACE+J/K AIR ATTACK   U SPECIAL   I ULTIMATE", 12, WHITE)
+	_text(Vector2(44,668), "A/D MOVE   SHIFT RUN   SPACE JUMP   J/J/J PUNCH COMBO   K/K/K KICK COMBO   SPACE+J/K AIR   S+J DEMON BIND 25MP   U/I SKILLS", 12, WHITE)
 	_text(Vector2(44,690), "A+A/D+D BLINK 15MP   S CROUCH   L GUARD   H/N TEST HIT/FALL   R RESET   F1 HELP   F2 DEMO   F3 BOXES   F4 ART   ESC PAUSE", 12, MUTED)
 	if player.debug_hitboxes:
 		_text(Vector2(1021,627), "HITBOXES ON", 12, CYAN)
@@ -80,6 +84,7 @@ func _draw_move_list() -> void:
 		["SPACE + J", "Jump punch · keep moving in the air", "9 DMG"],
 		["SPACE + K", "Jump kick · landing ends the attack", "15 DMG"],
 		["S / DOWN", "Crouch · lower hurtbox", "—"], ["L", "Guard · test with H or N", "2 chip"],
+		["S + J", "Demon Bind · lock target 0.7 s", "25 MP"],
 		["J / J / J", "Punch combo · three separate taps", "8 / 10 / 16"], ["K / K / K", "Kick combo · three separate taps", "14 / 16 / 22"],
 		["U", "Dark Pulse · traveling projectile", "25 MP / 24 DMG"],
 		["I", "Ultimate · violet dragon", "60 MP / 60 DMG"],

@@ -30,6 +30,7 @@ const ATTACKS: Dictionary = {
 	"KICK_3": [0.64, 0.0, 22, 0.34, 0.65, 174.0, 92.0],
 	"AIR_PUNCH": [0.32, 0.0, 9, 0.24, 0.60, 104.0, 76.0],
 	"AIR_KICK": [0.42, 0.0, 15, 0.30, 0.66, 146.0, 88.0],
+	"DEMON_BIND": [0.62, 25.0, 0, 0.32, 0.48, 620.0, 180.0],
 	"SPECIAL": [0.90, 25.0, 24, 0.42, 0.55, 0.0, 0.0],
 	"ULTIMATE": [1.80, 60.0, 60, 0.48, 0.80, 620.0, 180.0]
 }
@@ -38,6 +39,8 @@ const Effects = preload("res://scripts/character/combat_effects.gd")
 const ShadowBlinkVFX = preload("res://scripts/effects/shadow_blink_vfx.gd")
 const PurpleFist = preload("res://scripts/effects/purple_fist.gd")
 const PurpleImpact = preload("res://scripts/effects/purple_punch_impact.gd")
+const MovementLock = preload("res://scripts/combat/movement_lock.gd")
+const DemonBind = preload("res://scripts/effects/demon_bind.gd")
 
 @onready var rig: Node2D = $Rig
 @onready var body_shape: CollisionShape2D = $CollisionShape2D
@@ -70,8 +73,14 @@ var message: String = "Approach the crystal to practice attacks"
 var message_time: float = 3.0
 var effects: Node2D
 var purple_fist: Node2D
+var movement_lock: Node
+var demon_spawned: bool = false
 
 func _ready() -> void:
+	add_to_group("bind_targets")
+	movement_lock = MovementLock.new()
+	movement_lock.name = "MovementLock"
+	add_child(movement_lock)
 	effects = Node2D.new()
 	effects.set_script(Effects)
 	effects.name = "CombatEffects"
@@ -93,6 +102,14 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("reset"):
 		reset_training()
 		get_tree().call_group("training_target", "reset_target")
+		return
+	if is_movement_locked():
+		velocity = Vector2.ZERO
+		jump_buffer = 0.0
+		_set_state("BOUND")
+		rig.animate("BOUND",delta,facing,0.4)
+		queue_redraw()
+		effects.queue_redraw()
 		return
 	if Input.is_action_just_pressed("test_hit"):
 		receive_training_hit(false)
@@ -128,7 +145,10 @@ func _physics_process(delta: float) -> void:
 		jump_buffer = 0.0
 		coyote = 0.0
 		_clear_combo()
-	if not crouching and not guarding:
+	var bind_pressed: bool = crouching and Input.is_action_pressed("punch") and (Input.is_action_just_pressed("punch") or Input.is_action_just_pressed("crouch"))
+	if bind_pressed:
+		start_action("DEMON_BIND")
+	elif not crouching and not guarding:
 		for binding: String in ["ultimate", "special", "kick", "punch"]:
 			if Input.is_action_just_pressed(binding):
 				start_action(binding.to_upper())
@@ -192,7 +212,7 @@ func _physics_process(delta: float) -> void:
 	effects.queue_redraw()
 
 func _start_blink(direction: int) -> bool:
-	if blink_timer > 0.0 or blink_cooldown > 0.0 or action_timer > 0.0:
+	if is_movement_locked() or blink_timer > 0.0 or blink_cooldown > 0.0 or action_timer > 0.0:
 		return false
 	if not is_on_floor() or Input.is_action_pressed("crouch") or Input.is_action_pressed("guard"):
 		return false
@@ -239,13 +259,13 @@ func _step_blink(delta: float) -> void:
 		_set_state("IDLE")
 
 func start_action(action: String) -> bool:
-	if blink_timer > 0.0:
+	if is_movement_locked() or blink_timer > 0.0:
 		return false
-	if Input.is_action_pressed("guard") or Input.is_action_pressed("crouch"):
+	if Input.is_action_pressed("guard") or (Input.is_action_pressed("crouch") and action != "DEMON_BIND"):
 		return false
 	if action in ["PUNCH", "KICK"]:
 		return _request_normal_attack(action)
-	if action not in ["SPECIAL", "ULTIMATE"] or action_timer > 0.0 or not is_on_floor() or velocity.y < 0.0:
+	if action not in ["SPECIAL", "ULTIMATE", "DEMON_BIND"] or action_timer > 0.0 or not is_on_floor() or velocity.y < 0.0:
 		return false
 	var config: Array = ATTACKS[action]
 	if energy < float(config[1]):
@@ -284,6 +304,7 @@ func _begin_attack(action: String) -> void:
 	action_timer = action_duration
 	struck.clear()
 	pulse_spawned = false
+	demon_spawned = false
 	if not is_air_attack():
 		velocity.x = 0.0
 	jump_buffer = 0.0
@@ -293,6 +314,45 @@ func _begin_attack(action: String) -> void:
 		announce("%s COMBO / %d OF 3" % [combo_family, combo_step])
 	elif is_air_attack():
 		announce("JUMP " + action.trim_prefix("AIR_"))
+	elif action == "DEMON_BIND":
+		announce("DEMON BIND / 25 MP")
+
+func is_movement_locked() -> bool:
+	return is_instance_valid(movement_lock) and movement_lock.is_locked()
+
+func get_bind_anchor() -> Vector2:
+	return global_position+Vector2(0,-78)
+
+func apply_movement_lock(seconds: float) -> bool:
+	if blink_invulnerable():
+		return false
+	movement_lock.apply(seconds)
+	velocity = Vector2.ZERO
+	action_name = ""
+	action_timer = 0.0
+	blink_timer = 0.0
+	jump_buffer = 0.0
+	_clear_combo()
+	purple_fist.clear()
+	_set_state("BOUND")
+	_update_body_shape()
+	for blink_visual: Node in get_tree().get_nodes_in_group("shadow_blink_effects"):
+		if blink_visual.fighter == self:
+			blink_visual.queue_free()
+	return true
+
+func find_bind_target() -> Node2D:
+	var best: Node2D = null
+	var distance: float = 621.0
+	for candidate: Node in get_tree().get_nodes_in_group("bind_targets"):
+		if candidate == self or not candidate is Node2D or not candidate.has_method("apply_movement_lock") or not candidate.has_method("is_movement_locked"):
+			continue
+		var aim: Vector2 = candidate.get_bind_anchor() if candidate.has_method("get_bind_anchor") else candidate.global_position
+		var forward: float = (aim.x-global_position.x)*facing
+		if forward >= 0.0 and forward <= 620.0 and absf(aim.y-global_position.y) <= 180.0 and forward < distance:
+			best = candidate
+			distance = forward
+	return best
 
 func _combo_clip() -> String:
 	return combo_family if combo_step <= 1 else "%s_%d" % [combo_family, combo_step]
@@ -323,6 +383,16 @@ func _process_attack() -> void:
 	var config: Array = ATTACKS[action_name]
 	var phase: float = action_progress()
 	if phase < float(config[3]) or phase > float(config[4]):
+		return
+	if action_name == "DEMON_BIND":
+		if not demon_spawned:
+			demon_spawned = true
+			var demon: Node2D = DemonBind.new()
+			var victim: Node2D = find_bind_target()
+			demon.configure(self,victim)
+			get_parent().add_child(demon)
+			if is_instance_valid(victim) and victim.get_parent() == get_parent():
+				get_parent().move_child(demon,victim.get_index())
 		return
 	if action_name == "SPECIAL":
 		if not pulse_spawned:
@@ -417,6 +487,9 @@ func reset_training() -> void:
 	get_tree().call_group("dark_pulses", "queue_free")
 	get_tree().call_group("shadow_blink_effects", "queue_free")
 	get_tree().call_group("purple_punch_impacts", "queue_free")
+	get_tree().call_group("demon_bind_effects", "queue_free")
+	get_tree().call_group("movement_locks", "clear")
+	demon_spawned = false
 	if is_instance_valid(purple_fist):
 		purple_fist.clear()
 	announce("Training reset")
@@ -428,5 +501,5 @@ func _draw() -> void:
 	draw_set_transform(Vector2.ZERO)
 	if debug_hitboxes:
 		draw_rect(Rect2(body_shape.position - body_shape.shape.size * 0.5, body_shape.shape.size), Color(0.2, 1, 0.8, 0.3), false, 2.0)
-		if attack_phase() == "ACTIVE" and action_name != "SPECIAL":
+		if attack_phase() == "ACTIVE" and action_name not in ["SPECIAL", "DEMON_BIND"]:
 			draw_rect(Rect2(attack_shape.position - attack_shape.shape.size * 0.5, attack_shape.shape.size), Color(1, 0.3, 0.4, 0.6), false, 2.0)
