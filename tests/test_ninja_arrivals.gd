@@ -7,7 +7,7 @@ func run() -> void:
 	await frames(8)
 	a = stage.p1
 	b = stage.p2
-	check(Grip.get_frame_count("GRIP") == 8,"Rear grapple owns eight separate crouched gripping drawings")
+	check(Grip.get_frame_count("GRIP") == 8,"Rear ninja owns eight separate standing chain-pulling drawings")
 	for profile: String in ["PHUZASHI","PHUZASHI_CHILL"]:
 		for left: bool in [false,true]:
 			await setup(profile,left)
@@ -35,7 +35,7 @@ func run() -> void:
 			check(demon.phase == "FLIGHT" and not demon.guardian.visible and demon.global_position == demon.origin,"Teleport interval is invisible, with no sliding spirit across the stage")
 			await frames(17)
 			check(demon.caught and demon.phase == "HOLD" and b.is_movement_locked() and demon.lock_time == 1.1,"Rear teleport starts a real empowered 1.1-second hold")
-			check(demon.guardian.sprite_frames == Grip and demon.guardian.sprite_frames != a.status_aura.sprite.sprite_frames,"Rear creature uses a new pose, not a scaled copy of the stand")
+			check(demon.guardian.sprite_frames == Grip and demon.guardian.sprite_frames != a.status_aura.sprite.sprite_frames,"Standing chain ninja uses a separate pose from the large stand")
 			check(demon.grip_position.x*b.facing < 0 and demon.direction == b.facing and demon.visual_height == 116,"Compact creature attaches behind the victim's back in either direction")
 			var atlas: AtlasTexture = Grip.get_frame_texture("GRIP",demon.guardian.frame)
 			var eye: Vector2 = demon.guardian.to_global(atlas.margin.position+atlas.get_meta("core"))

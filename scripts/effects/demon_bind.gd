@@ -1,13 +1,14 @@
 extends Node2D
-## Smoke teleport, then a compact rear grapple. The victim owns the real lock.
+## A small standing ninja teleports behind the victim and pulls foreground chains.
 const FRAMES: SpriteFrames = preload("res://assets/effects/ninja_grapple_frames.res")
 const EDGES: Shader = preload("res://assets/effects/side_guardians/spectral_aura.gdshader")
 const Smoke = preload("res://scripts/effects/ninja_smoke.gd")
+const Chains = preload("res://scripts/effects/bind_chains.gd")
 const LOCK_TIME: float = 0.7
 const SUMMON_TIME: float = 0.12
 const FLIGHT_TIME: float = 0.22 # Hidden teleport interval; not a travelling projectile.
 const RELEASE_TIME: float = 0.22
-const REAR_OFFSET: float = 64
+const REAR_OFFSET: float = 104
 var lock_time: float = LOCK_TIME
 var caster: Node2D
 var target: Node2D
@@ -23,6 +24,7 @@ var guardian: AnimatedSprite2D
 var sprite: AnimatedSprite2D
 var visual_height: float = 0
 var grip_position: Vector2
+var chains: Node2D
 
 func configure(source: Node2D, victim: Node2D) -> void:
 	caster = source
@@ -44,8 +46,15 @@ func _ready() -> void:
 	var spectral := ShaderMaterial.new()
 	spectral.shader = EDGES
 	guardian.material = spectral
+	# The victim used to cover this effect because it was ordered behind them.
+	# Keep the small ninja separate in space AND above the fighter draw layer.
+	guardian.z_index = 1
 	add_child(guardian)
 	sprite = guardian
+	chains = Chains.new()
+	chains.z_index = 2
+	chains.visible = false
+	add_child(chains)
 	Smoke.spawn(get_parent(),origin+Vector2(0,78),90)
 	_update_visual()
 
@@ -86,7 +95,8 @@ func _arrive() -> void:
 			if other != self and other.target == target and other.phase == "HOLD": other.begin_release()
 		phase = "HOLD"
 		phase_age = 0
-		Smoke.spawn(get_parent(),global_position+Vector2(-direction*REAR_OFFSET,78),120)
+		_update_visual()
+		Smoke.spawn(get_parent(),global_position+grip_position,100)
 		if is_instance_valid(caster): caster.announce("NINJA BIND / TARGET LOCKED %.1fs" % lock_time)
 	else:
 		begin_release()
@@ -96,7 +106,7 @@ func begin_release() -> void:
 	if phase == "RELEASE": return
 	phase = "RELEASE"
 	phase_age = 0
-	if caught: Smoke.spawn(get_parent(),global_position+Vector2(-direction*REAR_OFFSET,78),90)
+	if caught: Smoke.spawn(get_parent(),global_position+grip_position,90)
 
 func _update_visual() -> void:
 	guardian.visible = phase != "FLIGHT" and (phase != "RELEASE" or caught)
@@ -108,29 +118,34 @@ func _update_visual() -> void:
 	guardian.frame = floori(age*10)%8
 	var factor: float = visual_height/float(FRAMES.get_meta("height"))
 	guardian.scale = Vector2(direction*factor,factor)
-	# Both ninja and victim face the same way: the ninja hugs from the BACK.
+	# Both face the same way. Stand apart from the victim and pull the chains.
 	grip_position = Vector2(-direction*REAR_OFFSET,78)
+	var atlas: AtlasTexture = FRAMES.get_frame_texture("GRIP",guardian.frame)
+	var ink: Rect2 = atlas.get_meta("ink_bounds")
+	var left: float = global_position.x+grip_position.x+(atlas.margin.position.x+ink.position.x-512)*factor*direction
+	var right: float = left+ink.size.x*factor*direction
+	# At arena edges keep the complete small body on screen, still on the rear
+	# side. Its independent foreground layer prevents the victim hiding it.
+	grip_position.x += maxf(0,12-minf(left,right))-maxf(0,maxf(left,right)-1268)
 	guardian.position = grip_position-Vector2(512*direction,960)*factor
 	guardian.modulate = Color(1,1,1,alpha*0.94)
-	var atlas: AtlasTexture = FRAMES.get_frame_texture("GRIP",guardian.frame)
 	var spectral: ShaderMaterial = guardian.material
 	spectral.set_shader_parameter("region_origin",atlas.region.position/atlas.atlas.get_size())
 	spectral.set_shader_parameter("region_extent",atlas.region.size/atlas.atlas.get_size())
 
+func visual_bounds() -> Rect2:
+	var atlas: AtlasTexture = FRAMES.get_frame_texture("GRIP",guardian.frame)
+	var ink: Rect2 = atlas.get_meta("ink_bounds")
+	var start: Vector2 = guardian.to_global(atlas.margin.position+ink.position)
+	var end: Vector2 = guardian.to_global(atlas.margin.position+ink.end)
+	return Rect2(Vector2(minf(start.x,end.x),minf(start.y,end.y)),(end-start).abs())
+
 func _draw() -> void:
 	if phase != "HOLD": return
-	var pulse: float = 0.7+sin(age*28)*0.15
-	for i in range(2):
-		draw_set_transform(Vector2(0,67-i*25),0,Vector2(1,0.25))
-		draw_arc(Vector2.ZERO,34+i*5,-age*(2+i),TAU-age*(2+i),32,Color(0.74,0.25,1,pulse*0.7),2,false)
-	draw_set_transform(Vector2.ZERO)
-	# Small cuffs connect the creature's grip to the victim's calves.
-	for side in [-1,1]:
-		var cuff := Vector2(side*13,58)
-		draw_arc(cuff,9,0,TAU,12,Color(0.91,0.67,1,pulse),2,false)
-		var chain := PackedVector2Array([Vector2(-direction*27,28),Vector2(-direction*18,40),cuff])
-		draw_polyline(chain,Color(0.73,0.35,1,pulse),2,false)
-		if empowered:
-			for link in range(4):
-				var point: Vector2 = chain[0].lerp(cuff,link/3.0)
-				draw_arc(point,4,0,TAU,8,Color(0.96,0.78,1,pulse),1,false)
+	# Rear halves sit behind the target; the separate foreground draws the front.
+	for row in range(3):
+		var points := PackedVector2Array()
+		for step in range(16):
+			var theta: float = PI+step*PI/15
+			points.append(Vector2(cos(theta)*34,Chains.TORSO_OFFSET-23+row*28+sin(theta)*10))
+		Chains.path(self,points,0.45)

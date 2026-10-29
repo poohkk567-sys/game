@@ -48,3 +48,6 @@ if rg -n "SCRIPT ERROR:|ERROR:|FAIL " work/side-guardians-check.log; then exit 1
 
 "$engine" --headless --path . --fixed-fps 60 --script tests/test_ninja_arrivals.gd 2>&1 | tee work/ninja-arrivals-check.log
 if rg -n "SCRIPT ERROR:|ERROR:|FAIL " work/ninja-arrivals-check.log; then exit 1; fi
+
+"$engine" --headless --path . --fixed-fps 60 --script tests/test_standing_bind.gd 2>&1 | tee work/standing-bind-check.log
+if rg -n "SCRIPT ERROR:|ERROR:|FAIL " work/standing-bind-check.log; then exit 1; fi
