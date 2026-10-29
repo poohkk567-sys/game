@@ -1,6 +1,6 @@
 extends Node2D
 ## Full 16-frame sprite VFX, drawn separately from the approved fighter artwork.
-const PULSE: Texture2D = preload("res://assets/effects/dark_pulse_vfx.png")
+const Shuriken = preload("res://scripts/effects/purple_shuriken_art.gd")
 const CARROT_HEAD: Texture2D = preload("res://assets/effects/carrot_headbutt_vfx.png")
 const CARROT_BARRAGE: Texture2D = preload("res://assets/effects/carrot_barrage_vfx.png")
 var defense_player: AudioStreamPlayer
@@ -146,12 +146,13 @@ func _special(p: float, t: float) -> void:
 	var hand := Vector2(49, -88)
 	if p < 0.42:
 		var q: float = p / 0.42
-		_cell(PULSE, mini(3, floori(q * 4)), hand, Vector2(132, 132))
+		Shuriken.draw(self,Vector2(fighter.facing*hand.x,hand.y),t*24,lerpf(0.25,0.8,q),smoothstep(0,0.2,q))
+		draw_set_transform(Vector2.ZERO,0,Vector2(fighter.facing,1))
 		for i in range(3):
 			draw_arc(hand, 25 + i * 10 + q * 10, -t * (3 + i), -t * (3 + i) + PI * 1.4, 26, Color(0.7, 0.18, 1, (0.3 + q * 0.4) / (i + 1)), 3, false)
 	elif p < 0.63:
 		var q: float = (p - 0.42) / 0.21
-		_cell(PULSE, 4 + mini(3, floori(q * 4)), hand + Vector2(q * 30, 0), Vector2(172, 144), 1.0 - q * 0.2)
+		draw_arc(hand,36+q*35,-t*24,-t*24+PI*1.5,28,Color(0.8,0.4,1,(1-q)*0.8),3,false)
 	else:
 		var fade: float = maxf(0.0, (1.0 - p) / 0.37)
 		for i in range(10):

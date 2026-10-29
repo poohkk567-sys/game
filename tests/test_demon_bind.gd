@@ -157,7 +157,7 @@ func run() -> void:
 	await chord()
 	check(await until_locked(target),"Left-facing S+J catches the target to the left")
 	demon = get_nodes_in_group("demon_bind_effects")[0]
-	check(demon.direction == -1 and demon.sprite.scale.x < 0,"Demon art mirrors with the casting direction")
+	check(demon.direction == -1 and demon.sprite.scale.x < 0,"Training ninja mirrors the casting direction when target has no facing")
 	await reset()
 	actor.position.x = 1035
 	check(actor.find_bind_target() == null,"Targets behind the caster are not selected")

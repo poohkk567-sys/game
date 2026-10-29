@@ -31,7 +31,7 @@ func record() -> void:
 	for left: bool in [false,true]:
 		await setup("PHUZASHI_CHILL",left)
 		a.start_action("CHEER")
-		await frames(55)
+		await frames(180)
 		a.start_action("DEMON_BIND")
 		await frames(40)
 		await shot("shinobi_left" if left else "shinobi_right")

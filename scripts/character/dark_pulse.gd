@@ -1,6 +1,7 @@
 extends Area2D
 ## Projectile gameplay is unchanged: 24 damage, 620 px/s, one impact.
-## Added: 16-frame visual charge/flight/impact atlas and impact lifetime.
+## Purple rotating shuriken replaces the fireball; legacy impact art is retained.
+const Shuriken = preload("res://scripts/effects/purple_shuriken_art.gd")
 const ATLAS: Texture2D = preload("res://assets/effects/dark_pulse_vfx.png")
 const IMPACT_TIME: float = 0.28
 var direction: int = 1
@@ -8,8 +9,10 @@ var source: Node2D
 var age: float = 0.0
 var impact_age: float = 0.0
 var hit: bool = false
+var spin_angle: float = 0
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	add_to_group("dark_pulses")
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	collision_layer = 0
@@ -30,6 +33,7 @@ func _physics_process(delta: float) -> void:
 			queue_redraw()
 		return
 	age += delta
+	spin_angle += direction*delta*24
 	position.x += float(direction) * 620.0 * delta
 	if age > 1.8 or position.x < -80.0 or position.x > 1360.0:
 		queue_free()
@@ -65,7 +69,6 @@ func _frame(index: int, dimensions: Vector2, opacity: float = 1.0) -> void:
 	draw_texture_rect_region(ATLAS, Rect2(-dimensions * 0.5, dimensions), Rect2(upper, lower - upper), Color(1, 1, 1, opacity), false, true)
 
 func _draw() -> void:
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2(float(direction), 1))
 	if hit:
 		var q: float = clampf(impact_age / IMPACT_TIME, 0.0, 0.9999)
 		_frame(12 + mini(3, floori(q * 4)), Vector2(175 + q * 75, 158 + q * 75), 1.0 - q * 0.2)
@@ -75,9 +78,14 @@ func _draw() -> void:
 			var axis := Vector2.from_angle(i * TAU / 12.0)
 			draw_line(axis * (18 + q * 30), axis * (40 + q * 65), Color(0.67, 0.18, 1, 1.0 - q), 3, false)
 	else:
-		_frame(8 + (floori(age * 12.0) % 4), Vector2(144, 122))
+		for i in range(3,0,-1):
+			Shuriken.draw(self,Vector2(-direction*i*19,0),spin_angle-direction*i*0.38,1-i*0.08,(4-i)*0.07)
+		Shuriken.draw(self,Vector2.ZERO,spin_angle)
+		draw_set_transform(Vector2.ZERO,0,Vector2(direction,1))
 		for i in range(9):
 			var tail := Vector2(-29 - i * 13, sin(age * 28 + i * 2) * (8 + i))
 			draw_rect(Rect2(tail, Vector2(4, 4)), Color(0.62, 0.12, 1, (9.0 - i) / 10.0))
-		draw_arc(Vector2.ZERO, 26, age * 12, age * 12 + PI * 1.4, 25, Color(0.94, 0.73, 1, 0.7), 3, false)
+		for arc in range(2):
+			var start: float = age*24+arc*PI
+			draw_arc(Vector2.ZERO,43,start,start+1.7,18,Color(0.94,0.73,1,0.7),2,false)
 	draw_set_transform(Vector2.ZERO)
