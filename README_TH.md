@@ -1,8 +1,10 @@
 # PHUZASHI — DARK PULSE / คู่มือภาษาไทย
 
-รุ่นปัจจุบัน: [สามตัวละคร ตั้งค่าจอย อัลติฟีโน่และบัฟเชียร์](docs/ROSTER_CONTROLLERS_TH.md) **F7/R3 ตั้งค่าจอย · F8 หน้าแรก · เลือกตัวละครก่อนเริ่มเกม**
+รุ่นปัจจุบัน: [ปรับตัวช่วยหญิงให้เข้ากับ PHUZASHI](docs/CHEER_STYLE_TH.md) คงผมและชุดเดิม ใช้ T / P2 [ / D-pad ขึ้นเรียกเชียร์
 
-[ดาวน์โหลดเกม Godot](https://github.com/poohkk567-sys/game/blob/codex/roster-fino-controller-settings/docs/downloads/PHUZASHI_Roster_Fino_Godot.zip?raw=true) → แตกZIP → Import project.godot → F5
+[ดาวน์โหลดเกม Godot](https://github.com/poohkk567-sys/game/blob/codex/cheer-assist-style/docs/downloads/PHUZASHI_Cheer_Style_Godot.zip?raw=true) → แตกZIP → Import project.godot → F5
+
+[คู่มือสามตัวละคร ตั้งค่าจอย อัลติฟีโน่และบัฟเชียร์](docs/ROSTER_CONTROLLERS_TH.md) **F7/R3 ตั้งค่าจอย · F8 หน้าแรก · เลือกตัวละครก่อนเริ่มเกม**
 
 รุ่นก่อนเพิ่ม [ชาร์จมานา เกจป้องกัน สกิลแครอท และจอยสองผู้เล่น](docs/MANA_GUARD_CARROT_GAMEPADS_TH.md) **Q/P ชาร์จ7 MP/s, LTชาร์จ, LBการ์ด, RTสกิล, Yอัลติ**
 
