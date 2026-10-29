@@ -91,5 +91,5 @@ func _draw() -> void:
 		for i in range(4):
 			var q: float = fmod(clock*1.8+i*0.25,1)
 			draw_rect(Rect2(Vector2((i-1.5)*9,-95+q*88),Vector2(2,4)),Color(0.8,0.02,0.07,(1-q)*0.8))
-	if buff_remaining > 0:
-		draw_string(ThemeDB.fallback_font,Vector2(-59,-178),"PACT +30%% / %.1fs" % buff_remaining,HORIZONTAL_ALIGNMENT_LEFT,-1,11,Color("ff718a"))
+	if buff_remaining > 0 and not fighter.duel_mode:
+		draw_string(ThemeDB.fallback_font,Vector2(-59,-335),"PACT +30%% / %.1fs" % buff_remaining,HORIZONTAL_ALIGNMENT_LEFT,-1,11,Color("ff718a"))

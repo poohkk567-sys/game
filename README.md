@@ -2,9 +2,21 @@
 
 เกมต่อสู้ 2D สำหรับ Godot 4.2.2 ขึ้นไป เล่นสองคนด้วยคีย์บอร์ดหรือจอย ตั้งจอยและปุ่มแยกแต่ละฝั่งได้ มีสนามโรงเรียนและสนามฝึกภูเขา
 
-[ดาวน์โหลดโปรเจกต์ Godot รุ่นล่าสุด (.zip)](https://github.com/poohkk567-sys/game/archive/refs/heads/codex/blood-pact-source.zip) · [วิธีเล่น/ปุ่มทั้งหมด](docs/BLOOD_PACT_CHILL_TH.md) · [ผลทดสอบ](docs/BLOOD_PACT_CHILL_TEST_REPORT.md)
+[ดาวน์โหลดโปรเจกต์ Godot รุ่นล่าสุด (.zip)](https://github.com/poohkk567-sys/game/archive/refs/heads/codex/side-guardian-source.zip) · [วิธีเล่น/ปุ่มทั้งหมด](docs/BLOOD_PACT_CHILL_TH.md) · [ผลทดสอบ](docs/BLOOD_PACT_CHILL_TEST_REPORT.md)
 
 แตก ZIP ทั้งหมด → เปิด Godot 4.2.2+ → Import `project.godot` → Import & Edit → รอนำเข้าครั้งแรก → F5 ไม่มี EXE ใหม่ ไม่มีแคชหรือ ZIP รุ่นเก่าซ้อนในชุดดาวน์โหลด
+
+## ล่าสุด: ออร่าหันข้างลายเส้นพิกเซล
+
+- **PHU:** ปีศาจนินจาม่วง Shadow Shinobi มีหน้ากาก ผ้าควันและโซ่เงา ใช้ตอนบัฟเชียร์ ฟีโน่ และล็อคขาตอนมีบัฟ
+- **BLACK:** Crimson Grin ปีศาจแดงยิ้มเสี้ยวจันทร์ เขาต่างทรง ปกเสื้อควัน และตรารูกุญแจ หลังอัลติฟันแลกเลือด
+- **ASSJIRO:** Golden Lotus องค์พระหันข้าง วงแสงบัวและเปลวพลังส้มทองระหว่างแปลง/ร่างหัวโล้น
+
+ทั้งสามเคลื่อนไหว8เฟรมต่อตัว หันตามทิศ อยู่ด้านหลังนักสู้ ค่าสกิล/บัฟ/มานาเดิมทั้งหมด ใช้แบบพิกเซลที่เลือก ไม่ใช่ภาพอนิเมะทดลอง
+
+[รายละเอียดออร่าใหม่](docs/SIDE_GUARDIANS_TH.md) · [ผลทดสอบรุ่นนี้](docs/SIDE_GUARDIANS_TEST_REPORT.md)
+
+![ออร่านินจาม่วงกับปีศาจแดงในเกมจริง](docs/screenshots/guardian_preview_duel.png)
 
 ## ตัวละครที่เลือกเล่นได้
 

@@ -57,11 +57,6 @@ func _hp(value: float) -> String:
 
 func _label_fighter(fighter: PhuzashiCharacter, label: String, color: Color) -> void:
 	_center(fighter.position.x,616,label+(" / AWAKENED" if fighter.red_awakened else ""),12,color)
-	if fighter.action_name == "TRANSFORM" and fighter.action_timer > 0:
-		_center(fighter.position.x,fighter.position.y-195,fighter.red_transform_phase(),14,GOLD)
-	if fighter.cheer_buff > 0:
-		_card(Rect2(fighter.position.x-137,fighter.position.y-255,274,27),Color("ffc5de"))
-		_center(fighter.position.x,fighter.position.y-235,"CHEER %.1fs / BIND 1.1s / MOVE +10%%" % fighter.cheer_buff,12,Color("ffc5de"))
 	if fighter.charging:
 		_center(fighter.position.x,fighter.position.y-190,"CHARGING / +7 MP / SEC",13,color)
 	if fighter.defense_feedback_time > 0:
@@ -115,9 +110,11 @@ func _text(point: Vector2, line: String, size: int, color: Color) -> void:
 	draw_string(ThemeDB.fallback_font,point,line,HORIZONTAL_ALIGNMENT_LEFT,-1,size,color)
 
 func _fighter_status(fighter: PhuzashiCharacter) -> String:
+	if fighter.action_name == "TRANSFORM" and fighter.action_timer > 0:
+		return " / AWAKENING / "+fighter.red_transform_phase()
 	if fighter.fighter_profile == "BLACK_COAT":
 		return " / PACT +30%% %.1fs" % fighter.pact.buff_remaining if fighter.pact.buff_remaining > 0 else " / BLOOD PACT 70 MP"
 	if fighter.red_awakened: return " / AWAKENED -30% DAMAGE"
 	if fighter.fighter_profile == "RED_CAP": return " / TRANSFORM TO UNLOCK SKILLS"
 	if fighter.fighter_profile == "MUAY_THAI": return " / BROWN GORILLA STAND"
-	return " / CHEER %.1fs" % fighter.cheer_buff if fighter.cheer_buff > 0 else " / DARK PULSE"
+	return " / CHEER %.1fs / BIND 1.1s / MOVE +10%%" % fighter.cheer_buff if fighter.cheer_buff > 0 else " / DARK PULSE"

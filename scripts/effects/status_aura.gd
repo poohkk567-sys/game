@@ -1,5 +1,6 @@
 extends Node2D
 ## Cosmetic guardians follow only their own live buff/form; no combat stats here.
+const Guardian = preload("res://scripts/effects/side_guardian_art.gd")
 @onready var fighter: Node2D = get_parent()
 var clock: float = 0
 var kind: String = ""
@@ -9,11 +10,7 @@ var intensity: float = 0
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	sprite = AnimatedSprite2D.new()
-	sprite.sprite_frames = load("res://assets/effects/guardian_auras_frames.res")
-	sprite.centered = false
-	sprite.visible = false
-	add_child(sprite)
+	sprite = Guardian.create(self)
 
 func _physics_process(delta: float) -> void:
 	clock += delta
@@ -37,17 +34,12 @@ func refresh() -> void:
 			intensity = minf(1,fighter.pact.buff_remaining*3)
 			if fighter.action_name == "BLOOD_PACT" and fighter.action_timer > 0:
 				intensity *= smoothstep(0.50,0.85,fighter.action_progress())
-	visible = not kind.is_empty()
+	# Fino owns one guardian during the ride; avoid two overlapping copies.
+	visible = not kind.is_empty() and not fighter.is_fino_active()
 	if is_instance_valid(sprite):
 		sprite.visible = visible
 		if visible:
-			sprite.animation = kind
-			sprite.frame = floori(clock*9)%sprite.sprite_frames.get_frame_count(kind)
-			var height: float = 252 if kind == "GOLD" else 230
-			var factor: float = height/float(sprite.sprite_frames.get_meta("heights")[kind])
-			sprite.scale = Vector2(factor*fighter.facing,factor)
-			sprite.position = Vector2(-18*fighter.facing,4)-Vector2(512*fighter.facing,960)*factor
-			sprite.modulate.a = intensity*0.82
+			Guardian.present(sprite,kind,clock,fighter.facing,318 if kind == "GOLD" else 300,Vector2(-50*fighter.facing,6),intensity*0.82)
 	queue_redraw()
 
 func _draw() -> void:

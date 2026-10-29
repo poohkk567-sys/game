@@ -2,6 +2,8 @@ extends Node2D
 ## Cosmetic homing spirit; immobilization belongs to the target's status component.
 const SHEET: Texture2D = preload("res://assets/effects/demon_bind/demon_bind.png")
 const EDGES: Shader = preload("res://assets/effects/shadow_blink/atlas_edges.gdshader")
+const Guardian = preload("res://scripts/effects/side_guardian_art.gd")
+var guardian: AnimatedSprite2D
 const LOCK_TIME: float = 0.7
 const SUMMON_TIME: float = 0.12
 const FLIGHT_TIME: float = 0.22
@@ -52,6 +54,7 @@ func _ready() -> void:
 		atlas.filter_clip = true
 		cells.append(atlas)
 		regions.append(atlas.region)
+	if empowered: guardian = Guardian.create(self)
 	_update_visual()
 
 func _physics_process(delta: float) -> void:
@@ -137,6 +140,10 @@ func _update_visual() -> void:
 	shader_edges.set_shader_parameter("region_extent",regions[index].size/SHEET.get_size())
 	shader_edges.set_shader_parameter("feather",Vector2(0.055,0.055))
 	sprite.set_meta("atlas_frame",index)
+	if empowered and is_instance_valid(guardian):
+		sprite.visible = false
+		var guardian_height: float = extent if phase in ["SUMMON","FLIGHT"] else (300.0 if caught else 158.0)
+		Guardian.present(guardian,"PURPLE",age,direction,guardian_height,Vector2(-35*direction,85),opacity*0.86)
 
 func _draw() -> void:
 	if phase != "HOLD":

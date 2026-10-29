@@ -1,11 +1,18 @@
 extends Node2D
-const DEMON: Texture2D = preload("res://assets/effects/demon_bind/demon_bind.png")
+const Guardian = preload("res://scripts/effects/side_guardian_art.gd")
+var guardian: AnimatedSprite2D
 const Art = preload("res://scripts/effects/skill_art.gd")
 @onready var fighter: Node2D = get_parent()
 
+func _ready() -> void:
+	guardian = Guardian.create(self)
+
 func _physics_process(_delta: float) -> void:
 	visible = fighter.is_fino_active()
-	if visible: queue_redraw()
+	guardian.visible = visible
+	if visible:
+		Guardian.present(guardian,"PURPLE",fighter.elapsed,fighter.facing,286,Vector2(-50*fighter.facing,4),sin(fighter.action_progress()*PI)*0.72)
+		queue_redraw()
 
 func _draw() -> void:
 	if not fighter.is_fino_active(): return
@@ -13,9 +20,6 @@ func _draw() -> void:
 	var opacity: float = sin(p*PI)
 	var d: float = fighter.facing
 	draw_set_transform(Vector2.ZERO,0,Vector2(d,1))
-	var index: int = mini(3,floori(p*12))
-	var cell: Vector2 = DEMON.get_size()/4
-	draw_texture_rect_region(DEMON,Rect2(-155,-285,230,250),Rect2(Vector2(index,0)*cell,cell),Color(1,0.88,1,opacity*0.60),false,true)
 	Art.frame(self,1+floori(fighter.elapsed*12)%3,Vector2(-80,-32),Vector2(165,112),opacity*0.7)
 	Art.frame(self,1+floori(fighter.elapsed*12+1)%3,Vector2(85,-18),Vector2(140,95),opacity*0.6)
 	for i in range(13):
