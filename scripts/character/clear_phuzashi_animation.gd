@@ -1,6 +1,7 @@
 extends "res://scripts/character/draft_sprite_animation.gd"
 ## Approved fair-skin outfit, complete frames, original gameplay/VFX timing.
 const CLEAR_FRAMES: SpriteFrames = preload("res://assets/characters/phuzashi_clear/clear_frames.res")
+const WALK_FRAMES: SpriteFrames = preload("res://assets/characters/phuzashi_clear/walk_fixed_frames.res")
 const ALIASES: Dictionary = {"AIR_PUNCH":"PUNCH","AIR_KICK":"KICK","BOUND":"HIT","DEMON_BIND":"SPECIAL"}
 const CLEAR_FIST: Array[Vector2] = [
 	Vector2(0.70,0.40),Vector2(0.72,0.58),Vector2(0.78,0.35),Vector2(0.70,0.07),
@@ -9,6 +10,9 @@ const CLEAR_FIST: Array[Vector2] = [
 
 func _ready() -> void:
 	sprite_frames = CLEAR_FRAMES.duplicate(true)
+	sprite_frames.clear("WALK")
+	for i in range(8):
+		sprite_frames.add_frame("WALK",WALK_FRAMES.get_frame_texture("WALK",i))
 	for clip: String in ALIASES:
 		sprite_frames.add_animation(clip)
 		sprite_frames.set_animation_loop(clip,false)
@@ -33,7 +37,8 @@ func show_state(state: String, enabled: bool, progress: float = -1.0) -> bool:
 	var source: String = ALIASES.get(state,state)
 	if state == "BLINK":
 		source = BLINK_POSES[clampi(frame,0,11)][0]
-	var factor: float = float(CLEAR_FRAMES.get_meta("scales").get(source,1.0))
+	var bank: SpriteFrames = WALK_FRAMES if source == "WALK" else CLEAR_FRAMES
+	var factor: float = float(bank.get_meta("scales").get(source,1.0))
 	var pivot: Vector2 = CLEAR_FRAMES.get_meta("pivot")
 	scale = Vector2.ONE * FRAME_SCALE * factor
 	position = -pivot * FRAME_SCALE * factor

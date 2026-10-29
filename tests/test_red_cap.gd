@@ -69,7 +69,7 @@ func run() -> void:
 	actor.attack_started.connect(func(action: String) -> void: started.append(action))
 	check(actor.specials_enabled and actor.fighter_profile == "PHUZASHI","Original fighter remains default")
 	await key(KEY_TAB)
-	check(actor.fighter_profile == "RED_CAP" and actor.display_name == "RED CAP" and not actor.specials_enabled,"Tab selects the Red Cap normal-moves profile")
+	check(actor.fighter_profile == "RED_CAP" and actor.display_name == "ASSJIRO" and not actor.specials_enabled,"Tab selects the Red Cap normal-moves profile")
 	check(stage.SEQUENCE == stage.NORMAL_SEQUENCE,"Red Cap demo excludes all special skills")
 	var bodies: int = 0
 	for child: Node in stage.get_children():
@@ -186,6 +186,7 @@ func run() -> void:
 	await reset()
 	for _i in range(3):
 		actor.start_action("PUNCH")
+	await key(KEY_TAB)
 	await key(KEY_TAB)
 	check(actor.fighter_profile == "PHUZASHI" and actor.specials_enabled and actor.combo_buffer == 0 and actor.action_timer == 0,"Switch during a combo cancels queued attacks and restores PHUZASHI")
 	check(stage.SEQUENCE == stage.PHUZASHI_SEQUENCE and actor.rig.draft_animation.sprite_frames.has_animation("DEMON_BIND"),"Switch restores original demo and full powers")

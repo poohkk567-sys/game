@@ -1,6 +1,7 @@
 extends Node2D
 ## Two independent human-controlled bodies; a 99-second first-to-two match.
 const InputSetup = preload("res://scripts/character/input_setup.gd")
+@export var round_health: float = 200.0
 const SPAWNS: Array[Vector2] = [Vector2(410,586),Vector2(870,586)]
 @onready var p1: PhuzashiCharacter = $Player1
 @onready var p2: PhuzashiCharacter = $Player2
@@ -23,7 +24,9 @@ func _ready() -> void:
 	for child: Node in get_children():
 		child.process_mode = Node.PROCESS_MODE_PAUSABLE
 	$HUD.process_mode = Node.PROCESS_MODE_ALWAYS
-	p2.select_fighter("RED_CAP")
+	var fighters: Array = get_tree().get_meta("fighter_choices",["PHUZASHI","RED_CAP"])
+	p1.select_fighter(fighters[0])
+	p2.select_fighter(fighters[1])
 	p1.rig.set_clear_enabled(true)
 	p1.enable_duel("p1_",p2,SPAWNS[0])
 	p2.enable_duel("p2_",p1,SPAWNS[1])
@@ -34,9 +37,13 @@ func _ready() -> void:
 	start_round()
 
 func toggle_help() -> void:
+	if Gamepads.settings_open:
+		return
 	show_help = not show_help
 
 func toggle_pause() -> void:
+	if Gamepads.settings_open:
+		return
 	if phase == "MATCH_OVER" and not paused:
 		restart_match()
 		return
@@ -52,6 +59,12 @@ func controller_changed() -> void:
 	get_tree().paused = true
 
 func _input(event: InputEvent) -> void:
+	if Gamepads.settings_open:
+		return
+	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_F8:
+		get_tree().paused = false
+		get_tree().change_scene_to_file("res://scenes/title_menu.tscn")
+		return
 	if event is InputEventJoypadButton and event.pressed and event.device in Gamepads.assignments.values() and paused and event.button_index == JOY_BUTTON_Y:
 		restart_match()
 		return
@@ -90,7 +103,7 @@ func _physics_process(delta: float) -> void:
 
 func _separate_fighters() -> void:
 	# Gentle pushboxes on the ground; jumping and Blink can cross sides.
-	if p1.blink_timer > 0 or p2.blink_timer > 0 or not p1.is_on_floor() or not p2.is_on_floor():
+	if p1.is_fino_active() or p2.is_fino_active() or p1.blink_timer > 0 or p2.blink_timer > 0 or not p1.is_on_floor() or not p2.is_on_floor():
 		return
 	var distance: float = absf(p2.position.x-p1.position.x)
 	if distance >= 54:
@@ -111,6 +124,8 @@ func _release_inputs() -> void:
 
 func start_round() -> void:
 	_release_inputs()
+	p1.max_health = round_health
+	p2.max_health = round_health
 	p1.reset_training()
 	p2.reset_training()
 	p1.position = SPAWNS[0]
@@ -136,18 +151,20 @@ func _settle_round() -> void:
 	winner = -1 if is_equal_approx(p1.health,p2.health) else (0 if p1.health > p2.health else 1)
 	if winner >= 0:
 		scores[winner] += 1
-	result = "DRAW" if winner < 0 else ("PHUZASHI WINS" if winner == 0 else "RED CAP WINS")
+	result = "DRAW" if winner < 0 else ([p1,p2][winner].display_name+" WINS")
 	phase = "MATCH_OVER" if winner >= 0 and scores[winner] >= 2 else "ROUND_OVER"
 	phase_time = 0
 	p1.controls_enabled = false
 	p2.controls_enabled = false
 	# Resolve the round once; no projectiles can change HP during the result card.
-	for group: String in ["dark_pulses","demon_bind_effects","shadow_blink_effects","purple_punch_impacts"]:
+	for group: String in ["cheer_assists","dark_pulses","demon_bind_effects","shadow_blink_effects","purple_punch_impacts"]:
 		get_tree().call_group(group,"queue_free")
 	for fighter: PhuzashiCharacter in [p1,p2]:
+		fighter.cheer_buff = 0.0
 		fighter.charging = false
 		fighter.action_timer = 0
 		fighter.action_name = ""
+		fighter.dash_timer = 0
 		fighter.blink_timer = 0
 		fighter._clear_combo()
 		fighter.movement_lock.clear()

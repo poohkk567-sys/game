@@ -52,6 +52,7 @@ func event(code: int) -> void:
 
 func run() -> void:
 	stage = load("res://scenes/versus_school.tscn").instantiate()
+	stage.round_health = 100 # Original damage/KO fixture; production defaults are covered separately.
 	root.add_child(stage)
 	await frames(8)
 	a = stage.p1
@@ -233,6 +234,7 @@ func run() -> void:
 	await frames(2)
 	check(get_nodes_in_group("bind_targets").is_empty() and get_nodes_in_group("dark_pulses").is_empty(),"Scene exit frees both fighters and all projectiles")
 	stage = load("res://scenes/versus_school.tscn").instantiate()
+	stage.round_health = 100 # Original damage/KO fixture; production defaults are covered separately.
 	root.add_child(stage)
 	current_scene = stage
 	await frames(5)

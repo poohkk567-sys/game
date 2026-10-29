@@ -3,7 +3,6 @@ extends Node2D
 const PULSE: Texture2D = preload("res://assets/effects/dark_pulse_vfx.png")
 const CARROT_HEAD: Texture2D = preload("res://assets/effects/carrot_headbutt_vfx.png")
 const CARROT_BARRAGE: Texture2D = preload("res://assets/effects/carrot_barrage_vfx.png")
-const DRAGON: Texture2D = preload("res://assets/effects/violet_dragon_vfx.png")
 var defense_player: AudioStreamPlayer
 var defense_sounds: Dictionary = {}
 @onready var fighter: PhuzashiCharacter = get_parent()
@@ -19,14 +18,14 @@ func play_defense_sound(kind: String) -> void:
 		var sound := AudioStreamWAV.new()
 		sound.format = AudioStreamWAV.FORMAT_16_BITS
 		sound.mix_rate = 22050
-		var length: float = 0.16 if kind == "PERFECT GUARD" else 0.25
+		var length: float = 0.16 if kind == "PERFECT GUARD" else (0.09 if kind == "GUARD" else 0.25)
 		var data := PackedByteArray()
 		data.resize(int(length*22050)*2)
 		for i in range(data.size()/2):
 			var t: float = float(i)/22050.0
-			var pitch: float = (1250.0 if kind == "PERFECT GUARD" else 280.0)*(1.0-0.5*t/length)
+			var pitch: float = (1250.0 if kind == "PERFECT GUARD" else (350.0 if kind == "GUARD" else 280.0))*(1.0-0.5*t/length)
 			var noise: float = sin(i*12.9898)*sin(i*78.233)
-			var sample: float = (sin(TAU*pitch*t)*0.6+noise*(0.15 if kind == "PERFECT GUARD" else 0.65))*pow(1.0-t/length,2)
+			var sample: float = (sin(TAU*pitch*t)*0.6+noise*(0.15 if kind == "PERFECT GUARD" else (0.3 if kind == "GUARD" else 0.65)))*pow(1.0-t/length,2)
 			data.encode_s16(i*2,int(clampf(sample,-1,1)*26000))
 		sound.data = data
 		defense_sounds[kind] = sound
@@ -66,8 +65,24 @@ func _draw() -> void:
 			draw_line(center+ray*distance,center+ray*(distance+15),Color(Color("a5ffff") if perfect else Color("ff9b74"),remaining),3,false)
 		if perfect:
 			draw_arc(center,66+(1.0-remaining)*25,0,TAU,32,Color(0.7,1,1,remaining),4,false)
-	if fighter.state_name == "GUARD":
-		draw_arc(Vector2(d * 20, -87), 66, -1.3 if d > 0 else PI - 1.3, 1.3 if d > 0 else PI + 1.3, 24, Color(0.66, 0.45, 1, 0.7), 3, false)
+	if fighter.can_guard():
+		var recoil: float = fighter.guard_impact/0.24
+		var shield_height: float = fighter.low_height() if fighter.state_name == "CROUCH" else fighter.standing_height()
+		var center := Vector2(d*42+sin(t*85)*recoil*3,-shield_height*0.59)
+		var outline := PackedVector2Array()
+		for i in range(33):
+			var angle: float = i*TAU/32.0
+			outline.append(center+Vector2(cos(angle)*28,sin(angle)*shield_height*0.54))
+		draw_colored_polygon(outline,Color(0.55,0.87,1,0.10+recoil*0.18))
+		draw_polyline(outline,Color(0.65,0.94,1,0.5+recoil*0.45),2+recoil*2,false)
+		draw_arc(center,23,-1.2,1.2,20,Color(0.9,1,1,0.25+recoil*0.6),2,false)
+		if recoil > 0:
+			for i in range(6):
+				var ray := Vector2.from_angle(i*TAU/6.0)
+				draw_line(center+ray*12,center+ray*(24+(1-recoil)*24),Color(0.8,0.96,1,recoil),3,false)
+	if fighter.dash_timer > 0:
+		for i in range(5):
+			draw_line(Vector2(-d*(30+i*14),-25-i*23),Vector2(-d*(80+i*18),-25-i*23),Color(1,0.72,0.36,0.45),2,false)
 	if fighter.blink_timer > 0.0:
 		return
 	if fighter.action_timer <= 0.0:
@@ -117,7 +132,7 @@ func _draw() -> void:
 			draw_set_transform(Vector2.ZERO)
 		"ULTIMATE":
 			draw_set_transform(Vector2.ZERO, 0.0, Vector2(d, 1))
-			_ultimate(p, t)
+			_fino_trail(p,t)
 			draw_set_transform(Vector2.ZERO)
 
 func _finisher(center: Vector2, progress: float) -> void:
@@ -143,32 +158,10 @@ func _special(p: float, t: float) -> void:
 			var pos := hand + Vector2(12 + i * 7, sin(t * 17 + i * 2.0) * (8 + i))
 			draw_rect(Rect2(pos, Vector2(3 + i % 2, 4)), Color(0.72, 0.2, 1, fade * 0.65))
 
-func _ultimate(p: float, t: float) -> void:
-	var power: float = sin(p * PI)
-	# Ground rune and ascending sparks keep the character grounded while charging.
-	draw_set_transform(Vector2(0, -2), 0, Vector2(1, 0.28))
-	for i in range(3):
-		draw_arc(Vector2.ZERO, 72 + i * 17 + power * 18, t * (i + 1), t * (i + 1) + PI * 1.7, 48, Color(0.65, 0.15, 1, power * 0.65), 4, false)
-	draw_set_transform(Vector2.ZERO)
-	for i in range(22):
-		var x: float = sin(i * 8.1) * 72
-		var y: float = -fmod(t * 145 + i * 19, 220)
-		draw_rect(Rect2(Vector2(x, y), Vector2(3 + i % 3, 7 + i % 6)), Color(0.68, 0.14, 1, power * 0.7))
-	if p < 0.35:
-		var q: float = p / 0.35
-		_cell(DRAGON, mini(3, floori(q * 4)), Vector2(5, -92), Vector2(220, 230))
-	elif p < 0.49:
-		var q: float = (p - 0.35) / 0.14
-		_cell(DRAGON, 4 + mini(3, floori(q * 4)), Vector2(105, -145), Vector2(340, 280))
-	elif p < 0.80:
-		var q: float = (p - 0.49) / 0.31
-		_cell(DRAGON, 8 + mini(3, floori(q * 4)), Vector2(245 + q * 65, -153), Vector2(590, 340))
-		var trail := PackedVector2Array()
-		for i in range(32):
-			var u: float = float(i) / 31.0
-			trail.append(Vector2(58 + u * (100 + q * 470), -106 - sin(u * TAU * 1.2 - t * 7) * (15 + u * 30)))
-		draw_polyline(trail, Color(0.56, 0.11, 1, 0.32), 28, false)
-		draw_polyline(trail, Color(0.92, 0.69, 1, 0.42), 8, false)
-	else:
-		var q: float = (p - 0.80) / 0.20
-		_cell(DRAGON, 12 + mini(3, floori(q * 4)), Vector2(395, -155), Vector2(620, 345), 1.0 - q * 0.25)
+func _fino_trail(p: float, t: float) -> void:
+	if p < 0.32 or p > 0.83:
+		return
+	for i in range(12):
+		var x: float = -80-i*12
+		var y: float = -18+sin(t*22+i*1.8)*8
+		draw_rect(Rect2(Vector2(x,y),Vector2(9,3)),Color(0.72,0.32,1,(12-i)/20.0))

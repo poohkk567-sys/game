@@ -1,5 +1,7 @@
 # Red Cap: อัลติถอดหมวก / ซอสเหลือง / ถอดเสื้อ
 
+> เอกสารรุ่นก่อน: ปุ่มและกติกาปัจจุบันดู [สามตัวละคร/ตั้งค่าจอย/ฟีโน่/บัฟเชียร์](ROSTER_CONTROLLERS_TH.md)
+
 > รุ่นปัจจุบัน: [มานา/การ์ด/จอยและสกิลแครอท](MANA_GUARD_CARROT_GAMEPADS_TH.md) สนามฝึกใช้ **O แปลงร่าง** เพราะ I เปลี่ยนเป็นหัวพุ่งแล้ว; P2 ยังคง Num5 / ; และจอย Y
 
 [ดาวน์โหลดเกมทดสอบ Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/mana-guard-carrot-gamepads/docs/downloads/PHUZASHI_Mana_Carrot_Gamepads_Godot.zip?raw=true)

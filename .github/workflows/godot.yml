@@ -24,7 +24,7 @@ jobs:
           GODOT_VERSION: ${{ matrix.godot }}
         run: GODOT_BIN="$PWD/work/engine/Godot_v${GODOT_VERSION}-stable_linux.x86_64" tools/check.sh
 
-      - name: Render mesh and whole-body sprite frames (216 + 192 + 64 + 224 + 344 + 304 + 140)
+      - name: Render legacy art, roster, effects and guard shields
         if: matrix.godot == '4.6.3'
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
@@ -54,3 +54,9 @@ jobs:
 
           xvfb-run -a -s "-screen 0 1280x720x24" work/engine/Godot_v4.6.3-stable_linux.x86_64 --path . --audio-driver Dummy --fixed-fps 60 --script tests/test_mana_carrot_render.gd 2>&1 | tee work/mana-carrot-render-check.log
           if rg 'SCRIPT ERROR:|ERROR:' work/mana-carrot-render-check.log; then exit 1; fi
+
+          xvfb-run -a -s "-screen 0 1280x720x24" work/engine/Godot_v4.6.3-stable_linux.x86_64 --path . --audio-driver Dummy --fixed-fps 60 --script tests/test_roster_render.gd 2>&1 | tee work/roster-render-check.log
+          if rg 'SCRIPT ERROR:|ERROR:' work/roster-render-check.log; then exit 1; fi
+
+          xvfb-run -a -s "-screen 0 1280x720x24" work/engine/Godot_v4.6.3-stable_linux.x86_64 --path . --audio-driver Dummy --fixed-fps 60 --script tests/test_guard_shields.gd 2>&1 | tee work/guard-shields-render-check.log
+          if rg 'SCRIPT ERROR:|ERROR:' work/guard-shields-render-check.log; then exit 1; fi

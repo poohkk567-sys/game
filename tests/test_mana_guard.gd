@@ -42,6 +42,7 @@ func held_guard() -> void:
 
 func run() -> void:
 	stage = load("res://scenes/versus_school.tscn").instantiate()
+	stage.round_health = 100 # Original damage/KO fixture; production defaults are covered separately.
 	root.add_child(stage)
 	await frames(5)
 	a = stage.p1

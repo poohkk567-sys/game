@@ -19,6 +19,9 @@ engine="${GODOT_BIN:-godot}"
 "$engine" --headless --path . --fixed-fps 60 --script tests/test_mana_guard.gd 2>&1 | tee work/mana-guard-check.log
 "$engine" --headless --path . --fixed-fps 60 --script tests/test_gamepads.gd 2>&1 | tee work/gamepads-check.log
 "$engine" --headless --path . --fixed-fps 60 --script tests/test_carrot_skills.gd 2>&1 | tee work/carrot-skills-check.log
-if rg -n '(^|[[:space:]])(SCRIPT ERROR:|ERROR:|FAIL )' work/import-check.log work/test-check.log work/sprite-trial-check.log work/vfx-check.log work/blink-check.log work/blink-vfx-check.log work/combat-combos-check.log work/combo-poses-check.log work/demon-bind-check.log work/red-cap-check.log work/local-versus-check.log work/red-transform-check.log work/mana-guard-check.log work/gamepads-check.log work/carrot-skills-check.log; then
+"$engine" --headless --path . --fixed-fps 60 --script tests/test_controller_settings.gd 2>&1 | tee work/controller-settings-check.log
+"$engine" --headless --path . --fixed-fps 60 --script tests/test_new_rules.gd 2>&1 | tee work/new-rules-check.log
+"$engine" --headless --path . --fixed-fps 60 --script tests/test_muay_thai.gd 2>&1 | tee work/muay-thai-check.log
+if rg -n '(^|[[:space:]])(SCRIPT ERROR:|ERROR:|FAIL )' work/import-check.log work/test-check.log work/sprite-trial-check.log work/vfx-check.log work/blink-check.log work/blink-vfx-check.log work/combat-combos-check.log work/combo-poses-check.log work/demon-bind-check.log work/red-cap-check.log work/local-versus-check.log work/red-transform-check.log work/mana-guard-check.log work/gamepads-check.log work/carrot-skills-check.log work/controller-settings-check.log work/new-rules-check.log work/muay-thai-check.log; then
   exit 1
 fi

@@ -20,7 +20,7 @@ func _initialize() -> void:
 	call_deferred("run")
 
 func run() -> void:
-	for path: String in ["res://assets/effects/dark_pulse_vfx.png", "res://assets/effects/violet_dragon_vfx.png"]:
+	for path: String in ["res://assets/effects/dark_pulse_vfx.png", "res://assets/characters/phuzashi_clear/fino_ultimate.png"]:
 		var texture: Texture2D = load(path)
 		expect(texture != null, "Atlas is imported: " + path)
 		if texture == null:

@@ -17,6 +17,9 @@ const GUARD_COSTS: Dictionary = {
 }
 const RED_TRANSFORM_COST: float = 100.0
 const RED_TRANSFORM_DURATION: float = 3.2
+const DASH_DURATION: float = 0.22
+const DASH_SPEED: float = 440.0
+const DASH_COOLDOWN: float = 0.45
 const WALK_SPEED: float = 190.0
 const RUN_SPEED: float = 340.0
 const AIR_SPEED: float = 220.0
@@ -42,11 +45,20 @@ const ATTACKS: Dictionary = {
 	"KICK_3": [0.64, 0.0, 22, 0.34, 0.65, 174.0, 92.0],
 	"AIR_PUNCH": [0.32, 0.0, 9, 0.24, 0.60, 104.0, 76.0],
 	"AIR_KICK": [0.42, 0.0, 15, 0.30, 0.66, 146.0, 88.0],
+	"CHEER": [0.60, 30.0, 0, 0.35, 0.48, 0.0, 0.0],
 	"CARROT_HEADBUTT": [0.85, 25.0, 22, 0.20, 0.67, 128.0, 112.0],
 	"CARROT_RUSH": [1.28, 30.0, 4, 0.20, 0.80, 155.0, 130.0],
 	"DEMON_BIND": [0.62, 25.0, 0, 0.32, 0.48, 620.0, 180.0],
 	"SPECIAL": [0.90, 25.0, 24, 0.42, 0.55, 0.0, 0.0],
-	"ULTIMATE": [1.80, 60.0, 60, 0.48, 0.80, 620.0, 180.0]
+	"ULTIMATE": [1.80, 60.0, 60, 0.32, 0.80, 128.0, 130.0]
+}
+const MUAY_ATTACKS: Dictionary = {
+ "PUNCH":[0.42,0.0,8,0.34,0.60,128.0,72.0],
+ "PUNCH_2":[0.40,0.0,10,0.32,0.57,132.0,78.0],
+ "PUNCH_3":[0.52,0.0,18,0.30,0.62,112.0,100.0],
+ "KICK":[0.58,0.0,14,0.40,0.65,160.0,86.0],
+ "KICK_2":[0.50,0.0,16,0.36,0.62,118.0,104.0],
+ "KICK_3":[0.66,0.0,22,0.34,0.65,174.0,150.0]
 }
 const Pulse = preload("res://scripts/character/dark_pulse.gd")
 const Effects = preload("res://scripts/character/combat_effects.gd")
@@ -54,11 +66,13 @@ const ShadowBlinkVFX = preload("res://scripts/effects/shadow_blink_vfx.gd")
 const PurpleFist = preload("res://scripts/effects/purple_fist.gd")
 const PurpleImpact = preload("res://scripts/effects/purple_punch_impact.gd")
 const MovementLock = preload("res://scripts/combat/movement_lock.gd")
+const CheerAssist = preload("res://scripts/effects/cheer_assist.gd")
 const DemonBind = preload("res://scripts/effects/demon_bind.gd")
 
 @onready var rig: Node2D = $Rig
 @onready var body_shape: CollisionShape2D = $CollisionShape2D
 @onready var attack_shape: CollisionShape2D = $AttackArea/CollisionShape2D
+var max_health: float = 100.0
 var health: float = 100.0
 var energy: float = 100.0
 var guard_meter: float = 100.0
@@ -83,6 +97,11 @@ var debug_hitboxes: bool = false
 var visited: Dictionary = {"IDLE": true}
 var struck: Dictionary = {}
 var pulse_spawned: bool = false
+var dash_timer: float = 0.0
+var dash_cooldown: float = 0.0
+var dash_direction: int = 1
+var guard_impact: float = 0.0
+var guard_push_timer: float = 0.0
 var blink_timer: float = 0.0
 var blink_cooldown: float = 0.0
 var blink_origin: float = 0.0
@@ -101,6 +120,12 @@ var movement_lock: Node
 var demon_spawned: bool = false
 var carrot_pulse: int = -1
 var headbutt_launched: bool = false
+var fino_visual: AnimatedSprite2D
+var walk_distance: float = 0.0
+var cheer_buff: float = 0.0
+var cheer_cooldown: float = 0.0
+var cheer_spawned: bool = false
+var bind_cast_duration: float = 0.7
 var fighter_profile: String = "PHUZASHI"
 var display_name: String = "PHUZASHI"
 var specials_enabled: bool = true
@@ -111,7 +136,7 @@ var controls_enabled: bool = true
 var spawn_point: Vector2 = SPAWN
 var opponent: PhuzashiCharacter
 var hurt_area: Area2D
-var damage_taken: int = 0
+var damage_taken: float = 0.0
 var last_received: String = ""
 
 func pressed(command: String) -> bool:
@@ -141,13 +166,15 @@ func receive_attack(damage: int, move_name: String, attacker: Node2D) -> int:
 	return _receive_hit(damage,move_name,attacker)
 
 func can_guard() -> bool:
-	return pressed("guard") and is_on_floor() and velocity.y >= 0.0 and action_timer <= 0.0 and blink_timer <= 0.0 and not is_movement_locked() and guard_meter > 0.0 and guard_break_remaining <= 0.0 and not charging
+	return pressed("guard") and is_on_floor() and velocity.y >= 0.0 and action_timer <= 0.0 and blink_timer <= 0.0 and dash_timer <= 0.0 and not is_movement_locked() and guard_meter > 0.0 and guard_break_remaining <= 0.0 and not charging
 
 func _tick_defense(delta: float) -> void:
 	if guard_break_remaining > 0:
 		guard_break_remaining = maxf(0.0,guard_break_remaining-delta)
 		if guard_break_remaining <= 0:
 			guard_meter = maxf(50.0,guard_meter)
+	guard_impact = maxf(0.0,guard_impact-delta)
+	guard_push_timer = maxf(0.0,guard_push_timer-delta)
 	defense_feedback_time = maxf(0,defense_feedback_time-delta)
 	var held: bool = pressed("guard")
 	if held and not guard_was_held:
@@ -180,6 +207,8 @@ func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 	guard_recovery_delay = GUARD_REGEN_DELAY
 	last_received = move_name
 	if guarded:
+		guard_impact = 0.24
+		guard_push_timer = 0.09
 		last_hit_blocked = true
 		# Also recognize a press arriving earlier in this same physics tick.
 		var fresh: bool = not guard_was_held or guard_press_age < PERFECT_GUARD_WINDOW
@@ -188,6 +217,7 @@ func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 				guard_press_age = 0.0
 			guard_was_held = true
 			perfect_guard_used = true
+			guard_push_timer = 0.025
 			energy = minf(100.0,energy+3.0)
 			_defense_flash("PERFECT GUARD")
 			announce("PERFECT GUARD / +3 MP")
@@ -195,12 +225,16 @@ func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 		guard_meter = maxf(0.0,guard_meter-float(GUARD_COSTS.get(move_name,14.0)))
 	var was_broken: bool = guard_break_remaining > 0.0
 	var break_remaining: float = guard_break_remaining
-	var actual: int = mini(2,damage) if guarded else damage
+	var actual: float = float(mini(2,damage) if guarded else damage)
+	if fighter_profile == "RED_CAP" and red_awakened:
+		actual *= 0.7
 	health = maxf(0.0,health-actual)
 	damage_taken += actual
 	if guarded and guard_meter > 0.0 and health > 0.0:
+		effects.play_defense_sound("GUARD")
 		announce("GUARD / 2 CHIP")
-		return actual
+		return roundi(actual)
+	dash_timer = 0.0
 	charging = false
 	_clear_combo()
 	purple_fist.clear()
@@ -219,7 +253,7 @@ func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 	velocity.x = -facing*95.0
 	_set_state(action_name)
 	_update_body_shape()
-	return actual
+	return roundi(actual)
 
 func award_normal_hit(move_name: String, blocked: bool) -> void:
 	if blocked or move_name not in ["PUNCH","PUNCH_2","PUNCH_3","KICK","KICK_2","KICK_3","AIR_PUNCH","AIR_KICK"]:
@@ -228,15 +262,15 @@ func award_normal_hit(move_name: String, blocked: bool) -> void:
 
 
 func select_fighter(profile: String) -> bool:
-	if profile not in ["PHUZASHI","RED_CAP"]:
+	if profile not in ["PHUZASHI","RED_CAP","MUAY_THAI"]:
 		return false
 	fighter_profile = profile
-	display_name = "RED CAP" if profile == "RED_CAP" else "PHUZASHI"
+	display_name = {"RED_CAP":"ASSJIRO","PHUZASHI":"PHUZASHI","MUAY_THAI":"MUAY THAI"}[profile]
 	specials_enabled = profile == "PHUZASHI"
 	rig.set_character_profile(profile)
 	visited = {"IDLE":true}
 	reset_training()
-	announce(display_name + (" / I: Carrot Headbutt / S+J: Barrage / O: Cap Off" if not specials_enabled else " / Dark Pulse"))
+	announce(display_name + (" / Punch, elbow, teep and knee" if profile == "MUAY_THAI" else (" / O: Transform to unlock carrot skills" if profile == "RED_CAP" else " / Fino ultimate / T: Cheer")))
 	return true
 
 func _ready() -> void:
@@ -252,13 +286,26 @@ func _ready() -> void:
 	purple_fist = PurpleFist.new()
 	purple_fist.name = "PurpleFist"
 	add_child(purple_fist)
+	fino_visual = AnimatedSprite2D.new()
+	fino_visual.sprite_frames = load("res://assets/characters/phuzashi_clear/fino_ultimate_frames.res")
+	fino_visual.centered = false
+	fino_visual.visible = false
+	add_child(fino_visual)
 
 func _physics_process(delta: float) -> void:
 	elapsed += delta
+	cheer_buff = maxf(0,cheer_buff-delta)
+	cheer_cooldown = maxf(0,cheer_cooldown-delta)
+	var previous_x: float = position.x
+	if is_instance_valid(fino_visual):
+		fino_visual.visible = false
+	rig.visible = true
 	rig.rotation = 0.0
 	charging = false
 	if not duel_mode or (controls_enabled and health > 0):
 		_tick_defense(delta)
+	rig.position = Vector2(sin(guard_impact*125.0)*2.5,cos(guard_impact*110.0)*1.0)*(guard_impact/0.24)
+	dash_cooldown = maxf(0.0,dash_cooldown-delta)
 	if duel_mode and health <= 0.0:
 		velocity.x = 0.0
 		if not is_on_floor():
@@ -309,11 +356,16 @@ func _physics_process(delta: float) -> void:
 			var direction: int = -1 if command == "move_left" else 1
 			var previous: float = left_tap if direction < 0 else right_tap
 			if elapsed - previous < BLINK_WINDOW:
-				_start_blink(direction)
+				_start_movement_burst(direction)
 			if direction < 0:
 				left_tap = elapsed
 			else:
 				right_tap = elapsed
+	if just_pressed("dash"):
+		_start_movement_burst(int(signf(movement_axis())) if movement_axis() != 0 else facing)
+	if dash_timer > 0.0:
+		_step_dash(delta)
+		return
 	if blink_timer > 0.0:
 		_step_blink(delta)
 		return
@@ -332,7 +384,7 @@ func _physics_process(delta: float) -> void:
 	if bind_pressed:
 		start_action("DEMON_BIND")
 	elif not crouching and not guarding:
-		for binding: String in ["pad_ultimate", "red_ultimate", "ultimate", "special", "kick", "punch"]:
+		for binding: String in ["cheer", "pad_ultimate", "red_ultimate", "ultimate", "special", "kick", "punch"]:
 			if binding == "red_ultimate" and fighter_profile != "RED_CAP":
 				continue
 			if just_pressed(binding):
@@ -352,15 +404,21 @@ func _physics_process(delta: float) -> void:
 	var airborne: bool = not was_grounded or velocity.y < 0.0
 	var locked: bool = (action_timer > 0.0 and not is_air_attack()) or charging or (not airborne and (crouching or guarding))
 	var speed: float = RUN_SPEED if pressed("run") else WALK_SPEED
+	if cheer_buff > 0:
+		speed *= 1.1
 	var desired: float = 0.0 if locked else axis * (AIR_SPEED if airborne else speed)
 	if not airborne and action_name in ["PUNCH_2", "PUNCH_3", "KICK_2", "KICK_3"] and action_progress() >= 0.15 and action_progress() < 0.45:
 		desired = facing * (80.0 if combo_step == 3 else 45.0)
+	if is_fino_active() and action_progress() >= 0.32 and action_progress() < 0.80:
+		desired = facing*650.0
 	if action_name == "CARROT_HEADBUTT" and action_timer > 0:
 		if action_progress() >= 0.18 and not headbutt_launched:
 			velocity.y = -260.0
 			headbutt_launched = true
 		if action_progress() >= 0.18 and action_progress() < 0.67:
 			desired = facing*520.0
+	if guarding and guard_push_timer > 0.0:
+		desired = -facing*100.0
 	velocity.x = move_toward(velocity.x, desired, ACCELERATION * delta)
 	if not was_grounded or velocity.y < 0.0:
 		velocity.y += GRAVITY * delta
@@ -413,9 +471,17 @@ func _physics_process(delta: float) -> void:
 		phase = action_progress()
 	elif state_name == "JUMP":
 		phase = clampf((velocity.y - JUMP_VELOCITY) / (-2.0 * JUMP_VELOCITY), 0.0, 1.0)
+	if state_name == "WALK":
+		walk_distance += absf(position.x-previous_x)
+		phase = fmod(walk_distance/104.0,1.0)
+		if velocity.x*facing < 0:
+			phase = 1.0-phase
 	var pose: String = "GUARD" if charging else ("HIT" if state_name == "GUARD_BREAK" else state_name)
 	if charging or state_name == "GUARD_BREAK":
 		phase = 0.8 if charging else 0.35
+	if state_name == "CHEER":
+		pose = "GUARD"
+		phase = 0.65
 	if state_name == "CARROT_HEADBUTT":
 		pose = "RUN"
 		phase = 0.3
@@ -424,8 +490,23 @@ func _physics_process(delta: float) -> void:
 		phase = 0.38 if carrot_pulse >= 0 else 0.15
 	rig.rotation = facing*0.25 if state_name == "CARROT_HEADBUTT" and headbutt_launched else 0.0
 	rig.animate(pose, delta, facing, phase)
+	_update_fino_visual()
 	queue_redraw()
 	effects.queue_redraw()
+
+func is_fino_active() -> bool:
+	return fighter_profile == "PHUZASHI" and action_name == "ULTIMATE" and action_timer > 0
+
+func _update_fino_visual() -> void:
+	if not is_fino_active():
+		return
+	var factor: float = 188.0/float(fino_visual.sprite_frames.get_meta("source_height"))
+	fino_visual.scale = Vector2(factor*facing,factor)
+	fino_visual.position = -Vector2(512*facing,960)*factor
+	fino_visual.animation = "FINO"
+	fino_visual.frame = mini(15,floori(action_progress()*16))
+	fino_visual.visible = true
+	rig.visible = false
 
 func _start_blink(direction: int) -> bool:
 	if duel_mode and (not controls_enabled or health <= 0):
@@ -458,6 +539,36 @@ func _start_blink(direction: int) -> bool:
 	get_parent().move_child(blink_effect, get_index())
 	return true
 
+func _start_movement_burst(direction: int) -> bool:
+	return _start_dash(direction) if fighter_profile != "PHUZASHI" else _start_blink(direction)
+
+func _start_dash(direction: int) -> bool:
+	if (duel_mode and (not controls_enabled or health <= 0)) or dash_timer > 0 or dash_cooldown > 0 or action_timer > 0 or is_movement_locked() or guard_break_remaining > 0:
+		return false
+	if not is_on_floor() or velocity.y < 0 or pressed("crouch") or pressed("guard"):
+		return false
+	dash_direction = direction
+	facing = direction
+	dash_timer = DASH_DURATION
+	dash_cooldown = DASH_COOLDOWN
+	charging = false
+	jump_buffer = 0
+	_clear_combo()
+	announce("ASSJIRO DASH")
+	return true
+
+func _step_dash(delta: float) -> void:
+	dash_timer = maxf(0.0,dash_timer-delta)
+	velocity = Vector2(dash_direction*DASH_SPEED,GRAVITY*delta)
+	move_and_slide()
+	position.x = clampf(position.x,75,1205)
+	_set_state("DASH")
+	rig.animate("RUN",delta,facing)
+	queue_redraw()
+	effects.queue_redraw()
+	if dash_timer <= 0:
+		velocity.x = 0
+
 func blink_progress() -> float:
 	return clampf(1.0 - blink_timer / BLINK_DURATION, 0.0, 1.0)
 
@@ -480,6 +591,10 @@ func _step_blink(delta: float) -> void:
 		_set_state("IDLE")
 
 func start_action(action: String) -> bool:
+	if fighter_profile == "MUAY_THAI" and action in ["SPECIAL","ULTIMATE","DEMON_BIND","CHEER"]:
+		return false
+	if action == "CHEER":
+		return _start_cheer()
 	if fighter_profile == "RED_CAP" and action in ["SPECIAL","DEMON_BIND"]:
 		return _start_red_skill("CARROT_HEADBUTT" if action == "SPECIAL" else "CARROT_RUSH")
 	if fighter_profile == "RED_CAP" and action == "ULTIMATE":
@@ -487,9 +602,9 @@ func start_action(action: String) -> bool:
 	if duel_mode and (not controls_enabled or health <= 0):
 		return false
 	if not specials_enabled and action in ["SPECIAL","ULTIMATE","DEMON_BIND"]:
-		announce("RED CAP / Special skills are not assigned yet")
+		announce("ASSJIRO / Special skills are not assigned yet")
 		return false
-	if guard_break_remaining > 0.0 or is_movement_locked() or blink_timer > 0.0:
+	if dash_timer > 0 or guard_break_remaining > 0.0 or is_movement_locked() or blink_timer > 0.0:
 		return false
 	if pressed("guard") or (pressed("crouch") and action != "DEMON_BIND"):
 		return false
@@ -497,7 +612,7 @@ func start_action(action: String) -> bool:
 		return _request_normal_attack(action)
 	if action not in ["SPECIAL", "ULTIMATE", "DEMON_BIND"] or action_timer > 0.0 or not is_on_floor() or velocity.y < 0.0:
 		return false
-	var config: Array = ATTACKS[action]
+	var config: Array = attack_config(action)
 	if energy < float(config[1]):
 		announce("Not enough MP / hold charge or land normal hits")
 		return false
@@ -506,8 +621,26 @@ func start_action(action: String) -> bool:
 	_begin_attack(action)
 	return true
 
+func bind_lock_duration() -> float:
+	return 1.1 if cheer_buff > 0 else 0.7
+
+func _start_cheer() -> bool:
+	if fighter_profile != "PHUZASHI" or cheer_cooldown > 0 or energy < 30 or action_timer > 0 or dash_timer > 0 or blink_timer > 0 or guard_break_remaining > 0 or is_movement_locked():
+		return false
+	if (duel_mode and (not controls_enabled or health <= 0)) or not is_on_floor() or velocity.y < 0 or pressed("guard") or pressed("crouch"):
+		return false
+	energy -= 30
+	cheer_cooldown = 14
+	_clear_combo()
+	_begin_attack("CHEER")
+	announce("CHEER ASSIST / 30 MP")
+	return true
+
 func _start_red_skill(action: String) -> bool:
-	if (duel_mode and (not controls_enabled or health <= 0)) or action_timer > 0 or is_movement_locked() or blink_timer > 0 or guard_break_remaining > 0:
+	if not red_awakened:
+		announce("ASSJIRO / Transform first to unlock carrot skills")
+		return false
+	if (duel_mode and (not controls_enabled or health <= 0)) or dash_timer > 0 or action_timer > 0 or is_movement_locked() or blink_timer > 0 or guard_break_remaining > 0:
 		return false
 	if not is_on_floor() or velocity.y < 0 or pressed("guard") or (action != "CARROT_RUSH" and pressed("crouch")):
 		return false
@@ -522,7 +655,7 @@ func _start_red_skill(action: String) -> bool:
 	return true
 
 func _start_red_transform() -> bool:
-	if guard_break_remaining > 0.0 or red_awakened or action_timer > 0.0 or is_movement_locked() or blink_timer > 0.0 or health <= 0:
+	if dash_timer > 0 or guard_break_remaining > 0.0 or red_awakened or action_timer > 0.0 or is_movement_locked() or blink_timer > 0.0 or health <= 0:
 		return false
 	if duel_mode and not controls_enabled:
 		return false
@@ -584,7 +717,9 @@ func _request_normal_attack(family: String) -> bool:
 
 func _begin_attack(action: String) -> void:
 	charging = false
-	var config: Array = ATTACKS[action]
+	var config: Array = attack_config(action)
+	if action == "DEMON_BIND":
+		bind_cast_duration = bind_lock_duration()
 	action_name = action
 	action_duration = float(config[0])
 	action_timer = action_duration
@@ -592,6 +727,7 @@ func _begin_attack(action: String) -> void:
 	pulse_spawned = false
 	demon_spawned = false
 	carrot_pulse = -1
+	cheer_spawned = false
 	headbutt_launched = false
 	if not is_air_attack():
 		velocity.x = 0.0
@@ -617,6 +753,7 @@ func apply_movement_lock(seconds: float) -> bool:
 	if blink_invulnerable():
 		return false
 	charging = false
+	dash_timer = 0.0
 	movement_lock.apply(seconds)
 	velocity = Vector2.ZERO
 	action_name = ""
@@ -668,14 +805,21 @@ func attack_phase() -> String:
 		return red_transform_phase()
 	if not ATTACKS.has(action_name) or action_timer <= 0.0:
 		return "READY"
-	var config: Array = ATTACKS[action_name]
+	var config: Array = attack_config(action_name)
 	var phase: float = action_progress()
 	return "STARTUP" if phase < float(config[3]) else ("ACTIVE" if phase <= float(config[4]) else "RECOVERY")
 
 func _process_attack() -> void:
-	var config: Array = ATTACKS[action_name]
+	var config: Array = attack_config(action_name)
 	var phase: float = action_progress()
 	if phase < float(config[3]) or phase > float(config[4]):
+		return
+	if action_name == "CHEER":
+		if not cheer_spawned:
+			cheer_spawned = true
+			var assist: Node2D = CheerAssist.new()
+			assist.configure(self)
+			get_parent().add_child(assist)
 		return
 	if action_name == "DEMON_BIND":
 		if not demon_spawned:
@@ -683,6 +827,7 @@ func _process_attack() -> void:
 			var demon: Node2D = DemonBind.new()
 			var victim: Node2D = find_bind_target()
 			demon.configure(self,victim)
+			demon.lock_time = bind_cast_duration
 			get_parent().add_child(demon)
 			if is_instance_valid(victim) and victim.get_parent() == get_parent():
 				get_parent().move_child(demon,victim.get_index())
@@ -704,6 +849,8 @@ func _process_attack() -> void:
 			struck.clear()
 	attack_shape.shape.size = Vector2(float(config[5]), float(config[6]))
 	var strike_y: float = -116.0 if action_name == "PUNCH_3" else (-64.0 if action_name == "AIR_KICK" else (-78.0 if action_name == "AIR_PUNCH" else -82.0))
+	if fighter_profile == "MUAY_THAI":
+		strike_y = -112.0 if action_name.begins_with("PUNCH") else (-125.0 if action_name == "KICK_3" else -90.0)
 	attack_shape.position = Vector2(facing * (float(config[5]) * 0.5 + 18.0), strike_y)
 	var query := PhysicsShapeQueryParameters2D.new()
 	query.shape = attack_shape.shape
@@ -738,10 +885,20 @@ func receive_training_hit(knockdown: bool) -> void:
 		return
 	_receive_hit(18 if knockdown else 8,"KICK_3" if knockdown else "PUNCH",null)
 
+func attack_config(action: String) -> Array:
+	return MUAY_ATTACKS.get(action,ATTACKS[action]) if fighter_profile == "MUAY_THAI" else ATTACKS[action]
+
+func standing_height() -> float:
+	return 168.0 if fighter_profile == "MUAY_THAI" else 144.0
+
+func low_height() -> float:
+	return 100.0 if fighter_profile == "MUAY_THAI" else 84.0
+
 func _update_body_shape() -> void:
-	var low: bool = state_name == "CROUCH" or state_name == "FALL"
-	body_shape.shape.size = Vector2(50.0, 84.0 if low else 144.0)
-	body_shape.position.y = -42.0 if low else -72.0
+	var low: bool = state_name in ["CROUCH","FALL"]
+	var height: float = low_height() if low else standing_height()
+	body_shape.shape.size = Vector2(50.0,height)
+	body_shape.position.y = -height*0.5
 
 func _set_state(next: String) -> void:
 	if state_name != next:
@@ -756,11 +913,11 @@ func announce(text: String) -> void:
 func reset_training() -> void:
 	if red_awakened:
 		red_awakened = false
-		display_name = "RED CAP" if fighter_profile == "RED_CAP" else "PHUZASHI"
+		display_name = {"RED_CAP":"ASSJIRO","PHUZASHI":"PHUZASHI","MUAY_THAI":"MUAY THAI"}[fighter_profile]
 		rig.set_red_awakened(false)
 	global_position = spawn_point
 	velocity = Vector2.ZERO
-	health = 100.0
+	health = max_health
 	damage_taken = 0
 	last_received = ""
 	energy = 100.0
@@ -784,6 +941,19 @@ func reset_training() -> void:
 	pulse_spawned = false
 	blink_timer = 0.0
 	blink_cooldown = 0.0
+	dash_timer = 0.0
+	if is_instance_valid(fino_visual):
+		fino_visual.visible = false
+	rig.visible = true
+	walk_distance = 0.0
+	dash_cooldown = 0.0
+	cheer_buff = 0.0
+	cheer_cooldown = 0.0
+	cheer_spawned = false
+	get_tree().call_group("cheer_assists","queue_free")
+	guard_impact = 0.0
+	guard_push_timer = 0.0
+	rig.position = Vector2.ZERO
 	left_tap = -100.0
 	right_tap = -100.0
 	_clear_combo()

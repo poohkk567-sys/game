@@ -18,6 +18,8 @@ func _enter_tree() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _ready() -> void:
+	if get_tree().has_meta("solo_fighter"):
+		phuzashi.select_fighter(get_tree().get_meta("solo_fighter"))
 	if get_tree().get_meta("clear_training",false):
 		phuzashi.rig.set_clear_enabled(true)
 	# Children pause normally; the orchestrator remains available for Esc.
@@ -30,9 +32,13 @@ func _ready() -> void:
 	Gamepads.device_changed.connect(controller_changed)
 
 func toggle_help() -> void:
+	if Gamepads.settings_open:
+		return
 	show_help = not show_help
 
 func toggle_pause() -> void:
+	if Gamepads.settings_open:
+		return
 	paused = not paused
 	Gamepads.suspend_until_neutral()
 	get_tree().paused = paused
@@ -44,6 +50,12 @@ func controller_changed() -> void:
 	get_tree().paused = true
 
 func _input(event: InputEvent) -> void:
+	if Gamepads.settings_open:
+		return
+	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_F8:
+		get_tree().paused = false
+		get_tree().change_scene_to_file("res://scenes/title_menu.tscn")
+		return
 	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_F6:
 		get_tree().paused = false
 		get_tree().change_scene_to_file("res://scenes/versus_school.tscn")
@@ -59,7 +71,7 @@ func _input(event: InputEvent) -> void:
 		phuzashi.debug_hitboxes = not phuzashi.debug_hitboxes
 	if event.is_action_pressed("sprite_trial") and not event.is_echo():
 		phuzashi.rig.set_draft_enabled(not phuzashi.rig.use_draft_spritesheet)
-		phuzashi.announce("RED CAP / Whole-body sprites" if not phuzashi.specials_enabled else ("SPRITESHEET: ALL 12 MOVES" if phuzashi.rig.use_draft_spritesheet else "Original master animation"))
+		phuzashi.announce("ASSJIRO / Whole-body sprites" if not phuzashi.specials_enabled else ("SPRITESHEET: ALL 12 MOVES" if phuzashi.rig.use_draft_spritesheet else "Original master animation"))
 	if event.is_action_pressed("showcase") and not event.is_echo():
 		set_showcase(not showcase)
 	elif showcase and (event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion) and not event.is_echo() and (not event is InputEventJoypadButton or event.pressed) and not event.is_action("pause") and not event.is_action("help") and not event.is_action("hitboxes") and not event.is_action("sprite_trial"):
@@ -70,7 +82,8 @@ func switch_fighter() -> void:
 	_release_demo()
 	for action: StringName in InputMap.get_actions():
 		Input.action_release(action)
-	phuzashi.select_fighter("RED_CAP" if phuzashi.fighter_profile == "PHUZASHI" else "PHUZASHI")
+	var choices: Array[String] = ["PHUZASHI","RED_CAP","MUAY_THAI"]
+	phuzashi.select_fighter(choices[(choices.find(phuzashi.fighter_profile)+1)%choices.size()])
 	target.reset_target()
 	SEQUENCE = PHUZASHI_SEQUENCE.duplicate() if phuzashi.specials_enabled else NORMAL_SEQUENCE.duplicate()
 

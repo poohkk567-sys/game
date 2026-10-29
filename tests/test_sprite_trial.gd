@@ -114,7 +114,7 @@ func run() -> void:
 		var config: Array = player.ATTACKS[attack]
 		expect(player.start_action(attack),"Start illustrated "+attack)
 		await frames(roundi(float(config[0])*float(config[3])*60.0)+2)
-		expect(sprite.visible and sprite.animation == attack and sprite.frame >= 3 and sprite.frame <= 5,"Contact drawing matches the active window for "+attack)
+		expect((player.fino_visual.visible and not player.rig.visible and player.fino_visual.frame >= 5) if attack == "ULTIMATE" else (sprite.visible and sprite.animation == attack and sprite.frame >= 3 and sprite.frame <= 5),"Contact drawing matches the active window for "+attack)
 		await frames(ceili(float(config[0])*60.0)+3)
 		expect(player.state_name == "IDLE" and sprite.animation == "IDLE","Illustrated "+attack+" completes recovery")
 	player.receive_training_hit(false)
