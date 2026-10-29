@@ -3,6 +3,8 @@ extends RefCounted
 
 static func install() -> void:
 	var bindings: Dictionary = {
+		"skill_four":[KEY_Y],"p1_skill_four":[KEY_Y],"p2_skill_four":[KEY_KP_6,KEY_BRACKETRIGHT],
+		"skill_five":[KEY_F],"p1_skill_five":[KEY_F],"p2_skill_five":[KEY_KP_9,KEY_MINUS],
 		"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT],
 		"cheer": [KEY_T], "p1_cheer":[KEY_T], "p2_cheer":[KEY_BRACKETLEFT], "dash": [KEY_E], "p1_dash":[KEY_E], "p2_dash":[KEY_KP_0,KEY_BACKSLASH], "charge": [KEY_Q], "run": [KEY_SHIFT], "jump": [KEY_SPACE], "crouch": [KEY_S, KEY_DOWN],
 		"guard": [KEY_L], "punch": [KEY_J], "kick": [KEY_K],

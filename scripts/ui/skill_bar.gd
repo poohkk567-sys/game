@@ -1,0 +1,23 @@
+extends RefCounted
+const Book = preload("res://scripts/combat/skill_book.gd")
+const READY := Color("d5b2ff")
+const DIM := Color("797f94")
+
+static func draw_bar(canvas: CanvasItem, fighter: Node2D, rect: Rect2, second: bool = false) -> void:
+	var moves: Array = Book.ROSTER[fighter.fighter_profile]
+	var keys: Array[String] = Book.keys(fighter.fighter_profile,second)
+	var width: float = rect.size.x/6
+	for slot in range(6):
+		var move: String = moves[slot]
+		var cell := Rect2(rect.position+Vector2(slot*width,0),Vector2(width-4,rect.size.y))
+		var cooldown: float = fighter.cheer_cooldown if move == "CHEER" else float(fighter.skills.cooldowns.get(move,0))
+		var locked: bool = fighter.fighter_profile == "RED_CAP" and ((not fighter.red_awakened and slot < 5) or (fighter.red_awakened and slot == 5))
+		var enough: bool = fighter.energy >= Book.cost(move)
+		var tint: Color = READY if enough and cooldown <= 0 and not locked else DIM
+		canvas.draw_rect(cell,Color(0.035,0.045,0.075,0.95))
+		canvas.draw_rect(cell,tint.darkened(0.45),false,1)
+		var key_label: String = keys[slot]
+		canvas.draw_string(ThemeDB.fallback_font,cell.position+Vector2(5,13),key_label,HORIZONTAL_ALIGNMENT_LEFT,-1,10,tint)
+		canvas.draw_string(ThemeDB.fallback_font,cell.position+Vector2(5,27),Book.SHORT_NAMES[move],HORIZONTAL_ALIGNMENT_LEFT,-1,10,tint)
+		var status: String = "AWAKEN FIRST" if locked and slot < 5 else ("ACTIVE FORM" if locked else ("%.1fs" % cooldown if cooldown > 0 else "%d MP" % Book.cost(move)))
+		canvas.draw_string(ThemeDB.fallback_font,cell.position+Vector2(5,40),status,HORIZONTAL_ALIGNMENT_LEFT,-1,9,tint)

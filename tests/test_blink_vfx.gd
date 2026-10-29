@@ -24,6 +24,7 @@ func run() -> void:
 	root.add_child(stage)
 	await frames(6)
 	var actor: PhuzashiCharacter = stage.get_node("PHUZASHI")
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	check(FileAccess.get_sha256("res://assets/effects/shadow_blink/shadow_blink_approved.png") == "6040de76cb8a691cb8d3b3fa0a8fab0b38206c23021ae8a49c504e4de866dfa7", "Approved effect sheet is byte-identical")
 	check(actor._start_blink(1), "Right blink starts with illustrated VFX")
 	check(get_nodes_in_group("shadow_blink_effects").size() == 1, "One independent effect per blink")
@@ -46,12 +47,14 @@ func run() -> void:
 	await frames(24)
 	check(get_nodes_in_group("shadow_blink_effects").is_empty(), "All visuals and afterimages expire")
 	actor.reset_training()
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	await frames(4)
 	check(actor._start_blink(-1), "Left blink starts")
 	effect = get_nodes_in_group("shadow_blink_effects")[0]
 	await frames(12)
 	check(effect.direction == -1 and effect.dash_sprite.scale.x < 0, "Left blink mirrors approved art")
 	actor.reset_training()
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	await frames(2)
 	check(get_nodes_in_group("shadow_blink_effects").is_empty(), "Reset removes active rifts and ghosts")
 	actor.position.x = 1185
@@ -62,6 +65,7 @@ func run() -> void:
 	await frames(26)
 	check(absf(actor.global_position.x - effect.destination.x) < 0.1, "Fighter and arrival effect agree at arena edge")
 	actor.reset_training()
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	await frames(2)
 	actor.energy = 1
 	check(not actor._start_blink(1), "Low MP rejects blink")

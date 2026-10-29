@@ -50,6 +50,7 @@ func reset() -> void:
 	for action: StringName in InputMap.get_actions():
 		Input.action_release(action)
 	actor.reset_training()
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	target.reset_target()
 	casts = 0
 	await frames(4)
@@ -74,6 +75,7 @@ func run() -> void:
 	root.add_child(stage)
 	await frames(6)
 	actor = stage.get_node("PHUZASHI")
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	target = stage.get_node("TrainingCrystal")
 	actor.attack_started.connect(on_attack)
 	await reset()
@@ -240,6 +242,7 @@ func run() -> void:
 	actor.start_action("DEMON_BIND")
 	await frames(20)
 	actor.reset_training()
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	target.reset_target()
 	await frames(70)
 	check(not target.is_movement_locked() and get_nodes_in_group("demon_bind_effects").is_empty(),"Reset during flight cancels the impending catch")
@@ -247,6 +250,7 @@ func run() -> void:
 	actor.start_action("DEMON_BIND")
 	await until_locked(target)
 	actor.reset_training()
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	await frames(2)
 	check(not target.is_movement_locked() and get_nodes_in_group("demon_bind_effects").is_empty(),"Reset while holding clears the lock and visual together")
 	await reset()

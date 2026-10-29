@@ -95,6 +95,7 @@ func _physics_process(delta: float) -> void:
 		_release_demo()
 		showcase_index = (showcase_index + 1) % SEQUENCE.size()
 		phuzashi.reset_training()
+		phuzashi.energy = 100 # Demonstration only; manual play/reset starts at 50 MP.
 		phuzashi.position.x = 800.0
 		showcase_clock = 2.4
 		# Wait a physics frame after reset so grounding/contact are established.

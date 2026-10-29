@@ -2,7 +2,19 @@
 
 เกมต่อสู้2D Godot4.2.2+ มีหน้าเลือกตัวละคร PHUZASHI / ASSJIRO / MUAY THAI เล่นสองคนด้วยคีย์บอร์ดหรือจอย ตั้งจอยแต่ละฝั่งและผูกปุ่มเองได้
 
-## ล่าสุด: ตัวช่วยหญิงลายเส้นเดียวกับ PHUZASHI
+## ล่าสุด: ตัวละ 6 สกิล · สแตนด์กอริลล่าน้ำตาล · ซีอิ๊วดำ · เปิด 50 มานา
+
+[ดาวน์โหลดเกม Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/six-skills-black-soy/docs/downloads/PHUZASHI_Six_Skills_Godot.zip?raw=true) — แตก ZIP → Import `project.godot` ด้วย Godot 4.2.2+ → F5
+
+เพิ่มครบตัวละ 6 ท่ารวมอัลติ PHUZASHI มีรอยแยกและเงาสวน ASSJIRO มีเสยหัวแครอท ขว้างซีอิ๊วดำ หมุนเตะ มวยไทยมีกอริลล่าขนน้ำตาลทั้งหกสกิล เริ่มทุกยก 50/100 MP เพิ่มแถบสกิลพร้อมค่ามานา/คูลดาวน์และล็อกร่าง
+
+**P1:** U / S+J / T / Y / F / I (ASSJIRO อัลติ O) · **P2:** Num4 / ลง+Num1 / [ / Num6 / Num9 / Num5 · **จอย:** RT / ลง+X / D-padขึ้น / สติ๊กขวาขึ้น / สติ๊กขวาลง / Y ตั้งปุ่มเองได้ใน F7/R3
+
+[คู่มือทั้ง 18 ท่าและปุ่มครบ](docs/SIX_SKILLS_TH.md) · [วิดีโอในเกม](docs/PHUZASHI_Six_Skills.mp4) · [ผลทดสอบ](docs/SIX_SKILLS_TEST_REPORT.md)
+
+![สแตนด์กอริลล่าขนน้ำตาล](docs/screenshots/six_preview_gorilla.png)
+
+## รุ่นก่อน: ตัวช่วยหญิงลายเส้นเดียวกับ PHUZASHI
 
 [ดาวน์โหลดเกม Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/cheer-assist-style/docs/downloads/PHUZASHI_Cheer_Style_Godot.zip?raw=true) — แตก ZIP → Import `project.godot` ด้วย Godot 4.2.2+ → F5
 

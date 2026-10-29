@@ -25,6 +25,8 @@ func setup(left: bool = false, awaken: bool = true) -> void:
 	for command: StringName in InputMap.get_actions():
 		Input.action_release(command)
 	stage.restart_match()
+	stage.p1.energy = 100
+	stage.p2.energy = 100
 	stage.phase = "FIGHT"
 	a.controls_enabled = true
 	b.controls_enabled = true
@@ -149,6 +151,7 @@ func run() -> void:
 	check(b.red_awakened and a.damage_taken == 22,"Awakened bald body can headbutt without reverting to the cap")
 	check(str(b.rig.draft_animation.get_script().resource_path).contains("red_awakened"),"Headbutt presentation keeps awakened art")
 	a.reset_training()
+	a.energy = 100 # Explicit full-mana combat fixture.
 	a.position.x = 640
 	b.position.x = 750
 	await frames(5)
@@ -167,19 +170,22 @@ func run() -> void:
 	await frames(5)
 	b = stage.phuzashi
 	b.select_fighter("RED_CAP")
+	b.energy = 100 # Explicit headbutt fixture.
 	await frames(5)
 	b.red_awakened = true
 	b.rig.set_red_awakened(true)
 	await tap_key(KEY_I)
 	check(b.action_name == "CARROT_HEADBUTT" and b.energy == 75,"Solo Red Cap I is now headbutt, not the cap-removal ultimate")
 	b.reset_training()
+	b.energy = 100 # Explicit full-mana combat fixture.
 	await frames(5)
 	await tap_key(KEY_O)
 	check(b.action_name == "TRANSFORM" and b.energy == 0,"Solo Red Cap O retains the 100-MP transformation")
 	b.select_fighter("PHUZASHI")
+	b.energy = 100 # Explicit Fino fixture.
 	await frames(5)
 	await tap_key(KEY_I)
-	check(b.action_name == "ULTIMATE" and b.energy == 40,"PHUZASHI I remains the original 60-MP dragon")
+	check(b.action_name == "ULTIMATE" and b.energy == 40,"PHUZASHI I retains the 60-MP Fino ultimate")
 	stage.queue_free()
 	await frames(3)
 	print("CARROT SKILLS RESULT: %d checks, %d failures" % [checks,failures])

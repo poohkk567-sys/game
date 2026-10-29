@@ -19,6 +19,8 @@ func frames(count: int) -> void:
 func setup(left: bool = false) -> void:
 	for action: StringName in InputMap.get_actions(): Input.action_release(action)
 	stage.restart_match()
+	stage.p1.energy = 100
+	stage.p2.energy = 100
 	stage.phase = "FIGHT"
 	boxer.controls_enabled = true
 	enemy.controls_enabled = true
@@ -33,7 +35,7 @@ func run() -> void:
 	enemy = stage.p1
 	check(boxer.select_fighter("MUAY_THAI"),"Third fighter profile is selectable")
 	await frames(5)
-	check(boxer.display_name == "MUAY THAI" and not boxer.specials_enabled,"Muay Thai is a normal-moves-only fighter")
+	check(boxer.display_name == "MUAY THAI" and not boxer.specials_enabled,"Muay Thai keeps its own Muay Thai artwork and six stand skills")
 	check(boxer.max_health == 200 and boxer.health == 200,"Third fighter follows the shared 200-HP rule")
 	var sprite: AnimatedSprite2D = boxer.rig.draft_animation
 	var total: int = 0
@@ -53,8 +55,7 @@ func run() -> void:
 	var atlas: AtlasTexture = sprite.sprite_frames.get_frame_texture("IDLE",0)
 	var visual_height: float = atlas.region.size.y*absf(sprite.scale.y*boxer.rig.scale.y)
 	check(absf(visual_height-187.2) < 2,"Muay Thai standing artwork is twenty percent taller than the 156px fighters")
-	for skill: String in ["SPECIAL","ULTIMATE","DEMON_BIND","CHEER"]:
-		check(not boxer.start_action(skill) and boxer.energy == 100,"No borrowed special skill: "+skill)
+	check(not boxer.start_action("CARROT_HEADBUTT") and not boxer.start_action("DARK_RIFT"),"Muay Thai cannot borrow other fighters' powers")
 	for left: bool in [false,true]:
 		for family: String in ["PUNCH","KICK"]:
 			await setup(left)

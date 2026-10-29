@@ -19,6 +19,8 @@ func frames(count: int) -> void:
 func setup(left: bool = false) -> void:
 	for command: StringName in InputMap.get_actions(): Input.action_release(command)
 	stage.restart_match()
+	stage.p1.energy = 100
+	stage.p2.energy = 100
 	stage.phase = "FIGHT"
 	a.controls_enabled = true
 	b.controls_enabled = true

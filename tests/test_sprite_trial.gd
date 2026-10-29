@@ -24,6 +24,7 @@ func run() -> void:
 	stage = load("res://scenes/main.tscn").instantiate()
 	root.add_child(stage)
 	player = stage.get_node("PHUZASHI")
+	player.energy = 100 # Explicit full-mana combat fixture.
 	await frames(5)
 	var sprite: AnimatedSprite2D = player.rig.draft_animation
 	expect(player.rig.use_draft_spritesheet and sprite.visible and not player.rig.skin.visible,"Main scene defaults to full-body spritesheet animation")
@@ -68,6 +69,7 @@ func run() -> void:
 	stage._input(toggle)
 	expect(player.rig.use_draft_spritesheet and sprite.visible,"F4 restores the spritesheet")
 	player.reset_training()
+	player.energy = 100 # Explicit full-mana combat fixture.
 	await frames(2)
 	expect(sprite.visible and sprite.animation == "IDLE","Reset returns to illustrated idle")
 	player.start_action("PUNCH")
@@ -97,6 +99,7 @@ func run() -> void:
 		expect(sprite.sprite_frames.get_animation_loop(clip) == loops,"Loop/hold mode matches "+clip)
 	# Holding crouch/guard must not restart their stand-to-pose transitions.
 	player.reset_training()
+	player.energy = 100 # Explicit full-mana combat fixture.
 	await frames(4)
 	for action: String in ["crouch","guard"]:
 		Input.action_press(action)
@@ -108,6 +111,7 @@ func run() -> void:
 		await frames(4)
 	# Attack visuals and actual hit windows must agree.
 	player.reset_training()
+	player.energy = 100 # Explicit full-mana combat fixture.
 	await frames(4)
 	for attack: String in ["PUNCH","KICK","SPECIAL","ULTIMATE"]:
 		player.energy = 100

@@ -236,7 +236,7 @@ func _listen_binding(command: String) -> void:
 	status.text = "ปล่อยสติ๊ก/ทริกเกอร์ แล้วกดปุ่มจอยสำหรับ "+Profile.NAMES[command]+" (Esc ยกเลิก)"
 
 func _refresh_bindings() -> void:
-	var keys: Dictionary = {"move_left":"←","move_right":"→","jump":"↑","crouch":"↓","run":"Ctrl","guard":"Num3 / /","punch":"Num1 / ,","kick":"Num2 / .","charge":"P","special":"Num4 / '","pad_ultimate":"Num5 / ;","dash":"Num0 / \\","pad_pause":"Esc","pad_help":"F1","cheer":"["}
+	var keys: Dictionary = {"move_left":"←","move_right":"→","jump":"↑","crouch":"↓","run":"Ctrl","guard":"Num3 / /","punch":"Num1 / ,","kick":"Num2 / .","charge":"P","special":"Num4 / '","pad_ultimate":"Num5 / ;","dash":"Num0 / \\","pad_pause":"Esc","pad_help":"F1","cheer":"[","skill_four":"Num6 / ]","skill_five":"Num9 / -"}
 	for command: String in Profile.COMMANDS:
 		var line: String = Profile.NAMES[command]
 		if editing == "p2_":
