@@ -1,5 +1,7 @@
 # RED CAP — หมวกแดง ไม่มีผม / ท่าปกติครบ
 
+> เอกสารรุ่นก่อน: ปุ่มและกติกาปัจจุบันดู [สามตัวละคร/ตั้งค่าจอย/ฟีโน่/บัฟเชียร์](ROSTER_CONTROLLERS_TH.md)
+
 [ดาวน์โหลดโปรเจกต์เล่นผ่าน Godot](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/PHUZASHI_Red_Cap_Normals_Godot.zip?raw=true)
 
 [ดาวน์โหลดสไปรต์ชีตแยก](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/RED_CAP_Normal_Spritesheets.zip?raw=true)

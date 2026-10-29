@@ -71,6 +71,7 @@ func run() -> void:
 	pads = root.get_node("Gamepads")
 	pads.set_process(false)
 	stage = load("res://scenes/versus_school.tscn").instantiate()
+	stage.round_health = 100 # Original damage/KO fixture; production defaults are covered separately.
 	root.add_child(stage)
 	await frames(5)
 	a = stage.p1
@@ -147,10 +148,14 @@ func run() -> void:
 	await frames(3)
 	check(not b.charging,"Releasing LT immediately ends charging")
 	await setup()
+	b.red_awakened = true
+	b.rig.set_red_awakened(true)
 	axis(5,JOY_AXIS_TRIGGER_RIGHT,1)
 	await frames(3)
 	check(b.action_name == "CARROT_HEADBUTT" and b.energy == 75,"P2 RT / R2 activates the new orange headbutt")
 	await setup()
+	b.red_awakened = true
+	b.rig.set_red_awakened(true)
 	button(5,JOY_BUTTON_DPAD_DOWN,true)
 	button(5,JOY_BUTTON_X,true)
 	await frames(3)
@@ -197,7 +202,7 @@ func run() -> void:
 				if event is InputEventJoypadMotion or event is InputEventJoypadButton:
 					valid = valid and event.device == int(pads.assignments[prefix])
 					count += 1
-		check(valid and count == 15,"Every gameplay pad binding has the correct explicit device: "+prefix)
+		check(valid and count == 18,"Every gameplay pad binding has the correct explicit device: "+prefix)
 	button(2,JOY_BUTTON_X,true)
 	button(5,JOY_BUTTON_B,true)
 	await frames(3)

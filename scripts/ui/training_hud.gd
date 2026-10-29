@@ -20,7 +20,7 @@ func _draw() -> void:
 	_text(Vector2(44,83), "HP", 13, MUTED)
 	_bar(Vector2(79,96), 311, player.energy, Color("a275e6"))
 	_text(Vector2(44,109), "MP", 13, MUTED)
-	_text(Vector2(356,83), "%03d" % int(player.health), 12, WHITE)
+	_text(Vector2(356,83), "%05.1f" % player.health, 12, WHITE)
 	_text(Vector2(356,109), "%03d" % int(player.energy), 12, WHITE)
 	_bar(Vector2(79,122),311,player.guard_meter,Color("7bdbca"))
 	_text(Vector2(44,135),"GD",13,MUTED)
@@ -95,20 +95,27 @@ func _draw_move_list() -> void:
 		["S + J", "Demon Bind · lock target 0.7 s", "25 MP"],
 		["J / J / J", "Punch combo · three separate taps", "8 / 10 / 16"], ["K / K / K", "Kick combo · three separate taps", "14 / 16 / 22"],
 		["U", "Dark Pulse · traveling projectile", "25 MP / 24 DMG"],
-		["I", "Ultimate · violet dragon", "60 MP / 60 DMG"],
+		["I", "Ultimate · purple Fino ram", "60 MP / 60 DMG"],
 		["H / N", "Test hit / fall + automatic recovery", "—"], ["R", "Reset position, HP, MP and target", "—"]
 	]
 	if not player.specials_enabled:
 		rows = rows.filter(func(row: Array) -> bool: return row[0] not in ["A+A / D+D","S + J","U","I"])
-		rows.append(["I / RT","Carrot Headbutt: hop and dash","25 MP"])
-		rows.append(["S+J","Carrot Barrage: 7 orange-aura hits","30 MP"])
-		rows.append(["O / Y","Cap Off: hat / sauce / shirt","100 MP"])
+		if player.fighter_profile == "RED_CAP":
+			rows.append(["I / RT","Carrot Headbutt (awaken first)","25 MP"])
+			rows.append(["S+J","Carrot Barrage (awaken first)","30 MP"])
+			rows.append(["O / Y","Cap Off: 30% less damage taken","100 MP"])
+		else:
+			rows.append(["JJJ","Jab / cross / elbow","8 / 10 / 18"])
+			rows.append(["KKK","Teep / knee / high kick","14 / 16 / 22"])
 	rows.append(["Q / LT","Hold to charge · move or release to cancel","7 MP/s"])
-	rows.append(["TAB","Switch PHUZASHI / Red Cap","—"])
+	if player.fighter_profile == "PHUZASHI":
+		rows.append(["T / UP","Cheer: bind 1.1s, move +10%, 8s","30 MP"])
+	rows.append(["E / L3","Dash / Blink; F7 settings; F8 menu","—"])
+	rows.append(["TAB","Switch PHUZASHI / Assjiro / MUAY THAI","—"])
 	for i in range(rows.size()):
-		var y: float = 241+i*21
+		var y: float = 241+i*18
 		_text(Vector2(368,y), rows[i][0], 13, PURPLE)
-		_text(Vector2(472,y), rows[i][1], 12, WHITE)
+		_text(Vector2(472,y), rows[i][1], 11, WHITE)
 		_text(Vector2(787,y), rows[i][2], 11, CYAN)
 	_text(Vector2(368,612), "Pad: A jump / X punch / B kick / Y ult / LB guard / RB run / LT charge / RT skill", 12, MUTED)
 

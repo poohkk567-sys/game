@@ -11,18 +11,18 @@ func _process(_delta: float) -> void:
 func _draw() -> void:
 	_card(Rect2(24,20,499,140),VIOLET)
 	_card(Rect2(757,20,499,140),GOLD)
-	_text(Vector2(42,49),"P1  /  PHUZASHI",22,WHITE)
-	_text(Vector2(776,49),"P2  /  RED CAP",22,WHITE)
-	_bar(Vector2(42,62),462,stage.p1.health,Color("ce8ab1"),false)
-	_bar(Vector2(776,62),462,stage.p2.health,Color("ddb77c"),true)
+	_text(Vector2(42,49),"P1  /  "+stage.p1.display_name,22,WHITE)
+	_text(Vector2(776,49),"P2  /  "+stage.p2.display_name,22,WHITE)
+	_bar(Vector2(42,62),462,stage.p1.health/stage.p1.max_health*100.0,Color("ce8ab1"),false)
+	_bar(Vector2(776,62),462,stage.p2.health/stage.p2.max_health*100.0,Color("ddb77c"),true)
 	_bar(Vector2(42,91),462,stage.p1.energy,VIOLET,false,9)
 	_bar(Vector2(776,91),462,stage.p2.energy,GOLD,true,9)
 	_bar(Vector2(42,113),462,stage.p1.guard_meter,Color("7bdbca"),false,9)
 	_bar(Vector2(776,113),462,stage.p2.guard_meter,Color("7bdbca"),true,9)
-	_text(Vector2(43,135),"HP %03d    MP %03d    GUARD %03d" % [stage.p1.health,stage.p1.energy,stage.p1.guard_meter],11,MUTED)
-	_text(Vector2(777,135),"HP %03d    MP %03d    GUARD %03d" % [stage.p2.health,stage.p2.energy,stage.p2.guard_meter],11,MUTED)
+	_text(Vector2(43,135),"HP %s/%03d    MP %03d    GUARD %03d" % [_hp(stage.p1.health),stage.p1.max_health,stage.p1.energy,stage.p1.guard_meter],11,MUTED)
+	_text(Vector2(777,135),"HP %s/%03d    MP %03d    GUARD %03d" % [_hp(stage.p2.health),stage.p2.max_health,stage.p2.energy,stage.p2.guard_meter],11,MUTED)
 	_text(Vector2(43,152),Gamepads.source_label("p1_"),10,VIOLET)
-	_text(Vector2(777,152),Gamepads.source_label("p2_")+(" / AWAKENED" if stage.p2.red_awakened else " / ULT 100 MP"),10,GOLD)
+	_text(Vector2(777,152),Gamepads.source_label("p2_")+(" / AWAKENED -30% DAMAGE" if stage.p2.red_awakened else (" / TRANSFORM TO UNLOCK SKILLS" if stage.p2.fighter_profile == "RED_CAP" else (" / NORMAL MOVES ONLY" if stage.p2.fighter_profile == "MUAY_THAI" else " / DARK PULSE"))),10,GOLD)
 	_card(Rect2(545,20,190,140),Color("69758b"))
 	_center(640,47,"LOCAL VERSUS",13,MUTED)
 	_center(640,88,"%02d" % ceili(stage.remaining),40,WHITE)
@@ -39,10 +39,12 @@ func _draw() -> void:
 	elif stage.phase in ["ROUND_OVER","MATCH_OVER"]:
 		_banner(stage.result,"MATCH COMPLETE  /  START OR R REMATCH" if stage.phase == "MATCH_OVER" else "NEXT ROUND",VIOLET if stage.winner == 0 else GOLD)
 	_card(Rect2(24,632,1232,80),Color("687184"))
-	_text(Vector2(40,651),"P1  A/D MOVE  SPACE/W JUMP  SHIFT RUN  S CROUCH  J PUNCH  K KICK  L GUARD  Q CHARGE  U/I SKILLS  S+J BIND  AA/DD BLINK",11,WHITE)
-	_text(Vector2(40,668),"P2  ARROWS MOVE/JUMP/CROUCH  CTRL RUN  , . / PUNCH/KICK/GUARD  P CHARGE  NUM 4 or ' HEADBUTT  DOWN+PUNCH BARRAGE  NUM 5 or ; ULT",11,GOLD)
-	_text(Vector2(40,685),"PAD  STICK/DPAD MOVE  A JUMP  X PUNCH  B KICK  Y ULT  LB GUARD  RB RUN  LT CHARGE  RT SKILL  DOWN+X BIND",11,WHITE)
-	_text(Vector2(40,702),"START / ESC PAUSE   BACK / F1 CONTROLS   F5 SWAP SINGLE PAD   F3 HITBOXES   R REMATCH   F6 TRAINING",10,MUTED)
+	var p1_skills: String = "U PULSE  I FINO  T CHEER  S+J BIND" if stage.p1.fighter_profile == "PHUZASHI" else ("I HEADBUTT  S+J BARRAGE (AWAKENED)  O TRANSFORM" if stage.p1.fighter_profile == "RED_CAP" else "JJJ JAB/CROSS/ELBOW  KKK TEEP/KNEE/KICK")
+	var p2_skills: String = "NUM4/' PULSE  NUM5/; FINO  [ CHEER" if stage.p2.fighter_profile == "PHUZASHI" else ("NUM4/' HEADBUTT + DOWN/PUNCH BARRAGE (AWAKENED)  NUM5/; TRANSFORM" if stage.p2.fighter_profile == "RED_CAP" else "PUNCH COMBO: JAB/CROSS/ELBOW  KICK COMBO: TEEP/KNEE/KICK")
+	_text(Vector2(40,651),"P1  A/D MOVE  SPACE/W JUMP  SHIFT RUN  S CROUCH  J/K ATTACK  L GUARD  Q CHARGE  E BURST   "+p1_skills,10,WHITE)
+	_text(Vector2(40,668),"P2  ARROWS MOVE/JUMP/CROUCH  CTRL RUN  , . / ATTACK/GUARD  P CHARGE  NUM0 BURST   "+p2_skills,10,GOLD)
+	_text(Vector2(40,685),"PAD DEFAULTS / F7 CUSTOM: STICK/DPAD MOVE  A JUMP  X PUNCH  B KICK  Y ULT  LB GUARD  RB RUN  LT CHARGE  RT SKILL  DOWN+X BIND/BARRAGE  DPAD UP CHEER  L3 DASH",11,WHITE)
+	_text(Vector2(40,702),"START / ESC PAUSE   BACK / F1 CONTROLS   F8 MENU  F7 SETTINGS  E/NUM0 DASH  F5 SWAP PAD   F3 HITBOXES   R REMATCH   F6 TRAINING",10,MUTED)
 	if stage.show_help:
 		_help()
 	if stage.paused:
@@ -51,10 +53,16 @@ func _draw() -> void:
 		_center(640,405,stage.pause_reason,14,MUTED)
 		_center(640,370,"START / ESC RESUME   /   Y ON PAD OR R REMATCH",16,GOLD)
 
+func _hp(value: float) -> String:
+	return "%03d" % value if is_equal_approx(value,roundf(value)) else "%.1f" % value
+
 func _label_fighter(fighter: PhuzashiCharacter, label: String, color: Color) -> void:
 	_center(fighter.position.x,616,label+(" / AWAKENED" if fighter.red_awakened else ""),12,color)
 	if fighter.action_name == "TRANSFORM" and fighter.action_timer > 0:
 		_center(fighter.position.x,fighter.position.y-195,fighter.red_transform_phase(),14,GOLD)
+	if fighter.cheer_buff > 0:
+		_card(Rect2(fighter.position.x-137,fighter.position.y-255,274,27),Color("ffc5de"))
+		_center(fighter.position.x,fighter.position.y-235,"CHEER %.1fs / BIND 1.1s / MOVE +10%%" % fighter.cheer_buff,12,Color("ffc5de"))
 	if fighter.charging:
 		_center(fighter.position.x,fighter.position.y-190,"CHARGING / +7 MP / SEC",13,color)
 	if fighter.defense_feedback_time > 0:
@@ -71,11 +79,11 @@ func _help() -> void:
 	_card(Rect2(160,194,960,411),VIOLET)
 	_center(640,226,"KEYBOARD + GAMEPADS / LOCAL TWO PLAYER",23,WHITE)
 	var rows: Array = [
-	 ["P1 PHUZASHI","P2 RED CAP"],
+	 ["P1 "+stage.p1.display_name,"P2 "+stage.p2.display_name],
 	 ["A/D move   Space/W jump   Shift run","Arrows move/jump/crouch   Ctrl run"],
 	 ["J punch   K kick   L guard   S crouch","Num 1/2/3 or , . / : punch/kick/guard"],
 	 ["Q hold: charge 7 MP/s   U skill   I ultimate","P charge   Num 4 / apostrophe: HEADBUTT 25 MP"],
-	 ["S+J bind 25 MP   AA/DD blink 15 MP","Down+punch: BARRAGE 30 MP   Num 5 / ;: ULT 100 MP"]
+	 ["S+J bind 25 MP   AA/DD blink 15 MP","Down+punch: bind / barrage   Num5 / ;: ult   [: cheer"]
 	]
 	for i in range(rows.size()):
 		_text(Vector2(184,259+i*26),rows[i][0],12,VIOLET if i == 0 else WHITE)

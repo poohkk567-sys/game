@@ -1,5 +1,7 @@
 # PHUZASHI — DARK PULSE / หน้าโรงเรียน · 2 ผู้เล่น
 
+> เอกสารรุ่นก่อน: ปุ่มและกติกาปัจจุบันดู [สามตัวละคร/ตั้งค่าจอย/ฟีโน่/บัฟเชียร์](ROSTER_CONTROLLERS_TH.md)
+
 > รุ่นล่าสุดเพิ่ม [มานา เกจป้องกัน สกิลแครอท และจอยสองผู้เล่น](MANA_GUARD_CARROT_GAMEPADS_TH.md) ดูปุ่มปัจจุบันที่ลิงก์นี้หรือ F1 ในเกม
 
 [ดาวน์โหลดเกมทดสอบ Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/mana-guard-carrot-gamepads/docs/downloads/PHUZASHI_Mana_Carrot_Gamepads_Godot.zip?raw=true)

@@ -1,6 +1,10 @@
 # PHUZASHI — DARK PULSE / คู่มือภาษาไทย
 
-รุ่นล่าสุดเพิ่ม [ชาร์จมานา เกจป้องกัน สกิลแครอท และจอยสองผู้เล่น](docs/MANA_GUARD_CARROT_GAMEPADS_TH.md) **Q/P ชาร์จ7 MP/s, LTชาร์จ, LBการ์ด, RTสกิล, Yอัลติ**
+รุ่นปัจจุบัน: [สามตัวละคร ตั้งค่าจอย อัลติฟีโน่และบัฟเชียร์](docs/ROSTER_CONTROLLERS_TH.md) **F7/R3 ตั้งค่าจอย · F8 หน้าแรก · เลือกตัวละครก่อนเริ่มเกม**
+
+[ดาวน์โหลดเกม Godot](https://github.com/poohkk567-sys/game/blob/codex/roster-fino-controller-settings/docs/downloads/PHUZASHI_Roster_Fino_Godot.zip?raw=true) → แตกZIP → Import project.godot → F5
+
+รุ่นก่อนเพิ่ม [ชาร์จมานา เกจป้องกัน สกิลแครอท และจอยสองผู้เล่น](docs/MANA_GUARD_CARROT_GAMEPADS_TH.md) **Q/P ชาร์จ7 MP/s, LTชาร์จ, LBการ์ด, RTสกิล, Yอัลติ**
 
 RED CAP ในสนามฝึก: **Iหัวพุ่ง / S+Jหมัดรัว / Oถอดหมวก** ผู้เล่น2: **Num4 หรือ ' หัวพุ่ง / ลง+ต่อยหมัดรัว / Num5 หรือ ; ถอดหมวก**
 

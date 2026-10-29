@@ -21,7 +21,7 @@ func frames(count: int) -> void:
 		await physics_frame
 		await process_frame
 
-func setup(left: bool = false) -> void:
+func setup(left: bool = false, awaken: bool = true) -> void:
 	for command: StringName in InputMap.get_actions():
 		Input.action_release(command)
 	stage.restart_match()
@@ -31,6 +31,9 @@ func setup(left: bool = false) -> void:
 	a.position.x = 750 if left else 640
 	b.position.x = 640 if left else 750
 	await frames(5)
+	if awaken:
+		b.red_awakened = true
+		b.rig.set_red_awakened(true)
 
 func tap_key(code: int) -> void:
 	var event := InputEventKey.new()
@@ -56,6 +59,7 @@ func tap_key(code: int) -> void:
 
 func run() -> void:
 	stage = load("res://scenes/versus_school.tscn").instantiate()
+	stage.round_health = 100 # Original damage/KO fixture; production defaults are covered separately.
 	root.add_child(stage)
 	await frames(5)
 	a = stage.p1
@@ -71,7 +75,7 @@ func run() -> void:
 		await frames(45)
 		check(a.damage_taken == 22 and a.health == 78,"Headbutt hits exactly once for 22 damage, left="+str(left))
 		check(b.energy == 75 and b.action_name == "" and b.rig.rotation == 0,"Recovery ends the aura/lean without generating mana")
-		check(b.is_on_floor() and not b.red_awakened,"Capped body lands intact without transforming")
+		check(b.is_on_floor() and b.red_awakened,"Awakened body lands without reverting")
 		await setup(left)
 		check(b.start_action("DEMON_BIND") and b.energy == 70 and b.action_name == "CARROT_RUSH","Barrage starts for exactly 30 MP, left="+str(left))
 		await frames(85)
@@ -100,7 +104,7 @@ func run() -> void:
 	await frames(12)
 	check(a.start_action("PUNCH"),"Original PHUZASHI normals still work")
 	await frames(35)
-	check(b.guard_meter == 90 and b.health == 98,"New skills do not alter normal guard rules")
+	check(b.guard_meter == 90 and is_equal_approx(b.health,98.6),"New skills do not alter normal guard rules")
 	await setup()
 	Input.action_press("p1_guard")
 	await frames(12)
@@ -114,7 +118,7 @@ func run() -> void:
 	b.receive_attack(8,"PUNCH",a)
 	var damage_before: int = a.damage_taken
 	await frames(80)
-	check(a.damage_taken == damage_before and b.health == 92,"Getting hit cancels remaining barrage pulses")
+	check(a.damage_taken == damage_before and is_equal_approx(b.health,94.4),"Getting hit cancels remaining barrage pulses with awakened reduction")
 	await setup()
 	b.start_action("SPECIAL")
 	await frames(7)
@@ -132,7 +136,7 @@ func run() -> void:
 	Input.action_press("p2_crouch")
 	await tap_key(KEY_COMMA)
 	check(b.action_name == "CARROT_RUSH" and b.energy == 70,"P2 Down + comma starts the new barrage")
-	await setup()
+	await setup(false,false)
 	b.start_action("ULTIMATE")
 	await frames(200)
 	check(b.red_awakened,"Cap Off transformation still completes")
@@ -164,6 +168,8 @@ func run() -> void:
 	b = stage.phuzashi
 	b.select_fighter("RED_CAP")
 	await frames(5)
+	b.red_awakened = true
+	b.rig.set_red_awakened(true)
 	await tap_key(KEY_I)
 	check(b.action_name == "CARROT_HEADBUTT" and b.energy == 75,"Solo Red Cap I is now headbutt, not the cap-removal ultimate")
 	b.reset_training()

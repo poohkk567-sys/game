@@ -16,8 +16,9 @@ func _physics_process(_delta: float) -> void:
 
 func _sync() -> void:
 	var low: bool = fighter.state_name in ["CROUCH","FALL"]
-	shape.shape.size = Vector2(50,84 if low else 144)
-	shape.position = Vector2(0,-42 if low else -72)
+	var height: float = fighter.low_height() if low else fighter.standing_height()
+	shape.shape.size = Vector2(50,height)
+	shape.position = Vector2(0,-height*0.5)
 
 func can_be_hit_by(attacker: Node2D) -> bool:
 	return attacker != fighter and fighter.health > 0.0 and not fighter.blink_invulnerable()

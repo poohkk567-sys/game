@@ -6,6 +6,7 @@ const LOCK_TIME: float = 0.7
 const SUMMON_TIME: float = 0.12
 const FLIGHT_TIME: float = 0.22
 const RELEASE_TIME: float = 0.22
+var lock_time: float = LOCK_TIME
 var caster: Node2D
 var target: Node2D
 var origin: Vector2
@@ -21,6 +22,7 @@ var regions: Array[Rect2] = []
 
 func configure(source: Node2D, victim: Node2D) -> void:
 	caster = source
+	lock_time = source.bind_lock_duration() if source.has_method("bind_lock_duration") else LOCK_TIME
 	target = victim
 	direction = source.facing
 	origin = source.global_position+Vector2(direction*54,-88)
@@ -81,7 +83,7 @@ func _target_anchor() -> Vector2:
 	return target.get_bind_anchor() if target.has_method("get_bind_anchor") else target.global_position
 
 func _arrive() -> void:
-	if is_instance_valid(target) and target.apply_movement_lock(LOCK_TIME):
+	if is_instance_valid(target) and target.apply_movement_lock(lock_time):
 		caught = true
 		# Refresh the status without accumulating duplicate holding demons.
 		for other: Node in get_tree().get_nodes_in_group("demon_bind_effects"):
@@ -91,7 +93,7 @@ func _arrive() -> void:
 		phase_age = 0.0
 		global_position = _target_anchor()
 		if is_instance_valid(caster):
-			caster.announce("DEMON BIND / TARGET LOCKED 0.7s")
+			caster.announce("DEMON BIND / TARGET LOCKED %.1fs" % lock_time)
 	else:
 		begin_release()
 		if is_instance_valid(caster):
