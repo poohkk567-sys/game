@@ -360,7 +360,7 @@ func _physics_process(delta: float) -> void:
 	rig.position = _reaction_offset()
 	dash_cooldown = maxf(0.0,dash_cooldown-delta)
 	if duel_mode and health <= 0.0:
-		velocity.x = 0.0
+		velocity.x = skills.push_velocity if skills.push_remaining > 0 else move_toward(velocity.x,0,ACCELERATION*delta)
 		if not is_on_floor():
 			velocity.y += GRAVITY*delta
 		move_and_slide()
@@ -472,7 +472,7 @@ func _physics_process(delta: float) -> void:
 	var desired: float = 0.0 if locked else axis * (AIR_SPEED if airborne else speed)
 	if not airborne and action_name in ["PUNCH_2", "PUNCH_3", "KICK_2", "KICK_3"] and action_progress() >= 0.15 and action_progress() < 0.45:
 		desired = facing * (80.0 if combo_step == 3 else 45.0)
-	if is_fino_active() and action_progress() >= 0.32 and action_progress() < 0.80:
+	if is_fino_active() and struck.is_empty() and action_progress() >= 0.32 and action_progress() < 0.80:
 		desired = facing*650.0
 	if action_name == "CARROT_HEADBUTT" and action_timer > 0:
 		if action_progress() >= 0.18 and not headbutt_launched:
@@ -535,6 +535,10 @@ func _physics_process(delta: float) -> void:
 		phase = action_progress()
 	elif state_name == "JUMP":
 		phase = clampf((velocity.y - JUMP_VELOCITY) / (-2.0 * JUMP_VELOCITY), 0.0, 1.0)
+	if state_name == "FALL" and launched_once:
+		# A ram victim tumbles in flight and stays down after landing, rather
+		# than replaying upright startup poses in the air.
+		phase = maxf(phase,0.40 if not is_on_floor() else 0.75)
 	if state_name == "WALK":
 		walk_distance += absf(position.x-previous_x)
 		phase = fmod(walk_distance/104.0,1.0)
@@ -1077,6 +1081,7 @@ func reset_training() -> void:
 	cheer_cooldown = 0.0
 	cheer_spawned = false
 	get_tree().call_group("cheer_assists","queue_free")
+	get_tree().call_group("ninja_smoke_effects","queue_free")
 	guard_impact = 0.0
 	guard_push_timer = 0.0
 	rig.position = Vector2.ZERO

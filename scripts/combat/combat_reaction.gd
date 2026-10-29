@@ -71,6 +71,15 @@ static func hit(victim: Node2D, attacker: Node2D, damage: int, move: String, blo
 	victim.skills.push_velocity = direction(victim,attacker)*data.force
 	victim.skills.push_remaining = data.duration
 	victim.velocity.x = victim.skills.push_velocity
+	if move == "ULTIMATE" and not blocked and is_instance_valid(attacker) and attacker.has_method("is_fino_active") and attacker.is_fino_active():
+		# A frontal ram sends the opponent away before the scooter can ride over
+		# them. Release leg binds so they cannot pin the launch to the floor.
+		victim.movement_lock.clear()
+		victim.launched_once = true
+		victim.velocity.y = -430
+		victim.skills.push_velocity = direction(victim,attacker)*820
+		victim.skills.push_remaining = 0.48
+		victim.velocity.x = victim.skills.push_velocity
 	if is_instance_valid(attacker) and attacker.has_method("bind_lock_duration"):
 		attacker.impact_pause = maxf(attacker.impact_pause,data.pause)
 	Feedback.obtain(victim.get_parent()).impact(data.camera,"GUARD" if blocked else data.sound)

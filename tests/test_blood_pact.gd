@@ -83,7 +83,7 @@ func run() -> void:
 	a.start_action("DEMON_BIND")
 	await frames(20)
 	var demons: Array[Node] = get_nodes_in_group("demon_bind_effects")
-	check(demons.size() == 1 and demons[0].empowered and demons[0].lock_time == 1.1,"Cheered bind snapshots larger chained-leg presentation and buffed duration")
+	check(demons.size() == 1 and demons[0].empowered and demons[0].lock_time == 1.1,"Cheered bind snapshots compact rear-grapple presentation and buffed duration")
 	a.cheer_buff = 0
 	await frames(2)
 	check(not a.status_aura.visible and a.bind_lock_duration() == 0.7,"Cheer expiry removes cloak and restores ordinary bind duration")
@@ -96,9 +96,9 @@ func run() -> void:
 	a.red_awakened = false
 	a.rig.set_red_awakened(false)
 	a.start_action("ULTIMATE")
-	await frames(80)
-	check(a.status_aura.kind == "GOLD" and not a.red_awakened,"Orange-gold sacred guardian appears during awakening")
-	await frames(125)
+	await frames(135)
+	check(a.status_aura.kind == "GOLD" and not a.red_awakened and a.red_transform_phase() == "SHIRT OFF","Orange-gold sacred guardian arrives with shirt removal")
+	await frames(70)
 	check(a.red_awakened and a.status_aura.kind == "GOLD" and a.energy == 30,"Golden aura remains in bald form without changing transformation cost")
 	a.start_action("CARROT_SPIN")
 	await frames(2)

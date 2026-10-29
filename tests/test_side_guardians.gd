@@ -1,6 +1,7 @@
 extends "res://tests/test_contact_controls.gd"
 ## Art alignment and real buff/form lifecycle. These auras never award combat stats.
 const Guardian = preload("res://scripts/effects/side_guardian_art.gd")
+const Grip: SpriteFrames = preload("res://assets/effects/ninja_grapple_frames.res")
 func run() -> void:
 	for kind: String in ["PURPLE","RED","GOLD"]:
 		check(Guardian.FRAMES.get_frame_count(kind) == 8,"Eight pixel-art loop drawings: "+kind)
@@ -34,8 +35,8 @@ func run() -> void:
 			a.start_action("DEMON_BIND")
 			await frames(40)
 			var demons: Array[Node] = get_nodes_in_group("demon_bind_effects")
-			check(demons.size() == 1 and demons[0].phase == "HOLD" and demons[0].guardian.sprite_frames == Guardian.FRAMES,"Empowered leg bind uses the same ninja identity")
-			check(demons[0].guardian.scale.x*a.facing > 0 and not demons[0].sprite.visible and demons[0].lock_time == 1.1,"Side guardian replaces the old spirit and preserves 1.1s lock")
+			check(demons.size() == 1 and demons[0].phase == "HOLD" and demons[0].guardian.sprite_frames == Grip,"Empowered leg bind uses separate compact grappling art")
+			check(demons[0].guardian.scale.x*b.facing > 0 and demons[0].visual_height == 116 and demons[0].lock_time == 1.1,"Small rear grappler follows victim facing and preserves 1.1s lock")
 			a.cheer_buff = 0
 			await frames(2)
 			check(not a.status_aura.visible and demons[0].guardian.visible,"Cheer cloak expires while the already-cast lock retains its snapshot")
@@ -44,7 +45,7 @@ func run() -> void:
 			a.start_action("DEMON_BIND")
 			await frames(35)
 			demons = get_nodes_in_group("demon_bind_effects")
-			check(demons.size() == 1 and not demons[0].empowered and demons[0].guardian == null and demons[0].lock_time == 0.7,"Unbuffed cast restores the original 0.7s bind")
+			check(demons.size() == 1 and not demons[0].empowered and demons[0].guardian.sprite_frames == Grip and demons[0].lock_time == 0.7,"Unbuffed cast uses the small ninja with original 0.7s bind")
 		await setup(profile)
 		a.cheer_buff = 8
 		a.start_action("ULTIMATE")
@@ -77,9 +78,9 @@ func run() -> void:
 	await frames(2)
 	check(not a.status_aura.visible,"Capped form has no golden guardian")
 	a.start_action("ULTIMATE")
-	await frames(90)
+	await frames(135)
 	check(a.status_aura.sprite.animation == "GOLD" and a.status_aura.visible,"Side-facing lotus guardian builds during awakening")
-	await frames(116)
+	await frames(71)
 	check(a.red_awakened and a.status_aura.visible and a.energy == 30,"Bald form keeps the new golden guardian and old mana rules")
 	a.start_action("CARROT_SPIN")
 	await frames(2)

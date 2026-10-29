@@ -84,6 +84,19 @@ func run() -> void:
 					await inspect(viewport,bank+"/"+clip+"/"+str(index))
 		sprite.queue_free()
 		await process_frame
+	var grapple := AnimatedSprite2D.new()
+	grapple.sprite_frames = load("res://assets/effects/ninja_grapple_frames.res")
+	grapple.centered = false
+	grapple.animation = "GRIP"
+	viewport.add_child(grapple)
+	for direction: int in [-1,1]:
+		var factor: float = 116.0/float(grapple.sprite_frames.get_meta("height"))
+		grapple.scale = Vector2(direction*factor,factor)
+		grapple.position = Vector2(256,310)-Vector2(direction*512,960)*factor
+		for index in range(8):
+			grapple.frame = index
+			await inspect(viewport,"COMPACT REAR NINJA/"+str(index)+"/"+str(direction))
+	grapple.queue_free()
 	viewport.queue_free()
 	await process_frame
 	print("ROSTER RENDER RESULT: %d samples, %d failures" % [samples,failures])

@@ -45,3 +45,6 @@ if rg -n 'SCRIPT ERROR:|ERROR:|FAIL ' work/phuzashi-chill-check.log; then exit 1
 
 "$engine" --headless --path . --fixed-fps 60 --script tests/test_side_guardians.gd 2>&1 | tee work/side-guardians-check.log
 if rg -n "SCRIPT ERROR:|ERROR:|FAIL " work/side-guardians-check.log; then exit 1; fi
+
+"$engine" --headless --path . --fixed-fps 60 --script tests/test_ninja_arrivals.gd 2>&1 | tee work/ninja-arrivals-check.log
+if rg -n "SCRIPT ERROR:|ERROR:|FAIL " work/ninja-arrivals-check.log; then exit 1; fi
