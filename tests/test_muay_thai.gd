@@ -98,7 +98,7 @@ func run() -> void:
 	root.add_child(menu)
 	current_scene = menu
 	await frames(4)
-	check(menu.selectors[0].item_count == 3 and menu.selectors[1].item_count == 3,"Both title selectors offer all three fighters")
+	check(menu.selectors[0].item_count == 5 and menu.selectors[1].item_count == 5,"Both title selectors offer all five fighters")
 	menu.selectors[0].select(2)
 	menu.selectors[1].select(1)
 	menu.start_versus()

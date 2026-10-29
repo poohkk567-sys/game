@@ -82,7 +82,7 @@ func switch_fighter() -> void:
 	_release_demo()
 	for action: StringName in InputMap.get_actions():
 		Input.action_release(action)
-	var choices: Array[String] = ["PHUZASHI","RED_CAP","MUAY_THAI"]
+	var choices: Array[String] = ["PHUZASHI","RED_CAP","MUAY_THAI","BLACK_COAT","PHUZASHI_CHILL"]
 	phuzashi.select_fighter(choices[(choices.find(phuzashi.fighter_profile)+1)%choices.size()])
 	target.reset_target()
 	SEQUENCE = PHUZASHI_SEQUENCE.duplicate() if phuzashi.specials_enabled else NORMAL_SEQUENCE.duplicate()

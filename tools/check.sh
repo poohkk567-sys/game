@@ -37,3 +37,8 @@ fi
 if rg -n '(^|[[:space:]])(SCRIPT ERROR:|ERROR:|FAIL )' work/import-check.log work/test-check.log work/sprite-trial-check.log work/vfx-check.log work/blink-check.log work/blink-vfx-check.log work/combat-combos-check.log work/combo-poses-check.log work/demon-bind-check.log work/red-cap-check.log work/local-versus-check.log work/red-transform-check.log work/mana-guard-check.log work/gamepads-check.log work/carrot-skills-check.log work/controller-settings-check.log work/new-rules-check.log work/muay-thai-check.log; then
   exit 1
 fi
+
+"$engine" --headless --path . --fixed-fps 60 --script tests/test_blood_pact.gd 2>&1 | tee work/blood-pact-check.log
+if rg -n "SCRIPT ERROR:|ERROR:|FAIL " work/blood-pact-check.log; then exit 1; fi
+"$engine" --headless --path . --fixed-fps 60 --script tests/test_phuzashi_chill.gd 2>&1 | tee work/phuzashi-chill-check.log
+if rg -n 'SCRIPT ERROR:|ERROR:|FAIL ' work/phuzashi-chill-check.log; then exit 1; fi

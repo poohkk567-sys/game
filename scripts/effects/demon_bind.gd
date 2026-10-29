@@ -16,12 +16,14 @@ var phase: String = "SUMMON"
 var phase_age: float = 0.0
 var age: float = 0.0
 var caught: bool = false
+var empowered: bool = false
 var sprite: Sprite2D
 var cells: Array[AtlasTexture] = []
 var regions: Array[Rect2] = []
 
 func configure(source: Node2D, victim: Node2D) -> void:
 	caster = source
+	empowered = source.uses_dark_pulse() and source.cheer_buff > 0
 	lock_time = source.bind_lock_duration() if source.has_method("bind_lock_duration") else LOCK_TIME
 	target = victim
 	direction = source.facing
@@ -124,6 +126,7 @@ func _update_visual() -> void:
 			index = 12+mini(3,floori(q*4))
 			extent = 238 if caught else 158
 			opacity = 1.0-smoothstep(0.25,1.0,q)
+	if empowered: extent *= 1.25
 	sprite.texture = cells[index]
 	sprite.scale = Vector2(direction*extent/regions[index].size.x,extent/regions[index].size.y)
 	# Shift the spirit upward: its open chain loop surrounds the target's body.
@@ -143,3 +146,19 @@ func _draw() -> void:
 		draw_set_transform(Vector2(0,67-i*25),0,Vector2(1,0.25))
 		draw_arc(Vector2.ZERO,54+i*9,-age*(2+i),TAU-age*(2+i),40,Color(0.74,0.25,1,pulse*0.7),2,false)
 	draw_set_transform(Vector2.ZERO)
+	if empowered:
+		# Additional shackles wrap the legs, leaving the opponent readable.
+		for side in [-1,1]:
+			var points := PackedVector2Array()
+			for step in range(18):
+				var t: float = step/17.0
+				points.append(Vector2(side*(18+sin(t*TAU*2+age*7)*10),20+t*58))
+			draw_polyline(points,Color(0.80,0.42,1,pulse),4)
+			for link in range(6):
+				var t: float = link/5.0
+				draw_arc(Vector2(side*(18+sin(t*TAU*2+age*7)*10),20+t*58),5,0,TAU,10,Color(0.95,0.78,1,pulse),1.5)
+		for i in range(8):
+			var angle: float = i*TAU/8+age*0.4
+			var point := Vector2(cos(angle)*82,67+sin(angle)*17)
+			draw_line(point-Vector2(4,4),point+Vector2(4,4),Color(0.9,0.5,1,pulse),2)
+			draw_line(point+Vector2(-4,4),point+Vector2(4,-4),Color(0.9,0.5,1,pulse),2)

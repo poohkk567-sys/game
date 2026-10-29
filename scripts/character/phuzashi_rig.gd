@@ -7,6 +7,8 @@ const DraftAnimation = preload("res://scripts/character/draft_sprite_animation.g
 const RedCapAnimation = preload("res://scripts/character/red_cap_animation.gd")
 const RedAwakenedAnimation = preload("res://scripts/character/red_awakened_animation.gd")
 const MuayAnimation = preload("res://scripts/character/muay_thai_animation.gd")
+const ChillAnimation = preload("res://scripts/character/phuzashi_chill_animation.gd")
+const BlackCoatAnimation = preload("res://scripts/character/black_coat_animation.gd")
 const ClearAnimation = preload("res://scripts/character/clear_phuzashi_animation.gd")
 var fighter_profile: String = "PHUZASHI"
 var use_clear_model: bool = false
@@ -294,7 +296,7 @@ func set_character_profile(profile: String) -> void:
 	old.queue_free()
 	draft_animation = AnimatedSprite2D.new()
 	draft_animation.name = "DraftSpriteAnimation"
-	draft_animation.set_script(MuayAnimation if profile == "MUAY_THAI" else ((RedAwakenedAnimation if red_awakened else RedCapAnimation) if profile == "RED_CAP" else (ClearAnimation if use_clear_model else DraftAnimation)))
+	draft_animation.set_script(ChillAnimation if profile == "PHUZASHI_CHILL" else BlackCoatAnimation if profile == "BLACK_COAT" else MuayAnimation if profile == "MUAY_THAI" else ((RedAwakenedAnimation if red_awakened else RedCapAnimation) if profile == "RED_CAP" else (ClearAnimation if use_clear_model else DraftAnimation)))
 	add_child(draft_animation)
 	use_draft_spritesheet = true
 	reset_pose()

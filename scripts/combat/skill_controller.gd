@@ -70,6 +70,9 @@ func reset() -> void:
 
 func start(action: String) -> bool:
 	if action not in Book.ROSTER[fighter.fighter_profile] or not Book.MOVES.has(action): return false
+	if action == "BLOOD_PACT" and fighter.pact.buff_remaining > 0:
+		fighter.announce("BLOOD PACT / ALREADY ACTIVE")
+		return false
 	if fighter.fighter_profile == "RED_CAP" and not fighter.red_awakened:
 		fighter.announce("AWAKEN FIRST / 70 MP")
 		return false
@@ -92,6 +95,7 @@ func start(action: String) -> bool:
 	return true
 
 func begin(_action: String) -> void:
+	if _action == "BLOOD_PACT": fighter.pact.begin()
 	spawned = false
 	launched = false
 	pulse = -1
@@ -127,6 +131,9 @@ func movement(desired: float) -> float:
 func process_attack() -> void:
 	var action: String = fighter.action_name
 	var p: float = fighter.action_progress()
+	if action == "BLOOD_PACT":
+		fighter.pact.commit()
+		return
 	if action in ["DARK_RIFT","SOY_BOMB","GORILLA_QUAKE"]:
 		if not spawned:
 			spawned = true
@@ -176,6 +183,7 @@ func pose(original: String, progress: float) -> Array:
 	var action: String = fighter.action_name
 	if fighter.action_timer <= 0: return [original,progress]
 	match action:
+		"BLOOD_PACT": return ["HIT",0.35] if progress >= 0.50 and progress < 0.65 else ["GUARD",0.8]
 		"DARK_RIFT": return ["KICK" if progress < 0.32 else "CROUCH",minf(0.7,progress*1.2)]
 		"SHADOW_COUNTER": return ["GUARD",0.75]
 		"SHADOW_REPRISAL": return ["PUNCH_3",progress]

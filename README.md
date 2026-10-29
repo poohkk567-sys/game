@@ -1,237 +1,64 @@
 # PHUZASHI — DARK PULSE
 
-เกมต่อสู้2D Godot4.2.2+ มีหน้าเลือกตัวละคร PHUZASHI / ASSJIRO / MUAY THAI เล่นสองคนด้วยคีย์บอร์ดหรือจอย ตั้งจอยแต่ละฝั่งและผูกปุ่มเองได้
+เกมต่อสู้ 2D สำหรับ Godot 4.2.2 ขึ้นไป เล่นสองคนด้วยคีย์บอร์ดหรือจอย ตั้งจอยและปุ่มแยกแต่ละฝั่งได้ มีสนามโรงเรียนและสนามฝึกภูเขา
 
-## ล่าสุด: แก้ปุ่มจอยให้ตรง J/K/L บนคีย์บอร์ด
+[ดาวน์โหลดโปรเจกต์ Godot รุ่นล่าสุด (.zip)](https://github.com/poohkk567-sys/game/archive/refs/heads/codex/blood-pact-source.zip) · [วิธีเล่น/ปุ่มทั้งหมด](docs/BLOOD_PACT_CHILL_TH.md) · [ผลทดสอบ](docs/BLOOD_PACT_CHILL_TEST_REPORT.md)
 
-[ดาวน์โหลดเกมรุ่นแก้ปุ่มจอย (.zip)](https://github.com/poohkk567-sys/game/blob/codex/controller-keyboard-parity/docs/downloads/PHUZASHI_Controller_Parity_Godot.zip?raw=true) — แตก ZIP → Godot 4.2.2+ Import `project.godot` → F5
+แตก ZIP ทั้งหมด → เปิด Godot 4.2.2+ → Import `project.godot` → Import & Edit → รอนำเข้าครั้งแรก → F5 ไม่มี EXE ใหม่ ไม่มีแคชหรือ ZIP รุ่นเก่าซ้อนในชุดดาวน์โหลด
 
-**PHUZASHI กดลง+ปุ่มเตะ K เพื่อเรียกเชียร์** ค่าเริ่มต้นคือ **ลง+B / Circle** ตรงกับ S+K ทุกตัวใช้สกิลนั่งตามปุ่มปกติ: ลง+ต่อย X / ลง+เตะ B / ลง+ป้องกัน LB / ลง+วิ่ง RB ตั้งปุ่มเองแล้วสกิลตามคำสั่งเดิมทั้ง P1/P2 และสนามฝึก
+## ตัวละครที่เลือกเล่นได้
 
-[ตารางปุ่มและผลตรวจ](docs/CONTROLLER_PARITY_TH.md) · [คู่มือเกม](docs/CONTACT_UPDATE_TH.md)
+| ตัวละคร | รุ่นนี้ |
+|---|---|
+| PHUZASHI | โมเดลเดิมและสกิลเดิม ครบ6ท่า |
+| PHUZASHI CHILL | ตัวใหม่แยก ใช้โมเดลใหม่ครบทุกท่า ยืน/เดิน/ต่อยสามจังหวะชิล มืออีกข้างล้วงกระเป๋า หมัดสามพลังม่วง สกิลและค่าต่อสู้เหมือน PHUZASHI ทุกอย่าง ฟีโน่ใช้คนขับใหม่และหญิงซ้อนท้าย |
+| ASSJIRO | แปลงด้วยซีอิ๊วดำ 70 MP ร่างหัวโล้นถึกขึ้น30% สกิลฟรีแต่มีคูลดาวน์ เพิ่มองค์พระ/วงแสงส้มทอง |
+| MUAY THAI | ตัวสูงกว่า เน้นศอก/เข่า มีสแตนด์กอริลล่าขนน้ำตาล6สกิล |
+| BLACK COAT | เสื้อคลุมดำ เสื้อด้านในน้ำตาล ท่าปกติครบ + อัลติคนอ้วนเปิดประตูมาฟันตัวเอง แลกเลือดกับพลังปีศาจยิ้มแดง |
 
-![จอยลง+ปุ่มเตะเรียกเชียร์จริง](docs/screenshots/parity_preview_cheer.png)
+![PHUZASHI CHILL กับ BLACK COAT ในหน้าเลือกตัวละคร](docs/screenshots/pact_preview_chill_menu.png)
 
-## รุ่นก่อน: ปุ่มนั่ง+สกิล · ดันตัวและแรงปะทะ · ฟีโน่คู่ซ้อน · คัตอินอัลติ
+## สิ่งที่เพิ่ม
 
-[ดาวน์โหลดเกม Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/chord-push-fino-duo/docs/downloads/PHUZASHI_Contact_Update_Godot.zip?raw=true) — แตก ZIP → Godot 4.2.2+ Import `project.godot` → F5
+- PHUZASHI CHILL มีภาพเต็มตัวใหม่128เฟรม ครบท่าพื้นฐาน คอมโบ ท่าออกสกิล และฟีโน่ใหม่อีก16เฟรม พร้อมคัตอินอัลติของตัวเอง
+- BLACK COAT มีท่าพื้นฐาน112เฟรม อัลติใช้70MP ลดเลือด20HPใน5วินาที หยุดที่1HP บัฟโจมตีแรงขึ้น30%นาน10วินาที คูลดาวน์18วินาที ไม่ซ้อน ไม่อมตะ ขัดจังหวะก่อนฟันได้
+- PHUZASHI ทั้งสองแบบได้บัฟเชียร์แล้วมีปีศาจม่วงคลุมตัว ล็อคขามีโซ่/วงอักขระเพิ่มและล็อค1.1วินาทีแทน0.7 บัฟหมดกลับปกติ
+- ASSJIRO มีออร่าส้มทองระหว่างแปลงและร่างหัวโล้น ซ่อนระหว่างพายุแครอทแล้วกลับมาหลังจบท่า ค่าสถานะเดิม
+- คงการดันตัวเมื่อเดินชน แรงถอย/สั่นตามน้ำหนักท่า ทุกยกเริ่ม50/100MP ชาร์จ7MP/s และ PHUZASHI Blink5MP
+- [ตัวเสื้อแทร็กดำ–ทอง](docs/concepts/track_jacket_neutral.png) เป็นแบบยืนเท่านั้น สูงระดับASSJIRO156px ยังไม่ทำท่า/สกิลหรือเพิ่มเป็นตัวเล่นตามคำขอ
 
-- **ปุ่มใหม่:** คง U/RT กับอัลติ สกิลอื่นใช้ S+J / S+K / S+L / S+Shift หรือจอย ลง+X / ลง+A / ลง+B / ลง+RB
-- **เดินชนแล้วดัน:** ไม่ซ้อนหรือทะลุกัน ติดขอบแล้วหยุด โดนหมัด/เตะ/สกิลแล้วสั่นและถอยตามน้ำหนัก
-- **ฟีโน่:** ตัวช่วยหญิงซ้อนท้าย ไฟม่วงกับปีศาจม่วง มีคัตอินกรอบหน้าด้านซ้ายให้อัลติทั้งสามตัว
-- **ASSJIRO:** แปลง 70 MP เก็บมานาที่เหลือ สกิลร่างแปลงไม่เสียมานาแต่มีคูลดาวน์ พายุแครอทแทนตัวคนและอมตะเฉพาะระหว่างท่า
-- **มวยไทย:** ท่ายืนและแดชใหม่ เคลื่อนที่ต่อเนื่อง แก้เศษเฟรมติดมา **PHUZASHI Blink เหลือ 5 MP**
+[วิดีโอในเกม 13 วินาที](https://github.com/poohkk567-sys/game/blob/codex/blood-pact-auras/docs/PHUZASHI_Chill_Preview.mp4?raw=true) — วิดีโอเติม100MPเฉพาะสาธิต การเล่นจริงเริ่ม50MP
 
-[คู่มือปุ่มและการเปลี่ยนแปลง](docs/CONTACT_UPDATE_TH.md) · [วิดีโอในเกม](https://github.com/poohkk567-sys/game/blob/codex/chord-push-fino-duo/docs/PHUZASHI_Contact_Update.mp4?raw=true) · [ผลทดสอบ](docs/CONTACT_TEST_REPORT.md)
+## ปุ่มเริ่มเล่น
 
-![ฟีโน่คู่ซ้อนพร้อมไฟและปีศาจม่วง](docs/screenshots/contact_preview_fino.png)
+| คำสั่ง | P1 | P2 | จอยค่าเริ่มต้น |
+|---|---|---|---|
+| เดิน / วิ่ง | A,D / Shift | ลูกศร / Ctrl | สติ๊กซ้าย,D-pad / RB |
+| กระโดด / หมอบ | Space,W / S | ขึ้น / ลง | A / ลง |
+| ต่อย / เตะ / กัน | J / K / L | Num1,2,3 หรือ , . / | X / B / LB |
+| ชาร์จ / แดช | Q / E | P / Num0 หรือ \ | LT / L3 |
+| สกิลหลัก | U | Num4 หรือ ' | RT |
+| สกิลนั่งอีก4ท่า | S+J,K,L,Shift | ลง+Num1,2,3,Ctrl | ลง+X,B,LB,RB |
+| อัลติ | I; ASSJIRO ใช้ O | Num5 หรือ ; | Y |
 
-## รุ่นก่อน: ตัวละ 6 สกิล · สแตนด์กอริลล่าน้ำตาล · ซีอิ๊วดำ · เปิด 50 มานา
+ลง+ปุ่มเตะตรงกับ **S+K / เชียร์ PHUZASHI** ค่าเริ่มต้นลง+B หลังตั้งปุ่มเอง สกิลนั่งตามปุ่มต่อย/เตะ/กัน/วิ่งที่เลือกไว้ [รายละเอียดแก้จอย](docs/CONTROLLER_PARITY_TH.md)
 
-[ดาวน์โหลดเกม Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/six-skills-black-soy/docs/downloads/PHUZASHI_Six_Skills_Godot.zip?raw=true) — แตก ZIP → Import `project.godot` ด้วย Godot 4.2.2+ → F5
+คอมโบกดต่อย3ครั้งหรือเตะ3ครั้ง กระโดดแล้วต่อย/เตะได้ กันกดค้างใช้เกจ100และมี Perfect Guard
 
-เพิ่มครบตัวละ 6 ท่ารวมอัลติ PHUZASHI มีรอยแยกและเงาสวน ASSJIRO มีเสยหัวแครอท ขว้างซีอิ๊วดำ หมุนเตะ มวยไทยมีกอริลล่าขนน้ำตาลทั้งหกสกิล เริ่มทุกยก 50/100 MP เพิ่มแถบสกิลพร้อมค่ามานา/คูลดาวน์และล็อกร่าง
+F1 รายการท่า · F7/R3 ตั้งจอย/ปุ่ม · F8 หน้าแรก · Esc/Start พัก · R เริ่มใหม่ · Tab สลับตัวในสนามฝึก
 
-**P1:** U / S+J / T / Y / F / I (ASSJIRO อัลติ O) · **P2:** Num4 / ลง+Num1 / [ / Num6 / Num9 / Num5 · **จอย:** RT / ลง+X / D-padขึ้น / สติ๊กขวาขึ้น / สติ๊กขวาลง / Y ตั้งปุ่มเองได้ใน F7/R3
+## โครงสร้างและการทดสอบ
 
-[คู่มือทั้ง 18 ท่าและปุ่มครบ](docs/SIX_SKILLS_TH.md) · [วิดีโอในเกม](docs/PHUZASHI_Six_Skills.mp4) · [ผลทดสอบ](docs/SIX_SKILLS_TEST_REPORT.md)
-
-![สแตนด์กอริลล่าขนน้ำตาล](docs/screenshots/six_preview_gorilla.png)
-
-## รุ่นก่อน: ตัวช่วยหญิงลายเส้นเดียวกับ PHUZASHI
-
-[ดาวน์โหลดเกม Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/cheer-assist-style/docs/downloads/PHUZASHI_Cheer_Style_Godot.zip?raw=true) — แตก ZIP → Import `project.godot` ด้วย Godot 4.2.2+ → F5
-
-ปรับหน้า ตา เส้นขอบ และสัดส่วนตัวช่วยหญิงให้เข้ากับ PHUZASHI ช่วงตัวและแขนขายาวขึ้น คงผมยาวสีน้ำตาล เสื้อชมพู กระโปรงน้ำตาลลายจุดขาว และรองเท้าชมพู มีท่าวิ่ง 8 เฟรมกับท่าเชียร์ 8 เฟรม ใช้ **T / P2 `[` / D-pad ขึ้น** เรียกเหมือนเดิม
-
-[รายละเอียดและผลตรวจ](docs/CHEER_STYLE_TH.md) · [วิดีโอในเกม](docs/PHUZASHI_Cheer_Style.mp4) · [คู่มือปุ่มทั้งหมด](docs/ROSTER_CONTROLLERS_TH.md)
-
-![ตัวช่วยหญิงแบบใหม่ข้าง PHUZASHI](docs/screenshots/cheer_style_cheer_1.png)
-
-## รุ่นก่อน: ตั้งค่าจอย · สามตัวละคร · ฟีโน่ม่วงดำ · ตัวช่วยเชียร์
-
-[ดาวน์โหลดเกม Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/roster-fino-controller-settings/docs/downloads/PHUZASHI_Roster_Fino_Godot.zip?raw=true) — แตกZIP → Import `project.godot` → F5 → เลือกตัวละครแล้วเริ่มเกม ไม่มีEXEใหม่
-
-- **F7/R3 ตั้งค่าจอย:** เลือกP1/P2 กดปุ่มระบุจอย ผูกปุ่มหรือแกนกับคำสั่งคีย์บอร์ด สลับปุ่มซ้ำ บันทึกค่าไว้ใช้ครั้งหน้า
-- **หน้าเข้าเกม:** เลือกตัวละครแต่ละฝั่ง เริ่มสองผู้เล่นหรือฝึกเดี่ยว สนามต่อสู้เพิ่มเป็น200HP
-- **ASSJIRO:** ชื่อใหม่ของหมวกแดง มีแดช ร่างปกติใช้ท่าพื้นฐาน ต้องถอดหมวก100MPก่อนจึงใช้สกิลแครอท ร่างหัวโล้นรับดาเมจน้อยลง30%
-- **PHUZASHI:** อัลติขี่ฟีโน่ม่วงดำแทนมังกร แก้ท่าเดินให้สลับขาและแกว่งแขนตามระยะเดินจริง
-- **T / D-padขึ้น:** ตัวช่วยหญิงรองเท้าชมพูวิ่งมาเชียร์ ใช้30MP บัฟ8วิ คูลดาวน์14วิ เพิ่มเวลาล็อกปีศาจเป็น1.1วิและเดินวิ่งเร็ว10%
-- **MUAY THAI:** ตัวใหม่สูงกว่า20% มี112เฟรม JJJผสมศอก KKKผสมเข่า ยังไม่มีสกิลพิเศษ
-- **ป้องกันทุกตัว:** โล่โปร่งใส แสงกระแทก เสียง ตัวสั่น และถอยเล็กน้อย
-
-[คู่มือปุ่มและกติกาปัจจุบัน](docs/ROSTER_CONTROLLERS_TH.md) · [วิดีโอ](docs/PHUZASHI_Roster_Update.mp4) · [ผลทดสอบ](docs/ROSTER_TEST_REPORT.md)
-
-![หน้าเข้าเกม](docs/screenshots/roster_preview_title.png)
-
-
-## รุ่นก่อน: ชาร์จมานา · เกจป้องกัน · สกิลแครอท · จอยสองผู้เล่น
-
-[ดาวน์โหลดเกม Godot รุ่นล่าสุด (.zip)](https://github.com/poohkk567-sys/game/blob/codex/mana-guard-carrot-gamepads/docs/downloads/PHUZASHI_Mana_Carrot_Gamepads_Godot.zip?raw=true) — แตก ZIP → Godot Import `project.godot` → F5
-
-**Q/P ชาร์จ7 MP/วินาที** ต่อยเตะโดนได้3 MP ท่าที่สามได้5 MP ไม่มีฟื้นเอง เพิ่มเกจ GUARD100 การ์ดแตกเสียหลัก1วินาที และ Perfect Guard0.12วินาที
-
-RED CAP มีหัวพุ่ง25 MP และหมัดรัวแครอท30 MP ทั้งสองร่าง **P2: Num4 หรือ ' หัวพุ่ง / ลง+ต่อย หมัดรัว / Num5 หรือ ; ถอดหมวก100 MP** ในสนามฝึกเลือก RED CAP: **I หัวพุ่ง / S+J หมัดรัว / O ถอดหมวก** PHUZASHI คง Iมังกรเดิม
-
-รองรับจอย1อัน+คีย์บอร์ด หรือจอย2อัน: Aกระโดด/Xต่อย/Bเตะ/Yอัลติ/LBการ์ด/RBวิ่ง/LTชาร์จ/RTสกิล Startพักเกม Backดูปุ่ม **F5 สลับฝั่งเมื่อมีจอย1อัน** ดู [คู่มือปุ่มและกติกา](docs/MANA_GUARD_CARROT_GAMEPADS_TH.md) / [วิดีโอ](docs/PHUZASHI_Mana_Carrot_Gamepads.mp4) ไม่มี EXE ใหม่
-
-## รุ่นก่อน: อัลติ Red Cap ใช้มานา100 แปลงร่างหัวโล้นถอดเสื้อ
-
-[ดาวน์โหลดเกม Godot รุ่นแปลงร่าง (.zip)](https://github.com/poohkk567-sys/game/blob/codex/red-cap-ultimate-transform/docs/downloads/PHUZASHI_Red_Cap_Transform_Godot.zip?raw=true) — แตก ZIP → Import project.godot → F5
-
-ผู้เล่น2กด **Numpad5 หรือ ;** เพื่อถอดหมวก → เหยาะซอสขวดเหลืองบนหัว → ถอดเสื้อเป็นร่างต่อสู้ใหม่ ใช้มานา100 คงร่างจนจบยก มีท่าใหม่ครบ112เฟรมและแปลงร่าง16เฟรม ในรุ่นปัจจุบันสนามฝึกเลือก Red Cap แล้วกด O (I เป็นหัวพุ่ง) อ่าน [วิธีใช้และภาพในเกม](docs/RED_CAP_TRANSFORM_TH.md) / [วิดีโอ](docs/PHUZASHI_Red_Transform.mp4)
-
-รุ่นนี้เพิ่มอัลติแปลงร่าง; รุ่นล่าสุดมีสกิลแครอทเพิ่มตามคู่มือด้านบน สกิล/เอฟเฟกต์ของ PHUZASHI และสนามโรงเรียนสองผู้เล่นคงเดิม ไม่มี EXE ใหม่
-
-## PHUZASHI แบบใหม่ · สนามโรงเรียน · 2 ผู้เล่น
-
-[ดาวน์โหลดเกมทดสอบสองผู้เล่น (.zip)](https://github.com/poohkk567-sys/game/blob/codex/school-local-versus/docs/downloads/PHUZASHI_School_2P_Godot.zip?raw=true) — แตก ZIP → Godot Import `project.godot` → F5
-
-PHUZASHI ใช้โมเดลผิวขาวแบบใหม่ครบ128เฟรม โดยคงสกิลและเอฟเฟกต์เดิมครบ สนามหน้าโรงเรียนตามภาพอ้างอิง พร้อม RED CAP เล่นพร้อมกันคนละตัวบนคีย์บอร์ดเดียว มี HP/MP แยกสองฝั่ง ระบบแพ้ชนะ จับเวลา และแข่งชนะ2ยก
-
-**P1:** A/D เดิน · Space กระโดด · J/K ต่อย/เตะ · L ป้องกัน · U/I สกิล · S+J ปีศาจ
-
-**P2:** ลูกศรเดิน/กระโดด/หมอบ · Numpad1/2/3 หรือ , . / ต่อย/เตะ/ป้องกัน
-
-F1 ดูปุ่ม · R เริ่มแมตช์ใหม่ · F6 สลับสนามฝึกคนเดียว อ่าน [คู่มือสองผู้เล่น](docs/LOCAL_VERSUS_TH.md) / [วิดีโอ](docs/PHUZASHI_Local_Versus.mp4) รุ่นนี้ไม่มี EXE ใหม่
-
-![สนามใหม่พร้อมสองผู้เล่น](docs/screenshots/versus_school_gate.png)
-
-## ตัวหมวกแดงไม่มีผม พร้อมท่าปกติและคอมโบ
-
-[ดาวน์โหลดเกมทดสอบ Red Cap (.zip)](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/PHUZASHI_Red_Cap_Normals_Godot.zip?raw=true) · [สไปรต์ชีต 112 เฟรม](https://github.com/poohkk567-sys/game/blob/codex/red-cap-normal-moves/docs/downloads/RED_CAP_Normal_Spritesheets.zip?raw=true)
-
-แตก ZIP → Godot Import `project.godot` → F5 → **Tab สลับตัวละคร** มีเดิน วิ่ง กระโดด หมอบ ป้องกัน กระโดดต่อย/เตะ และคอมโบ J–J–J / K–K–K ของตัวใหม่ครบ รวม 16 สถานะท่าปกติ ไม่มีผมโผล่ใต้หมวกแดง สกิลพิเศษของตัวใหม่ยังเว้นไว้ตามที่ขอ
-
-[วิธีเล่นและภาพในเกม](docs/RED_CAP_NORMAL_MOVES_TH.md) · [วิดีโอ](docs/PHUZASHI_Red_Cap_Normals.mp4) ไม่มี EXE ใหม่ในรอบนี้
-
-## S + J เรียกปีศาจล็อกเป้า (PHUZASHI)
-
-[ดาวน์โหลดเกมทดสอบ Demon Bind (.zip)](https://github.com/poohkk567-sys/game/blob/codex/demon-bind-skill/docs/downloads/PHUZASHI_Demon_Bind_Godot.zip?raw=true) — แตก ZIP → Godot Import `project.godot` → F5
-
-กด **S ค้างแล้วกด J** หรือกด S+J พร้อมกัน ใช้ **25 MP** เรียกปีศาจเงาพุ่งไปล็อกเป้าด้านหน้า **0.7 วินาทีหลังจับติด** มีโซ่ม่วงและเวลานับถอยหลัง เป้าฝึกหยุดลอยขณะโดนล็อก และระบบรองรับการหยุดตัวละครหรือ AI ที่เคลื่อนที่จริงแล้ว ดู [วิธีเล่นและรายละเอียด](docs/DEMON_BIND_TH.md) / [วิดีโอในเกม](docs/PHUZASHI_Demon_Bind.mp4)
-
-## คอมโบเปลี่ยนท่าจริงและหมัดม่วงปิดคอมโบ
-
-[ดาวน์โหลดเกมทดสอบรุ่นท่าใหม่ (.zip)](https://github.com/poohkk567-sys/game/blob/codex/distinct-combo-poses/docs/downloads/PHUZASHI_Distinct_Combos_Godot.zip?raw=true) — แตก ZIP → Godot Import `project.godot` → F5
-
-**J–J–J:** หมัดตรง → หมัดฮุกบิดตัว → อัปเปอร์คัตพลังม่วง
-
-**K–K–K:** เตะเดิม → หมุนตัวเตะ → ยกขาเตะฟาดปิดคอมโบ
-
-ใช้ภาพใหม่ 4 ชุด ชุดละ 8 เฟรม หมัดที่ 3 มีพลังหุ้มกำปั้น เส้นพลังขณะยกหมัด และระเบิดม่วงเมื่อโดนเป้าจริง ดู [รายละเอียดและสไปรต์ชีต](docs/DISTINCT_COMBO_POSES_TH.md) / [วิดีโอจากเกมจริง](docs/PHUZASHI_Distinct_Combos.mp4) ไม่มี EXE ใหม่ในรอบนี้
-
-## กระโดดต่อย–เตะ และคอมโบ 3 จังหวะ
-
-[ดาวน์โหลดเกมทดสอบ Godot รุ่นคอมโบ (.zip)](https://github.com/poohkk567-sys/game/blob/codex/air-attacks-three-hit-combos/docs/downloads/PHUZASHI_Air_Combos_Godot.zip?raw=true) — แตก ZIP → Import `project.godot` → F5
-
-กด **Space + J** กระโดดต่อย / **Space + K** กระโดดเตะ หรือกด J/K หลังเริ่มกระโดดแล้วก็ได้ กด **J–J–J** เพื่อต่อย 3 จังหวะ และ **K–K–K** เพื่อเตะ 3 จังหวะ กดต่อเนื่องล่วงหน้าได้ มีเอฟเฟกต์ท่าปิดคอมโบและ F2 สาธิตท่าใหม่ ดู [วิธีเล่นและดาเมจ](docs/COMBAT_COMBOS_TH.md) / [วิดีโอจากเกมจริง](docs/PHUZASHI_Air_Combos.mp4) ชุดนี้ไม่มี EXE ใหม่
-
-## Shadow Blink พร้อมเอฟเฟกต์รอยแยก 16 เฟรม
-
-[ดาวน์โหลดโปรเจกต์ทดสอบ Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/shadow-blink-enhanced-vfx/docs/downloads/PHUZASHI_Shadow_Blink_FX_Godot.zip?raw=true) — แตก ZIP → Import `project.godot` → F5 → แตะ A หรือ D สองครั้งเพื่อพุ่งหลบ
-
-เพิ่มรอยแยกต้นทาง เส้นพลังสายฟ้า เงาร่างตามหลัง และวงระเบิดปลายทาง ใช้ภาพที่ผู้ใช้เลือก ดู [รายละเอียดและภาพในเกม](docs/SHADOW_BLINK_TH.md) หรือ [วิดีโอพุ่งซ้าย–ขวา](docs/PHUZASHI_Shadow_Blink_FX.mp4) รอบนี้ไม่มี EXE ใหม่
-
-## ดาวน์โหลดไฟล์เล่นบน Windows
-
-[ดาวน์โหลด PHUZASHI สำหรับ Windows 64-bit (.zip)](https://github.com/poohkk567-sys/game/blob/codex/phuzashi-training-complete/docs/downloads/PHUZASHI_Windows_x64.zip?raw=true)
-
-แตก ZIP แล้วเข้าโฟลเดอร์ `PHUZASHI` ดับเบิลคลิก `PHUZASHI.exe` เล่นได้โดยไม่ต้องติดตั้ง Godot กด F2 สาธิตทุกท่า หรือ F1 ดูปุ่มควบคุม
-
-[ไฟล์โปรเจกต์ Godot สำหรับแก้ไข (.zip)](https://github.com/poohkk567-sys/game/blob/codex/phuzashi-training-complete/docs/downloads/PHUZASHI_Godot_Source.zip?raw=true)
-
-## เปิดเล่นผ่าน Godot
-
-1. เปิด Godot → Import → เลือก `project.godot`
-2. กด **F5** เล่น หรือเปิด `scenes/main.tscn` แล้วกด **F6**
-3. กด **F2** สาธิตครบทุกท่า หรือ **F1** ดูรายการปุ่ม
+`assets/characters/` ตัวละคร/เฟรม · `assets/effects/` เอฟเฟกต์ · `scenes/` ฉาก · `scripts/character/` การเคลื่อนไหว/แอนิเมชัน · `scripts/combat/` สกิล/สถานะ/แรงปะทะ · `scripts/ui/` เมนู/HUD · `tests/` ตรวจระบบ/ภาพ · `tools/` นำเข้าภาพ/บันทึก/แพ็กโปรเจกต์
 
 ```sh
-godot --path .
+bash tools/check.sh
+# หรือเลือก binary:
+GODOT_BIN=/path/to/godot bash tools/check.sh
+# ตรวจภาพจริง ต้องมี display/OpenGL:
+godot --path . --fixed-fps 60 --script tests/test_roster_render.gd
 ```
 
-## ท่าทั้งหมด
+ทดสอบทั้ง Godot4.2.2 และ4.6.3 ดูจำนวนและขอบเขตใน [รายงานล่าสุด](docs/BLOOD_PACT_CHILL_TEST_REPORT.md) สร้าง binary SpriteFrames ด้วย **Godot4.2.2** เพื่อรักษารุ่นขั้นต่ำ ผู้เล่นใช้ resource ที่รวมมาแล้วได้ทันที ไม่ต้องสร้างใหม่
 
-ตารางนี้เป็นท่าต้นฉบับ PHUZASHI; ตัวหมวกแดงมีสไปรต์ของตัวเองเพิ่มอีก 112 เฟรมตามลิงก์ด้านบน
-
-เพิ่มใหม่ **80 เฟรมใน 5 แผ่น** ต่อจากยืน–เดิน 16 เฟรมที่ผู้ใช้เลือก รูปลักษณ์อ้างอิง PHUZASHI ชุดเดียวกัน
-
-| ท่า | เฟรม | การเล่น | ภาพต้นทาง |
-| --- | --- | --- | --- |
-| IDLE / WALK | 8 + 8 | วนรอบ | [ยืน–เดิน](assets/characters/drafts/idle_walk_draft.png) |
-| RUN / JUMP | 8 + 8 | วิ่งวนรอบ / กระโดดตามฟิสิกส์ | [เคลื่อนไหว](assets/characters/spritesheets/mobility.png) |
-| CROUCH / GUARD | 8 + 8 | เข้าท่าแล้วค้างเฟรมสุดท้าย | [หมอบ–ป้องกัน](assets/characters/spritesheets/defense.png) |
-| PUNCH / KICK | 8 + 8 | เตรียม–สัมผัส–คืนท่า | [ต่อย–เตะ](assets/characters/spritesheets/strikes.png) |
-| HIT / FALL | 8 + 8 | โดนโจมตี / ล้ม–นอน–ลุก | [รับแรงโจมตี](assets/characters/spritesheets/reactions.png) |
-| SPECIAL / ULTIMATE | 8 + 8 | ชาร์จ–ปล่อยพลัง–คืนท่า | [สกิล–อัลติเมต](assets/characters/spritesheets/powers.png) |
-
-ใช้ `AnimatedSprite2D` กับ `SpriteFrames` ทั้ง 12 สถานะ ไม่มีการดัดข้อต่อหรือ mesh กับภาพชุดใหม่ เอฟเฟกต์กระสุน โล่ และมังกรแสดงแยกจากตัวละคร เฟรมโจมตีสัมพันธ์กับช่วงสร้างความเสียหายจริง
-
-## ปุ่มควบคุม
-
-| ปุ่ม | การทำงาน |
-| --- | --- |
-| A / D หรือ ← / → | เดินและหันตามทิศทาง |
-| Shift + ทิศทาง | วิ่ง |
-| Space | กระโดดและควบคุมทิศทางกลางอากาศ |
-| S / ↓ ค้าง | หมอบ ลดขนาด collider |
-| L ค้าง | ป้องกัน; ทดลองด้วย H / N |
-| J / K | ต่อย 8 damage / เตะ 14 damage |
-| U | Dark Pulse — 25 MP, กระสุนเดินทาง, 24 damage |
-| I | Ultimate — 60 MP, มังกรพลังม่วง, 60 damage |
-| H / N | ทดลองโดนโจมตี 8 HP / ล้ม 18 HP แล้วลุกอัตโนมัติ |
-| R | รีเซ็ตตำแหน่ง HP, MP, เป้า และกระสุน |
-| F1 / F2 | รายการท่า / สาธิตครบ 12 ท่า |
-| F3 / F4 | แสดง hitbox / เทียบกับแอนิเมชันจาก Master เดิม |
-| Esc | หยุด / เล่นต่อ |
-
-เข้าใกล้คริสตัลด้านขวาเพื่อต่อยและเตะ สกิลยิงได้จากระยะไกล MP ฟื้น 9 หน่วย/วินาที การโจมตีมีช่วงเตรียม/ออกท่า/คืนท่า และสร้างความเสียหายหนึ่งครั้งต่อท่าต่อเป้า การป้องกันลดความเสียหายจาก H / N เหลือ 2 HP
-
-## การจัดเฟรมและไฟล์ต้นฉบับ
-
-ภาพ PNG ต้นทางมีท่าที่ยื่นพ้นกริดปกติ จึงตัดตามตัวละครที่ต่อเนื่องกันจริง ไม่แบ่งภาพเป็นช่องเท่ากันจนมือหรือเท้าขาด `AtlasTexture` ใช้ canvas ร่วม 512×384 และ pivot (256,360) เท้าทุกเฟรมอยู่ระดับเดียวกัน ใช้สเกลเดียวตลอดชุด
-
-เฟรมล้มสองเฟรมมีกรอบภาพซ้อนกับตัวข้าง ๆ ตัวนำเข้าแยกเฉพาะพิกเซลของตัวที่ถูกต้องแบบ lossless และเก็บเป็น texture ใน resource ส่วนภาพ PNG ต้นทางยังคงเดิม ข้อมูลเฟรมทั้งหมดอยู่ใน [manifest.json](assets/characters/spritesheets/manifest.json)
-
-Master เดิม `assets/characters/PHUZASHI_MASTER_SHOES_APPROVED.png` คงเดิมทุกไบต์:
-
-```text
-SHA-256 d0d6156d5114d612c1d04e39781fcd5c783eb09b0ba1268fc8b42c9779e6be06
-```
-
-ภาพแอนิเมชันชุดใหม่เป็นภาพเต็มตัวที่สร้างต่อจากชุดยืน–เดินที่ผู้ใช้เลือก ไม่ใช่การคัดลอก Master เฟรมเดียวซ้ำให้เป็นทุกท่า
-
-## โครงสร้าง
-
-```text
-assets/characters/              Master และชุดยืน–เดินเดิม
-assets/characters/spritesheets/ แผ่นใหม่, manifest และ SpriteFrames
-scenes/                        ฉากฝึกและฉากตัวละคร
-scripts/character/             Input, movement, combat, animation และ projectile
-scripts/stage/                 ฉากภูเขา คริสตัล และโหมดสาธิต
-scripts/ui/                    HUD, รายการท่า และ pause overlay
-tests/                         ตรวจระบบเกม เฟรมภาพ และบันทึกสาธิต
-tools/                         ตัวนำเข้า spritesheet และคำสั่งทดสอบ
-docs/                          รายงาน ภาพ และวิดีโอ
-browser/                       HTML ต้นแบบเก่า เก็บไว้อ้างอิง
-```
-
-## ทดสอบและสร้าง resource ใหม่
-
-```sh
-tools/check.sh
-# หรือระบุ binary:
-GODOT_BIN=/path/to/godot tools/check.sh
-```
-
-ทดสอบบน Godot 4.2.2 และ 4.6.3: ระบบเกม 88 รายการ + ระบบ spritesheet 75 รายการ รวม **163 รายการต่อเวอร์ชัน** และภาพเรนเดอร์ **192 เฟรมต่อเวอร์ชัน** มี CI ตรวจซ้ำ ดู [รายงาน](docs/TEST_REPORT.md) และ [รายละเอียดระบบ](docs/IMPLEMENTATION.md)
-
-การสร้าง `phuzashi_frames.res` ใหม่ใช้ **Godot 4.2.2** เพื่อให้ binary resource อ่านได้ตั้งแต่เวอร์ชันขั้นต่ำขึ้นไป:
-
-```sh
-/path/to/godot-4.2.2 --headless --path . --editor --import --quit
-/path/to/godot-4.2.2 --headless --path . --script tools/import_spritesheets.gd
-```
-
-ผู้เล่นเปิดเกมได้ทันทีจาก resource ที่รวมมาแล้ว ขั้นตอนนำเข้าใหม่นี้ใช้เมื่อเปลี่ยนภาพต้นทาง
+ประวัติงานก่อน: [โครงสร้าง/ภูเขา](docs/IMPLEMENTATION.md) · [ปุ่มนั่ง/ดันตัว/แรงปะทะ/ฟีโน่คู่](docs/CONTACT_UPDATE_TH.md) · [หกสกิลเดิม](docs/SIX_SKILLS_TH.md)

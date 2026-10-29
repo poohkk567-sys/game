@@ -80,6 +80,8 @@ const DemonBind = preload("res://scripts/effects/demon_bind.gd")
 var max_health: float = 100.0
 var health: float = 100.0
 var energy: float = STARTING_MANA
+var pact: Node2D
+var status_aura: Node2D
 var skills: Node2D
 var impact_pause: float = 0
 var hit_shake: float = 0
@@ -288,15 +290,17 @@ func award_normal_hit(move_name: String, blocked: bool) -> void:
 
 
 func select_fighter(profile: String) -> bool:
-	if profile not in ["PHUZASHI","RED_CAP","MUAY_THAI"]:
+	if profile not in ["PHUZASHI","RED_CAP","MUAY_THAI","BLACK_COAT","PHUZASHI_CHILL"]:
 		return false
 	fighter_profile = profile
-	display_name = {"RED_CAP":"ASSJIRO","PHUZASHI":"PHUZASHI","MUAY_THAI":"MUAY THAI"}[profile]
-	specials_enabled = profile == "PHUZASHI"
+	display_name = {"RED_CAP":"ASSJIRO","PHUZASHI":"PHUZASHI","MUAY_THAI":"MUAY THAI","BLACK_COAT":"BLACK COAT","PHUZASHI_CHILL":"PHUZASHI CHILL"}[profile]
+	specials_enabled = uses_dark_pulse()
 	rig.set_character_profile(profile)
+	if is_instance_valid(fino_visual):
+		fino_visual.sprite_frames = load("res://assets/characters/"+("phuzashi_chill" if profile == "PHUZASHI_CHILL" else "phuzashi_clear")+"/fino_ultimate_frames.res")
 	visited = {"IDLE":true}
 	reset_training()
-	announce(display_name + (" / SIX GORILLA STAND SKILLS" if profile == "MUAY_THAI" else (" / O: Black soy awakening / 6 skills" if profile == "RED_CAP" else " / SIX DARK PULSE SKILLS")))
+	announce(display_name + (" / NORMAL MOVES + I: BLOOD PACT" if profile == "BLACK_COAT" else (" / SIX GORILLA STAND SKILLS" if profile == "MUAY_THAI" else (" / O: Black soy awakening / 6 skills" if profile == "RED_CAP" else " / SIX DARK PULSE SKILLS"))))
 	return true
 
 func _ready() -> void:
@@ -317,6 +321,14 @@ func _ready() -> void:
 	fino_visual.centered = false
 	fino_visual.visible = false
 	add_child(fino_visual)
+	pact = load("res://scripts/combat/blood_pact.gd").new()
+	pact.name = "BloodPact"
+	add_child(pact)
+	move_child(pact,0)
+	status_aura = load("res://scripts/effects/status_aura.gd").new()
+	status_aura.name = "StatusAura"
+	add_child(status_aura)
+	move_child(status_aura,0)
 	skills = SkillController.new()
 	skills.name = "Skills"
 	add_child(skills)
@@ -549,8 +561,11 @@ func _physics_process(delta: float) -> void:
 	queue_redraw()
 	effects.queue_redraw()
 
+func uses_dark_pulse() -> bool:
+	return fighter_profile in ["PHUZASHI","PHUZASHI_CHILL"]
+
 func is_fino_active() -> bool:
-	return fighter_profile == "PHUZASHI" and action_name == "ULTIMATE" and action_timer > 0
+	return uses_dark_pulse() and action_name == "ULTIMATE" and action_timer > 0
 
 func _update_fino_visual() -> void:
 	if not is_fino_active():
@@ -595,7 +610,7 @@ func _start_blink(direction: int) -> bool:
 	return true
 
 func _start_movement_burst(direction: int) -> bool:
-	return _start_dash(direction) if fighter_profile != "PHUZASHI" else _start_blink(direction)
+	return _start_blink(direction) if uses_dark_pulse() else _start_dash(direction)
 
 func _start_dash(direction: int) -> bool:
 	if (duel_mode and (not controls_enabled or health <= 0)) or dash_timer > 0 or dash_cooldown > 0 or action_timer > 0 or is_movement_locked() or guard_break_remaining > 0:
@@ -667,9 +682,13 @@ func _step_blink(delta: float) -> void:
 
 func request_skill_slot(index: int) -> bool:
 	if index < 0 or index >= 6: return false
-	return start_action(SkillBook.ROSTER[fighter_profile][index])
+	var action: String = SkillBook.ROSTER[fighter_profile][index]
+	return false if action.is_empty() else start_action(action)
 
 func start_action(action: String) -> bool:
+	if fighter_profile == "BLACK_COAT":
+		if action == "ULTIMATE": action = "BLOOD_PACT"
+		if action not in ["PUNCH","KICK","BLOOD_PACT"]: return false
 	if fighter_profile == "MUAY_THAI":
 		action = {"SPECIAL":"GORILLA_ELBOW","DEMON_BIND":"GORILLA_KNEE","CHEER":"GORILLA_QUAKE","ULTIMATE":"GORILLA_KING"}.get(action,action)
 	elif fighter_profile == "RED_CAP" and action == "CHEER":
@@ -710,7 +729,7 @@ func bind_lock_duration() -> float:
 	return 1.1 if cheer_buff > 0 else 0.7
 
 func _start_cheer() -> bool:
-	if fighter_profile != "PHUZASHI" or cheer_cooldown > 0 or energy < 30 or action_timer > 0 or dash_timer > 0 or blink_timer > 0 or guard_break_remaining > 0 or is_movement_locked():
+	if not uses_dark_pulse() or cheer_cooldown > 0 or energy < 30 or action_timer > 0 or dash_timer > 0 or blink_timer > 0 or guard_break_remaining > 0 or is_movement_locked():
 		return false
 	if (duel_mode and (not controls_enabled or health <= 0)) or not is_on_floor() or velocity.y < 0 or (not skill_input_modifier and (pressed("guard") or pressed("crouch"))):
 		return false
@@ -823,7 +842,7 @@ func _begin_attack(action: String) -> void:
 	jump_buffer = 0.0
 	_set_state(action)
 	attack_started.emit(action)
-	if (fighter_profile == "PHUZASHI" and action == "ULTIMATE") or action == "GORILLA_KING": UltimateCutin.play_for(self)
+	if (uses_dark_pulse() and action == "ULTIMATE") or action in ["GORILLA_KING","BLOOD_PACT"]: UltimateCutin.play_for(self)
 	if combo_step > 0:
 		announce("%s COMBO / %d OF 3" % [combo_family, combo_step])
 	elif is_air_attack():
@@ -957,6 +976,7 @@ func _process_attack() -> void:
 		var target: Object = result.collider
 		if (target.has_method("take_hit") or target.has_method("receive_attack")) and not struck.has(target.get_instance_id()):
 			var inflicted: int = 8 if action_name == "CARROT_RUSH" and carrot_pulse == 6 else int(config[2])
+			inflicted = outgoing_damage(inflicted)
 			var hit_move: String = "CARROT_RUSH_FINISH" if action_name == "CARROT_RUSH" and carrot_pulse == 6 else action_name
 			if target.has_method("receive_attack"):
 				if not target.can_be_hit_by(self):
@@ -979,6 +999,9 @@ func receive_training_hit(knockdown: bool) -> void:
 	if attack_invulnerable() or action_name == "FALL":
 		return
 	_receive_hit(18 if knockdown else 8,"KICK_3" if knockdown else "PUNCH",null)
+
+func outgoing_damage(base: int) -> int:
+	return roundi(base*1.30) if is_instance_valid(pact) and pact.buff_remaining > 0 else base
 
 func attack_config(action: String) -> Array:
 	if SkillBook.MOVES.has(action): return SkillBook.MOVES[action]
@@ -1009,7 +1032,7 @@ func announce(text: String) -> void:
 func reset_training() -> void:
 	if red_awakened:
 		red_awakened = false
-		display_name = {"RED_CAP":"ASSJIRO","PHUZASHI":"PHUZASHI","MUAY_THAI":"MUAY THAI"}[fighter_profile]
+		display_name = {"RED_CAP":"ASSJIRO","PHUZASHI":"PHUZASHI","MUAY_THAI":"MUAY THAI","BLACK_COAT":"BLACK COAT","PHUZASHI_CHILL":"PHUZASHI CHILL"}[fighter_profile]
 		rig.set_red_awakened(false)
 	global_position = spawn_point
 	velocity = Vector2.ZERO
@@ -1023,6 +1046,7 @@ func reset_training() -> void:
 	launched_once = false
 	skill_input_modifier = false
 	if is_instance_valid(skills): skills.reset()
+	if is_instance_valid(pact): pact.reset()
 	guard_meter = 100.0
 	guard_break_remaining = 0.0
 	guard_recovery_delay = 0.0
@@ -1075,6 +1099,7 @@ func reset_training() -> void:
 	rig.rotation = 0.0
 	if is_instance_valid(purple_fist):
 		purple_fist.clear()
+	if is_instance_valid(status_aura): status_aura.refresh()
 	announce("Training reset")
 
 func _draw() -> void:
