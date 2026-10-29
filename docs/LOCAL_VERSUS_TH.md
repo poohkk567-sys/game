@@ -1,6 +1,8 @@
 # PHUZASHI — DARK PULSE / หน้าโรงเรียน · 2 ผู้เล่น
 
-[ดาวน์โหลดเกมทดสอบ Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/school-local-versus/docs/downloads/PHUZASHI_School_2P_Godot.zip?raw=true)
+> รุ่นล่าสุดเพิ่ม [มานา เกจป้องกัน สกิลแครอท และจอยสองผู้เล่น](MANA_GUARD_CARROT_GAMEPADS_TH.md) ดูปุ่มปัจจุบันที่ลิงก์นี้หรือ F1 ในเกม
+
+[ดาวน์โหลดเกมทดสอบ Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/mana-guard-carrot-gamepads/docs/downloads/PHUZASHI_Mana_Carrot_Gamepads_Godot.zip?raw=true)
 
 แตก ZIP ทั้งหมด → เปิด Godot 4.2.2+ → Import `project.godot` → F5
 เกมเริ่มที่สนามหน้าโรงเรียนตามรูปอ้างอิง มี PHUZASHI แบบใหม่ผิวขาว และ RED CAP แบบไม่มีผม บังคับคนละตัวพร้อมกันบนคีย์บอร์ดเดียว
@@ -21,10 +23,11 @@
 | คอมโบต่อย | J–J–J | 1–1–1 หรือ , สามครั้ง |
 | คอมโบเตะ | K–K–K | 2–2–2 หรือ . สามครั้ง |
 | กระโดดต่อย/เตะ | Space + J/K | ขึ้น + 1/2 หรือ ,/. |
-| Dark Pulse | U · 25 MP | ยังไม่มีสกิลพิเศษ |
+| สกิลหลัก | U · Dark Pulse 25 MP | Numpad4 หรือ apostrophe: หัวพุ่ง25 MP |
 | Ultimate | I มังกร · 60 MP | Numpad5 หรือ ; แปลงร่าง · 100 MP |
-| ปีศาจล็อกเป้า | S+J · 25 MP · ล็อก0.7วินาที | ยังไม่มีสกิลพิเศษ |
-| Shadow Blink | A A / D D · 15 MP | ยังไม่มีสกิลพิเศษ |
+| หมอบ+ต่อย | S+J ปีศาจ25 MP · ล็อก0.7วินาที | ลง+ต่อย หมัดรัวแครอท30 MP |
+| Shadow Blink | A A / D D · 15 MP | ไม่มี Blink |
+| ค้างชาร์จมานา | Q · 7 MP/วินาที | P · 7 MP/วินาที |
 
 F1 ดูปุ่มทั้งหมด · F3 แสดง hitbox · R เริ่มแมตช์ใหม่ · Esc หยุด/เล่นต่อ · F6 สลับสนามฝึกคนเดียว/สนามต่อสู้
 สนามฝึกที่เข้าจาก F6 ใช้โมเดลใหม่เช่นกัน กด Tab สลับตัวละครเมื่อฝึกคนเดียว

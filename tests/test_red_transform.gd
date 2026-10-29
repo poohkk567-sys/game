@@ -52,7 +52,7 @@ func run() -> void:
 		if binding is InputEventKey:
 			keys.append(binding.physical_keycode)
 	check(KEY_KP_5 in keys and KEY_SEMICOLON in keys,"P2 has numpad5 and semicolon ultimate keys")
-	check(not b.specials_enabled and not b.start_action("SPECIAL") and not b.start_action("DEMON_BIND") and not b._start_blink(-1),"Capped form keeps normal moves and no borrowed special powers")
+	check(not b.specials_enabled and not b._start_blink(-1),"Capped form does not borrow PHUZASHI special powers")
 	for mp: float in [0.0,25.0,99.0,99.9]:
 		b.energy = mp
 		check(not b.start_action("ULTIMATE") and b.energy == mp and not b.red_awakened,"Requires full 100 MP: "+str(mp))
@@ -197,8 +197,8 @@ func run() -> void:
 	b = stage.phuzashi
 	b.select_fighter("RED_CAP")
 	await frames(5)
-	await tap("ultimate")
-	check(b.action_name == "TRANSFORM","Solo training I key uses Red Cap's own ultimate")
+	await tap("red_ultimate")
+	check(b.action_name == "TRANSFORM","Solo training O key uses Red Cap's own ultimate")
 	await frames(210)
 	check(b.red_awakened,"Solo training completes the same transformation")
 	b.select_fighter("PHUZASHI")

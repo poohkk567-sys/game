@@ -6,6 +6,9 @@ config/name="PHUZASHI — DARK PULSE"
 run/main_scene="res://scenes/versus_school.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 
+[autoload]
+Gamepads="*res://scripts/input/gamepad_manager.gd"
+
 [display]
 window/size/viewport_width=1280
 window/size/viewport_height=720

@@ -13,7 +13,7 @@ func _process(_delta: float) -> void:
 
 func _draw() -> void:
 	# Header and health card.
-	_panel(Rect2(26,24,390,113), PURPLE)
+	_panel(Rect2(26,24,390,135), PURPLE)
 	_text(Vector2(44,51), player.display_name, 25, WHITE)
 	_text(Vector2(208,50), "D A R K   P U L S E", 13, PURPLE)
 	_bar(Vector2(79,70), 311, player.health, Color("e69b9e"))
@@ -22,6 +22,9 @@ func _draw() -> void:
 	_text(Vector2(44,109), "MP", 13, MUTED)
 	_text(Vector2(356,83), "%03d" % int(player.health), 12, WHITE)
 	_text(Vector2(356,109), "%03d" % int(player.energy), 12, WHITE)
+	_bar(Vector2(79,122),311,player.guard_meter,Color("7bdbca"))
+	_text(Vector2(44,135),"GD",13,MUTED)
+	_text(Vector2(356,135),"%03d" % int(player.guard_meter),12,WHITE)
 	_text(Vector2(470,43), "S O L O   T R A I N I N G", 13, CYAN)
 	_text(Vector2(470,72), "MOUNTAIN SANCTUARY", 20, WHITE)
 	_text(Vector2(470,94), "01  /  One fighter. Every move.", 12, Color("d4e2e8"))
@@ -47,8 +50,8 @@ func _draw() -> void:
 		var practiced: Dictionary = {}
 		for move: String in player.visited:
 			var base: String = move.trim_prefix("AIR_").get_slice("_",0) if player.specials_enabled else move
-			var counted: bool = base in player.rig.CLIPS if player.specials_enabled else base not in ["BOUND","TRANSFORM"]
-			if counted:
+			var counted: bool = base in player.rig.CLIPS if player.specials_enabled else base not in ["BOUND","TRANSFORM","CHARGE","GUARD_BREAK"]
+			if counted and move not in ["CHARGE","GUARD_BREAK"]:
 				practiced[base] = true
 		_text(Vector2(42,251), "%d / %d POSES PRACTICED" % [practiced.size(),12 if player.specials_enabled else 16], 11, MUTED)
 	# Target label and health stay near the target rather than obscuring it.
@@ -59,6 +62,9 @@ func _draw() -> void:
 		_text(Vector2(target_x-66,354),"BOUND  %.2f s" % crystal.movement_lock.remaining,15,WHITE)
 	draw_rect(Rect2(target_x-42,414,84,4), Color("344b61"))
 	draw_rect(Rect2(target_x-42,414,84*crystal.health/100.0,4), Color("d6bfef"))
+	if player.charging or player.defense_feedback_time > 0:
+		_text(Vector2(player.position.x-80,player.position.y-190),"CHARGING +7 MP/S" if player.charging else player.defense_feedback,15,CYAN)
+	_text(Vector2(470,117),Gamepads.source_label("")+" / Q or LT: CHARGE 7 MP/S",12,CYAN)
 	if player.message_time > 0.0:
 		_text(Vector2(302,166), player.message, 13, WHITE)
 	if stage.showcase:
@@ -66,8 +72,8 @@ func _draw() -> void:
 		_text(Vector2(463,232), "SHOWCASE  %02d / %02d   %s" % [stage.showcase_index+1, stage.SEQUENCE.size(), stage.SEQUENCE[maxi(0,stage.showcase_index)].replace("_", " ")], 16, WHITE)
 	# Footer is inside the safe screen area, with every control visible.
 	_panel(Rect2(26,646,1228,56), Color("69728c"))
-	var normal_controls: String = "A/D MOVE   SHIFT RUN   SPACE JUMP   J/J/J PUNCH COMBO   K/K/K KICK COMBO   SPACE+J/K AIR"
-	_text(Vector2(44,668),normal_controls + ("   S+J BIND 25MP   U/I SKILLS" if player.specials_enabled else ("   AWAKENED" if player.red_awakened else "   I ULTIMATE 100MP")),12,WHITE)
+	var normal_controls: String = "A/D MOVE   SHIFT RUN   Q CHARGE   SPACE JUMP   J/J/J PUNCH COMBO   K/K/K KICK COMBO   SPACE+J/K AIR"
+	_text(Vector2(44,668),normal_controls + ("   S+J BIND 25MP   U/I SKILLS" if player.specials_enabled else "   I HEADBUTT  S+J BARRAGE  O ULT"),12,WHITE)
 	_text(Vector2(44,690),"TAB SWITCH   S CROUCH   L GUARD   H/N HIT/FALL   R RESET   F1 HELP   F2 DEMO   F3 BOXES   F4 ART   ESC PAUSE" + ("   AA/DD BLINK" if player.specials_enabled else ""),12,MUTED)
 	if player.debug_hitboxes:
 		_text(Vector2(1021,627), "HITBOXES ON", 12, CYAN)
@@ -79,13 +85,13 @@ func _draw() -> void:
 		_text(Vector2(520,377), "ESC  /  Return to training", 16, PURPLE)
 
 func _draw_move_list() -> void:
-	_panel(Rect2(343,174,594,444), PURPLE)
+	_panel(Rect2(343,174,640,480), PURPLE)
 	_text(Vector2(367,210), "MOVE LIST / " + player.display_name, 23, WHITE)
 	var rows: Array = [
 		["A / D", "Walk · Shift to run", "—"], ["A+A / D+D", "Shadow Blink 130px", "15 MP"], ["SPACE", "Jump · control direction in the air", "—"],
 		["SPACE + J", "Jump punch · keep moving in the air", "9 DMG"],
 		["SPACE + K", "Jump kick · landing ends the attack", "15 DMG"],
-		["S / DOWN", "Crouch · lower hurtbox", "—"], ["L", "Guard · test with H or N", "2 chip"],
+		["S / DOWN", "Crouch · lower hurtbox", "—"], ["L / LB", "Guard · timed press: Perfect Guard", "GD 100"],
 		["S + J", "Demon Bind · lock target 0.7 s", "25 MP"],
 		["J / J / J", "Punch combo · three separate taps", "8 / 10 / 16"], ["K / K / K", "Kick combo · three separate taps", "14 / 16 / 22"],
 		["U", "Dark Pulse · traveling projectile", "25 MP / 24 DMG"],
@@ -94,14 +100,17 @@ func _draw_move_list() -> void:
 	]
 	if not player.specials_enabled:
 		rows = rows.filter(func(row: Array) -> bool: return row[0] not in ["A+A / D+D","S + J","U","I"])
-		rows.append(["I","Cap Off: hat / yellow sauce / shirt","100 MP"])
+		rows.append(["I / RT","Carrot Headbutt: hop and dash","25 MP"])
+		rows.append(["S+J","Carrot Barrage: 7 orange-aura hits","30 MP"])
+		rows.append(["O / Y","Cap Off: hat / sauce / shirt","100 MP"])
+	rows.append(["Q / LT","Hold to charge · move or release to cancel","7 MP/s"])
 	rows.append(["TAB","Switch PHUZASHI / Red Cap","—"])
 	for i in range(rows.size()):
-		var y: float = 241+i*24
+		var y: float = 241+i*21
 		_text(Vector2(368,y), rows[i][0], 13, PURPLE)
 		_text(Vector2(472,y), rows[i][1], 12, WHITE)
 		_text(Vector2(787,y), rows[i][2], 11, CYAN)
-	_text(Vector2(368,599), "F2 demonstrates moves and combos. Any gameplay key returns control.", 12, MUTED)
+	_text(Vector2(368,612), "Pad: A jump / X punch / B kick / Y ult / LB guard / RB run / LT charge / RT skill", 12, MUTED)
 
 func _panel(rect: Rect2, accent: Color) -> void:
 	draw_rect(rect, Color(0.025,0.045,0.085,0.93))

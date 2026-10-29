@@ -24,3 +24,6 @@ func can_be_hit_by(attacker: Node2D) -> bool:
 
 func receive_attack(damage: int, move_name: String, attacker: Node2D) -> int:
 	return fighter.receive_attack(damage,move_name,attacker)
+
+func was_last_hit_blocked() -> bool:
+	return fighter.last_hit_blocked
