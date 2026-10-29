@@ -1,0 +1,434 @@
+{
+	"canvas": [
+		1024,
+		1024
+	],
+	"frames": [
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 390,
+			"foot_x": 149,
+			"frame": 0,
+			"region": [
+				77,
+				55,
+				232,
+				335
+			],
+			"source": "res://assets/characters/combos/punch_2_hook.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 389,
+			"foot_x": 707,
+			"frame": 1,
+			"region": [
+				519,
+				58,
+				272,
+				331
+			],
+			"source": "res://assets/characters/combos/punch_2_hook.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 389,
+			"foot_x": 1157,
+			"frame": 2,
+			"region": [
+				966,
+				58,
+				278,
+				331
+			],
+			"source": "res://assets/characters/combos/punch_2_hook.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 390,
+			"foot_x": 1586,
+			"frame": 3,
+			"region": [
+				1394,
+				58,
+				291,
+				332
+			],
+			"source": "res://assets/characters/combos/punch_2_hook.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 833,
+			"foot_x": 267,
+			"frame": 4,
+			"region": [
+				80,
+				490,
+				322,
+				343
+			],
+			"source": "res://assets/characters/combos/punch_2_hook.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 831,
+			"foot_x": 609,
+			"frame": 5,
+			"region": [
+				530,
+				492,
+				265,
+				339
+			],
+			"source": "res://assets/characters/combos/punch_2_hook.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 831,
+			"foot_x": 1127,
+			"frame": 6,
+			"region": [
+				970,
+				490,
+				244,
+				341
+			],
+			"source": "res://assets/characters/combos/punch_2_hook.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 831,
+			"foot_x": 1565,
+			"frame": 7,
+			"region": [
+				1419,
+				490,
+				233,
+				341
+			],
+			"source": "res://assets/characters/combos/punch_2_hook.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 431,
+			"foot_x": 253,
+			"frame": 0,
+			"region": [
+				101,
+				92,
+				237,
+				339
+			],
+			"source": "res://assets/characters/combos/punch_3_uppercut.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 431,
+			"foot_x": 717,
+			"frame": 1,
+			"region": [
+				537,
+				202,
+				263,
+				229
+			],
+			"source": "res://assets/characters/combos/punch_3_uppercut.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 431,
+			"foot_x": 1165,
+			"frame": 2,
+			"region": [
+				984,
+				152,
+				265,
+				279
+			],
+			"source": "res://assets/characters/combos/punch_3_uppercut.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 431,
+			"foot_x": 1601,
+			"frame": 3,
+			"region": [
+				1413,
+				62,
+				276,
+				369
+			],
+			"source": "res://assets/characters/combos/punch_3_uppercut.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 872,
+			"foot_x": 308,
+			"frame": 4,
+			"region": [
+				109,
+				450,
+				264,
+				422
+			],
+			"source": "res://assets/characters/combos/punch_3_uppercut.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 872,
+			"foot_x": 726,
+			"frame": 5,
+			"region": [
+				559,
+				480,
+				255,
+				392
+			],
+			"source": "res://assets/characters/combos/punch_3_uppercut.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 872,
+			"foot_x": 1153,
+			"frame": 6,
+			"region": [
+				983,
+				556,
+				262,
+				316
+			],
+			"source": "res://assets/characters/combos/punch_3_uppercut.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 872,
+			"foot_x": 1582,
+			"frame": 7,
+			"region": [
+				1431,
+				536,
+				237,
+				336
+			],
+			"source": "res://assets/characters/combos/punch_3_uppercut.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 396,
+			"foot_x": 137,
+			"frame": 0,
+			"region": [
+				67,
+				70,
+				218,
+				326
+			],
+			"source": "res://assets/characters/combos/kick_2_spin.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 396,
+			"foot_x": 689,
+			"frame": 1,
+			"region": [
+				515,
+				70,
+				247,
+				326
+			],
+			"source": "res://assets/characters/combos/kick_2_spin.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 400,
+			"foot_x": 1090,
+			"frame": 2,
+			"region": [
+				958,
+				70,
+				244,
+				330
+			],
+			"source": "res://assets/characters/combos/kick_2_spin.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 402,
+			"foot_x": 1502,
+			"frame": 3,
+			"region": [
+				1353,
+				71,
+				379,
+				331
+			],
+			"source": "res://assets/characters/combos/kick_2_spin.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 837,
+			"foot_x": 168,
+			"frame": 4,
+			"region": [
+				60,
+				508,
+				375,
+				329
+			],
+			"source": "res://assets/characters/combos/kick_2_spin.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 835,
+			"foot_x": 666,
+			"frame": 5,
+			"region": [
+				585,
+				505,
+				181,
+				330
+			],
+			"source": "res://assets/characters/combos/kick_2_spin.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 835,
+			"foot_x": 1144,
+			"frame": 6,
+			"region": [
+				969,
+				505,
+				246,
+				330
+			],
+			"source": "res://assets/characters/combos/kick_2_spin.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 835,
+			"foot_x": 1572,
+			"frame": 7,
+			"region": [
+				1435,
+				509,
+				217,
+				326
+			],
+			"source": "res://assets/characters/combos/kick_2_spin.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 441,
+			"foot_x": 259,
+			"frame": 0,
+			"region": [
+				98,
+				113,
+				243,
+				328
+			],
+			"source": "res://assets/characters/combos/kick_3_axe.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 443,
+			"foot_x": 703,
+			"frame": 1,
+			"region": [
+				536,
+				168,
+				294,
+				275
+			],
+			"source": "res://assets/characters/combos/kick_3_axe.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 443,
+			"foot_x": 1094,
+			"frame": 2,
+			"region": [
+				1024,
+				92,
+				197,
+				351
+			],
+			"source": "res://assets/characters/combos/kick_3_axe.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 443,
+			"foot_x": 1546,
+			"frame": 3,
+			"region": [
+				1466,
+				20,
+				219,
+				423
+			],
+			"source": "res://assets/characters/combos/kick_3_axe.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 855,
+			"foot_x": 166,
+			"frame": 4,
+			"region": [
+				71,
+				527,
+				332,
+				328
+			],
+			"source": "res://assets/characters/combos/kick_3_axe.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 855,
+			"foot_x": 617,
+			"frame": 5,
+			"region": [
+				515,
+				513,
+				329,
+				342
+			],
+			"source": "res://assets/characters/combos/kick_3_axe.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 855,
+			"foot_x": 1072,
+			"frame": 6,
+			"region": [
+				1010,
+				517,
+				194,
+				338
+			],
+			"source": "res://assets/characters/combos/kick_3_axe.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 853,
+			"foot_x": 1571,
+			"frame": 7,
+			"region": [
+				1410,
+				513,
+				244,
+				340
+			],
+			"source": "res://assets/characters/combos/kick_3_axe.png"
+		}
+	],
+	"pivot": [
+		512,
+		960
+	],
+	"scales": {
+		"KICK_2": 0.877300613496933,
+		"KICK_3": 0.856287425149701,
+		"PUNCH_2": 0.846153846153846,
+		"PUNCH_3": 0.847407407407407
+	}
+}

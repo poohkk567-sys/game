@@ -1,0 +1,1357 @@
+{
+	"alpha_threshold": 0.5,
+	"canvas": [
+		512,
+		384
+	],
+	"frames": [
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 0,
+			"isolated": false,
+			"region": [
+				68,
+				56,
+				155,
+				267
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 156
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 1,
+			"isolated": false,
+			"region": [
+				340,
+				64,
+				156,
+				259
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 428
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 2,
+			"isolated": false,
+			"region": [
+				611,
+				62,
+				155,
+				261
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 700
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 3,
+			"isolated": false,
+			"region": [
+				882,
+				77,
+				157,
+				246
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 971
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 4,
+			"isolated": false,
+			"region": [
+				1153,
+				73,
+				158,
+				250
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 1240
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 5,
+			"isolated": false,
+			"region": [
+				1425,
+				64,
+				156,
+				259
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 1513
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 6,
+			"isolated": false,
+			"region": [
+				1694,
+				56,
+				158,
+				267
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 1786
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 7,
+			"isolated": false,
+			"region": [
+				1966,
+				56,
+				156,
+				267
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 2055
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 0,
+			"isolated": false,
+			"region": [
+				51,
+				387,
+				174,
+				286
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 145
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 1,
+			"isolated": false,
+			"region": [
+				320,
+				387,
+				179,
+				286
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 417
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 2,
+			"isolated": false,
+			"region": [
+				594,
+				387,
+				175,
+				286
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 692
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 3,
+			"isolated": false,
+			"region": [
+				866,
+				387,
+				180,
+				286
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 963
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 4,
+			"isolated": false,
+			"region": [
+				1142,
+				387,
+				168,
+				286
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 1234
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 5,
+			"isolated": false,
+			"region": [
+				1443,
+				388,
+				131,
+				285
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 1505
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 6,
+			"isolated": false,
+			"region": [
+				1679,
+				387,
+				181,
+				286
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 1778
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 7,
+			"isolated": false,
+			"region": [
+				1954,
+				387,
+				171,
+				286
+			],
+			"source": "res://assets/characters/drafts/idle_walk_draft.png",
+			"waist_x": 2046
+		},
+		{
+			"animation": "RUN",
+			"floor_y": 331,
+			"frame": 0,
+			"isolated": false,
+			"region": [
+				31,
+				62,
+				246,
+				269
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 140
+		},
+		{
+			"animation": "RUN",
+			"floor_y": 331,
+			"frame": 1,
+			"isolated": false,
+			"region": [
+				311,
+				62,
+				247,
+				269
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 439
+		},
+		{
+			"animation": "RUN",
+			"floor_y": 335,
+			"frame": 2,
+			"isolated": false,
+			"region": [
+				610,
+				67,
+				239,
+				268
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 746
+		},
+		{
+			"animation": "RUN",
+			"floor_y": 335,
+			"frame": 3,
+			"isolated": false,
+			"region": [
+				889,
+				73,
+				245,
+				262
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 1016
+		},
+		{
+			"animation": "RUN",
+			"floor_y": 335,
+			"frame": 4,
+			"isolated": false,
+			"region": [
+				1145,
+				70,
+				268,
+				265
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 1256
+		},
+		{
+			"animation": "RUN",
+			"floor_y": 331,
+			"frame": 5,
+			"isolated": false,
+			"region": [
+				1458,
+				78,
+				220,
+				253
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 1540
+		},
+		{
+			"animation": "RUN",
+			"floor_y": 335,
+			"frame": 6,
+			"isolated": false,
+			"region": [
+				1704,
+				73,
+				228,
+				262
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 1826
+		},
+		{
+			"animation": "RUN",
+			"floor_y": 335,
+			"frame": 7,
+			"isolated": false,
+			"region": [
+				1945,
+				70,
+				219,
+				265
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 2063
+		},
+		{
+			"animation": "JUMP",
+			"floor_y": 685,
+			"frame": 0,
+			"isolated": false,
+			"region": [
+				47,
+				460,
+				202,
+				225
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 151
+		},
+		{
+			"animation": "JUMP",
+			"floor_y": 687,
+			"frame": 1,
+			"isolated": false,
+			"region": [
+				297,
+				401,
+				214,
+				286
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 411
+		},
+		{
+			"animation": "JUMP",
+			"floor_y": 672,
+			"frame": 2,
+			"isolated": false,
+			"region": [
+				584,
+				364,
+				204,
+				308
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 685
+		},
+		{
+			"animation": "JUMP",
+			"floor_y": 596,
+			"frame": 3,
+			"isolated": false,
+			"region": [
+				880,
+				351,
+				172,
+				245
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 962
+		},
+		{
+			"animation": "JUMP",
+			"floor_y": 672,
+			"frame": 4,
+			"isolated": false,
+			"region": [
+				1124,
+				394,
+				192,
+				278
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 1221
+		},
+		{
+			"animation": "JUMP",
+			"floor_y": 685,
+			"frame": 5,
+			"isolated": false,
+			"region": [
+				1400,
+				437,
+				198,
+				248
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 1491
+		},
+		{
+			"animation": "JUMP",
+			"floor_y": 688,
+			"frame": 6,
+			"isolated": false,
+			"region": [
+				1709,
+				475,
+				179,
+				213
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 1787
+		},
+		{
+			"animation": "JUMP",
+			"floor_y": 688,
+			"frame": 7,
+			"isolated": false,
+			"region": [
+				1964,
+				387,
+				167,
+				301
+			],
+			"source": "res://assets/characters/spritesheets/mobility.png",
+			"waist_x": 2049
+		},
+		{
+			"animation": "CROUCH",
+			"floor_y": 326,
+			"frame": 0,
+			"isolated": false,
+			"region": [
+				65,
+				55,
+				161,
+				271
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 155
+		},
+		{
+			"animation": "CROUCH",
+			"floor_y": 326,
+			"frame": 1,
+			"isolated": false,
+			"region": [
+				336,
+				67,
+				167,
+				259
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 425
+		},
+		{
+			"animation": "CROUCH",
+			"floor_y": 326,
+			"frame": 2,
+			"isolated": false,
+			"region": [
+				609,
+				88,
+				175,
+				238
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 703
+		},
+		{
+			"animation": "CROUCH",
+			"floor_y": 326,
+			"frame": 3,
+			"isolated": false,
+			"region": [
+				877,
+				116,
+				184,
+				210
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 980
+		},
+		{
+			"animation": "CROUCH",
+			"floor_y": 326,
+			"frame": 4,
+			"isolated": false,
+			"region": [
+				1145,
+				116,
+				181,
+				210
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 1245
+		},
+		{
+			"animation": "CROUCH",
+			"floor_y": 326,
+			"frame": 5,
+			"isolated": false,
+			"region": [
+				1414,
+				115,
+				179,
+				211
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 1512
+		},
+		{
+			"animation": "CROUCH",
+			"floor_y": 326,
+			"frame": 6,
+			"isolated": false,
+			"region": [
+				1681,
+				115,
+				178,
+				211
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 1777
+		},
+		{
+			"animation": "CROUCH",
+			"floor_y": 326,
+			"frame": 7,
+			"isolated": false,
+			"region": [
+				1947,
+				114,
+				178,
+				212
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 2042
+		},
+		{
+			"animation": "GUARD",
+			"floor_y": 676,
+			"frame": 0,
+			"isolated": false,
+			"region": [
+				48,
+				387,
+				178,
+				289
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 145
+		},
+		{
+			"animation": "GUARD",
+			"floor_y": 676,
+			"frame": 1,
+			"isolated": false,
+			"region": [
+				317,
+				392,
+				186,
+				284
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 415
+		},
+		{
+			"animation": "GUARD",
+			"floor_y": 676,
+			"frame": 2,
+			"isolated": false,
+			"region": [
+				594,
+				394,
+				189,
+				282
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 689
+		},
+		{
+			"animation": "GUARD",
+			"floor_y": 676,
+			"frame": 3,
+			"isolated": false,
+			"region": [
+				868,
+				394,
+				187,
+				282
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 963
+		},
+		{
+			"animation": "GUARD",
+			"floor_y": 676,
+			"frame": 4,
+			"isolated": false,
+			"region": [
+				1138,
+				395,
+				188,
+				281
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 1233
+		},
+		{
+			"animation": "GUARD",
+			"floor_y": 676,
+			"frame": 5,
+			"isolated": false,
+			"region": [
+				1407,
+				396,
+				185,
+				280
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 1499
+		},
+		{
+			"animation": "GUARD",
+			"floor_y": 676,
+			"frame": 6,
+			"isolated": false,
+			"region": [
+				1675,
+				396,
+				184,
+				280
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 1764
+		},
+		{
+			"animation": "GUARD",
+			"floor_y": 676,
+			"frame": 7,
+			"isolated": false,
+			"region": [
+				1941,
+				394,
+				183,
+				282
+			],
+			"source": "res://assets/characters/spritesheets/defense.png",
+			"waist_x": 2029
+		},
+		{
+			"animation": "PUNCH",
+			"floor_y": 330,
+			"frame": 0,
+			"isolated": false,
+			"region": [
+				50,
+				61,
+				175,
+				269
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 141
+		},
+		{
+			"animation": "PUNCH",
+			"floor_y": 330,
+			"frame": 1,
+			"isolated": false,
+			"region": [
+				306,
+				61,
+				199,
+				269
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 417
+		},
+		{
+			"animation": "PUNCH",
+			"floor_y": 330,
+			"frame": 2,
+			"isolated": false,
+			"region": [
+				613,
+				61,
+				191,
+				269
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 719
+		},
+		{
+			"animation": "PUNCH",
+			"floor_y": 330,
+			"frame": 3,
+			"isolated": false,
+			"region": [
+				883,
+				67,
+				254,
+				263
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 990
+		},
+		{
+			"animation": "PUNCH",
+			"floor_y": 330,
+			"frame": 4,
+			"isolated": false,
+			"region": [
+				1154,
+				67,
+				254,
+				263
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 1264
+		},
+		{
+			"animation": "PUNCH",
+			"floor_y": 330,
+			"frame": 5,
+			"isolated": false,
+			"region": [
+				1436,
+				61,
+				193,
+				269
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 1544
+		},
+		{
+			"animation": "PUNCH",
+			"floor_y": 330,
+			"frame": 6,
+			"isolated": false,
+			"region": [
+				1688,
+				58,
+				188,
+				272
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 1791
+		},
+		{
+			"animation": "PUNCH",
+			"floor_y": 330,
+			"frame": 7,
+			"isolated": false,
+			"region": [
+				1946,
+				58,
+				174,
+				272
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 2035
+		},
+		{
+			"animation": "KICK",
+			"floor_y": 675,
+			"frame": 0,
+			"isolated": false,
+			"region": [
+				49,
+				390,
+				179,
+				285
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 144
+		},
+		{
+			"animation": "KICK",
+			"floor_y": 675,
+			"frame": 1,
+			"isolated": false,
+			"region": [
+				341,
+				390,
+				170,
+				285
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 419
+		},
+		{
+			"animation": "KICK",
+			"floor_y": 677,
+			"frame": 2,
+			"isolated": false,
+			"region": [
+				625,
+				385,
+				152,
+				292
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 720
+		},
+		{
+			"animation": "KICK",
+			"floor_y": 677,
+			"frame": 3,
+			"isolated": false,
+			"region": [
+				858,
+				386,
+				218,
+				291
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 984
+		},
+		{
+			"animation": "KICK",
+			"floor_y": 677,
+			"frame": 4,
+			"isolated": false,
+			"region": [
+				1113,
+				396,
+				286,
+				281
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 1216
+		},
+		{
+			"animation": "KICK",
+			"floor_y": 677,
+			"frame": 5,
+			"isolated": false,
+			"region": [
+				1457,
+				385,
+				153,
+				292
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 1552
+		},
+		{
+			"animation": "KICK",
+			"floor_y": 676,
+			"frame": 6,
+			"isolated": false,
+			"region": [
+				1692,
+				386,
+				176,
+				290
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 1790
+		},
+		{
+			"animation": "KICK",
+			"floor_y": 675,
+			"frame": 7,
+			"isolated": false,
+			"region": [
+				1938,
+				389,
+				180,
+				286
+			],
+			"source": "res://assets/characters/spritesheets/strikes.png",
+			"waist_x": 2029
+		},
+		{
+			"animation": "HIT",
+			"floor_y": 329,
+			"frame": 0,
+			"isolated": false,
+			"region": [
+				47,
+				57,
+				167,
+				272
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 141
+		},
+		{
+			"animation": "HIT",
+			"floor_y": 329,
+			"frame": 1,
+			"isolated": false,
+			"region": [
+				305,
+				78,
+				225,
+				251
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 435
+		},
+		{
+			"animation": "HIT",
+			"floor_y": 329,
+			"frame": 2,
+			"isolated": false,
+			"region": [
+				576,
+				79,
+				242,
+				250
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 718
+		},
+		{
+			"animation": "HIT",
+			"floor_y": 329,
+			"frame": 3,
+			"isolated": false,
+			"region": [
+				849,
+				91,
+				251,
+				238
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 985
+		},
+		{
+			"animation": "HIT",
+			"floor_y": 329,
+			"frame": 4,
+			"isolated": false,
+			"region": [
+				1149,
+				96,
+				181,
+				233
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 1230
+		},
+		{
+			"animation": "HIT",
+			"floor_y": 329,
+			"frame": 5,
+			"isolated": false,
+			"region": [
+				1427,
+				84,
+				181,
+				245
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 1522
+		},
+		{
+			"animation": "HIT",
+			"floor_y": 329,
+			"frame": 6,
+			"isolated": false,
+			"region": [
+				1701,
+				71,
+				181,
+				258
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 1796
+		},
+		{
+			"animation": "HIT",
+			"floor_y": 329,
+			"frame": 7,
+			"isolated": false,
+			"region": [
+				1973,
+				57,
+				167,
+				272
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 2067
+		},
+		{
+			"animation": "FALL",
+			"floor_y": 662,
+			"frame": 0,
+			"isolated": true,
+			"region": [
+				37,
+				413,
+				234,
+				249
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 187
+		},
+		{
+			"animation": "FALL",
+			"floor_y": 664,
+			"frame": 1,
+			"isolated": true,
+			"region": [
+				261,
+				469,
+				270,
+				195
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 405
+		},
+		{
+			"animation": "FALL",
+			"floor_y": 647,
+			"frame": 2,
+			"isolated": false,
+			"region": [
+				549,
+				514,
+				296,
+				133
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 657
+		},
+		{
+			"animation": "FALL",
+			"floor_y": 665,
+			"frame": 3,
+			"isolated": false,
+			"region": [
+				851,
+				575,
+				295,
+				90
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 1001
+		},
+		{
+			"animation": "FALL",
+			"floor_y": 665,
+			"frame": 4,
+			"isolated": false,
+			"region": [
+				1175,
+				575,
+				295,
+				90
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 1326
+		},
+		{
+			"animation": "FALL",
+			"floor_y": 662,
+			"frame": 5,
+			"isolated": false,
+			"region": [
+				1496,
+				481,
+				183,
+				181
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 1569
+		},
+		{
+			"animation": "FALL",
+			"floor_y": 662,
+			"frame": 6,
+			"isolated": false,
+			"region": [
+				1717,
+				462,
+				200,
+				200
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 1810
+		},
+		{
+			"animation": "FALL",
+			"floor_y": 662,
+			"frame": 7,
+			"isolated": false,
+			"region": [
+				1973,
+				389,
+				168,
+				273
+			],
+			"source": "res://assets/characters/spritesheets/reactions.png",
+			"waist_x": 2068
+		},
+		{
+			"animation": "SPECIAL",
+			"floor_y": 327,
+			"frame": 0,
+			"isolated": false,
+			"region": [
+				56,
+				57,
+				167,
+				270
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 151
+		},
+		{
+			"animation": "SPECIAL",
+			"floor_y": 326,
+			"frame": 1,
+			"isolated": false,
+			"region": [
+				306,
+				93,
+				207,
+				233
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 410
+		},
+		{
+			"animation": "SPECIAL",
+			"floor_y": 327,
+			"frame": 2,
+			"isolated": false,
+			"region": [
+				593,
+				85,
+				211,
+				242
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 711
+		},
+		{
+			"animation": "SPECIAL",
+			"floor_y": 327,
+			"frame": 3,
+			"isolated": false,
+			"region": [
+				856,
+				78,
+				225,
+				249
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 978
+		},
+		{
+			"animation": "SPECIAL",
+			"floor_y": 327,
+			"frame": 4,
+			"isolated": false,
+			"region": [
+				1111,
+				83,
+				263,
+				244
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 1237
+		},
+		{
+			"animation": "SPECIAL",
+			"floor_y": 327,
+			"frame": 5,
+			"isolated": false,
+			"region": [
+				1398,
+				77,
+				237,
+				250
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 1505
+		},
+		{
+			"animation": "SPECIAL",
+			"floor_y": 327,
+			"frame": 6,
+			"isolated": false,
+			"region": [
+				1690,
+				79,
+				196,
+				248
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 1794
+		},
+		{
+			"animation": "SPECIAL",
+			"floor_y": 327,
+			"frame": 7,
+			"isolated": false,
+			"region": [
+				1954,
+				57,
+				166,
+				270
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 2048
+		},
+		{
+			"animation": "ULTIMATE",
+			"floor_y": 676,
+			"frame": 0,
+			"isolated": false,
+			"region": [
+				56,
+				395,
+				168,
+				281
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 150
+		},
+		{
+			"animation": "ULTIMATE",
+			"floor_y": 676,
+			"frame": 1,
+			"isolated": false,
+			"region": [
+				291,
+				468,
+				210,
+				208
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 401
+		},
+		{
+			"animation": "ULTIMATE",
+			"floor_y": 676,
+			"frame": 2,
+			"isolated": false,
+			"region": [
+				588,
+				404,
+				227,
+				272
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 719
+		},
+		{
+			"animation": "ULTIMATE",
+			"floor_y": 676,
+			"frame": 3,
+			"isolated": false,
+			"region": [
+				856,
+				381,
+				221,
+				295
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 972
+		},
+		{
+			"animation": "ULTIMATE",
+			"floor_y": 676,
+			"frame": 4,
+			"isolated": false,
+			"region": [
+				1096,
+				427,
+				277,
+				249
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 1238
+		},
+		{
+			"animation": "ULTIMATE",
+			"floor_y": 676,
+			"frame": 5,
+			"isolated": false,
+			"region": [
+				1385,
+				423,
+				271,
+				253
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 1518
+		},
+		{
+			"animation": "ULTIMATE",
+			"floor_y": 676,
+			"frame": 6,
+			"isolated": false,
+			"region": [
+				1685,
+				452,
+				197,
+				224
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 1776
+		},
+		{
+			"animation": "ULTIMATE",
+			"floor_y": 676,
+			"frame": 7,
+			"isolated": false,
+			"region": [
+				1954,
+				394,
+				168,
+				282
+			],
+			"source": "res://assets/characters/spritesheets/powers.png",
+			"waist_x": 2048
+		}
+	],
+	"pivot": [
+		256,
+		360
+	]
+}
