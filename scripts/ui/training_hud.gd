@@ -77,7 +77,7 @@ func _draw() -> void:
 	SkillBar.draw_bar(self,player,Rect2(34,638,680,46))
 	_text(Vector2(730,655),"A/D MOVE  SPACE JUMP  J/K COMBO  L GUARD",11,WHITE)
 	_text(Vector2(730,673),"Q/LT CHARGE  F1 HELP  F7 SETTINGS  F8 MENU",11,MUTED)
-	_text(Vector2(42,696),"PAD: RT:1 | DOWN+X:2 | DOWN+A:3 | DOWN+B:4 | DOWN+RB:5 | Y:ULT | TAB SWITCH | R RESET",10,MUTED)
+	_text(Vector2(42,696),"PAD: RT:1 | DOWN+X:2 | DOWN+B:3 | DOWN+LB:4 | DOWN+RB:5 | Y:ULT | TAB SWITCH | R RESET",10,MUTED)
 	if player.debug_hitboxes:
 		_text(Vector2(1021,627), "HITBOXES ON", 12, CYAN)
 	if stage.show_help:

@@ -34,7 +34,7 @@ func button(device: int, code: int, held: bool) -> void:
 func release() -> void:
 	for code: int in [KEY_S,KEY_J,KEY_K,KEY_L,KEY_SHIFT,KEY_DOWN,KEY_KP_1,KEY_KP_2,KEY_KP_3,KEY_CTRL]: key(code,false)
 	for device: int in [2,5]:
-		for code: int in [JOY_BUTTON_DPAD_DOWN,JOY_BUTTON_X,JOY_BUTTON_A,JOY_BUTTON_B,JOY_BUTTON_RIGHT_SHOULDER]: button(device,code,false)
+		for code: int in [JOY_BUTTON_DPAD_DOWN,JOY_BUTTON_X,JOY_BUTTON_A,JOY_BUTTON_B,JOY_BUTTON_Y,JOY_BUTTON_LEFT_SHOULDER,JOY_BUTTON_RIGHT_SHOULDER]: button(device,code,false)
 	for command: StringName in InputMap.get_actions(): Input.action_release(command)
 func setup(profile: String = "PHUZASHI", left: bool = false) -> void:
 	release()
@@ -138,10 +138,10 @@ func run() -> void:
 		pads._apply_layout()
 		for device: int in [2,5]: button(device,JOY_BUTTON_DPAD_DOWN,true)
 		await frames(2)
-		for device: int in [2,5]: button(device,[JOY_BUTTON_X,JOY_BUTTON_A,JOY_BUTTON_B,JOY_BUTTON_RIGHT_SHOULDER][slot-1],true)
+		for device: int in [2,5]: button(device,[JOY_BUTTON_X,JOY_BUTTON_B,JOY_BUTTON_LEFT_SHOULDER,JOY_BUTTON_RIGHT_SHOULDER][slot-1],true)
 		await frames(2)
 		check(a.action_name == Book.ROSTER.PHUZASHI[slot] and b.action_name == Book.ROSTER.PHUZASHI[slot],"Two independent gamepads trigger down chord "+str(slot+1))
-		check(a.position.y == 586 and b.position.y == 586,"Down+A is a skill, without jump buffering")
+		check(a.position.y == 586 and b.position.y == 586,"Crouch skills match punch/kick/guard/run without jump buffering")
 	release()
 	pads.configure_devices([])
 	await setup("PHUZASHI")

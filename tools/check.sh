@@ -24,6 +24,10 @@ engine="${GODOT_BIN:-godot}"
 "$engine" --headless --path . --fixed-fps 60 --script tests/test_muay_thai.gd 2>&1 | tee work/muay-thai-check.log
 "$engine" --headless --path . --fixed-fps 60 --script tests/test_six_skills.gd 2>&1 | tee work/six-skills-check.log
 "$engine" --headless --path . --fixed-fps 60 --script tests/test_contact_controls.gd 2>&1 | tee work/contact-controls-check.log
+"$engine" --headless --path . --fixed-fps 60 --script tests/test_controller_parity.gd 2>&1 | tee work/controller-parity-check.log
+if rg -n '(^|[[:space:]])(SCRIPT ERROR:|ERROR:|FAIL )' work/controller-parity-check.log; then
+  exit 1
+fi
 if rg -n '(^|[[:space:]])(SCRIPT ERROR:|ERROR:|FAIL )' work/contact-controls-check.log; then
   exit 1
 fi

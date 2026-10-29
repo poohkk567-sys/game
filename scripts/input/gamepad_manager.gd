@@ -199,7 +199,7 @@ func _apply_layout() -> void:
 		if not settings_open and not waiting_neutral:
 			# Modifier actions share the remapped normal button but have separate keys.
 			for command: String in ["chord_three","chord_four","chord_five"]:
-				var base: String = {"chord_three":"jump","chord_four":"kick","chord_five":"run"}[command]
+				var base: String = {"chord_three":"kick","chord_four":"guard","chord_five":"run"}[command]
 				_bind_command(prefix+command,device,profile.bindings[player][base])
 
 func _bind_command(action: String, device: int, bindings: Array) -> void:
