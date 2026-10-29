@@ -22,8 +22,8 @@ func _draw() -> void:
 	_bar(Vector2(776,113),462,stage.p2.guard_meter,Color("7bdbca"),true,9)
 	_text(Vector2(43,135),"HP %s/%03d    MP %03d    GUARD %03d" % [_hp(stage.p1.health),stage.p1.max_health,stage.p1.energy,stage.p1.guard_meter],11,MUTED)
 	_text(Vector2(777,135),"HP %s/%03d    MP %03d    GUARD %03d" % [_hp(stage.p2.health),stage.p2.max_health,stage.p2.energy,stage.p2.guard_meter],11,MUTED)
-	_text(Vector2(43,152),Gamepads.source_label("p1_"),10,VIOLET)
-	_text(Vector2(777,152),Gamepads.source_label("p2_")+(" / AWAKENED -30% DAMAGE" if stage.p2.red_awakened else (" / TRANSFORM TO UNLOCK SKILLS" if stage.p2.fighter_profile == "RED_CAP" else (" / BROWN GORILLA STAND" if stage.p2.fighter_profile == "MUAY_THAI" else " / DARK PULSE"))),10,GOLD)
+	_text(Vector2(43,152),Gamepads.source_label("p1_")+_fighter_status(stage.p1),10,VIOLET)
+	_text(Vector2(777,152),Gamepads.source_label("p2_")+_fighter_status(stage.p2),10,GOLD)
 	_card(Rect2(545,20,190,140),Color("69758b"))
 	_center(640,47,"LOCAL VERSUS",13,MUTED)
 	_center(640,88,"%02d" % ceili(stage.remaining),40,WHITE)
@@ -113,3 +113,11 @@ func _center(x: float, y: float, line: String, size: int = 12, color: Color = WH
 
 func _text(point: Vector2, line: String, size: int, color: Color) -> void:
 	draw_string(ThemeDB.fallback_font,point,line,HORIZONTAL_ALIGNMENT_LEFT,-1,size,color)
+
+func _fighter_status(fighter: PhuzashiCharacter) -> String:
+	if fighter.fighter_profile == "BLACK_COAT":
+		return " / PACT +30%% %.1fs" % fighter.pact.buff_remaining if fighter.pact.buff_remaining > 0 else " / BLOOD PACT 70 MP"
+	if fighter.red_awakened: return " / AWAKENED -30% DAMAGE"
+	if fighter.fighter_profile == "RED_CAP": return " / TRANSFORM TO UNLOCK SKILLS"
+	if fighter.fighter_profile == "MUAY_THAI": return " / BROWN GORILLA STAND"
+	return " / CHEER %.1fs" % fighter.cheer_buff if fighter.cheer_buff > 0 else " / DARK PULSE"

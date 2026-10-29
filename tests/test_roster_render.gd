@@ -3,11 +3,11 @@ var samples: int = 0
 var failures: int = 0
 func _initialize() -> void:
 	call_deferred("run")
-func inspect(viewport: SubViewport, label: String) -> void:
+func inspect(viewport: SubViewport, label: String, alpha_threshold: float = 0.5) -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var bitmap := BitMap.new()
-	bitmap.create_from_image_alpha(viewport.get_texture().get_image(),0.5)
+	bitmap.create_from_image_alpha(viewport.get_texture().get_image(),alpha_threshold)
 	var large: int = 0
 	var clipped: bool = false
 	for polygon: PackedVector2Array in bitmap.opaque_to_polygons(Rect2i(0,0,512,360),0.2):
@@ -36,6 +36,14 @@ func run() -> void:
 				rig.animate(clip,1.0/60,direction,float(index)/8)
 				rig.draft_animation.frame = index
 				await inspect(viewport,"MUAY "+clip+"/"+str(index)+" dir="+str(direction))
+	for profile: String in ["BLACK_COAT","PHUZASHI_CHILL"]:
+		rig.set_character_profile(profile)
+		for direction: int in [-1,1]:
+			for clip: StringName in rig.draft_animation.sprite_frames.get_animation_names():
+				for index in range(rig.draft_animation.sprite_frames.get_frame_count(clip)):
+					rig.animate(clip,1.0/60,direction,float(index)/rig.draft_animation.sprite_frames.get_frame_count(clip))
+					rig.draft_animation.frame = index
+					await inspect(viewport,profile+" "+clip+"/"+str(index)+" dir="+str(direction),0.05 if clip == "BLINK" and index == 6 else 0.5)
 	rig.set_clear_enabled(true)
 	rig.set_character_profile("PHUZASHI")
 	for direction: int in [-1,1]:
@@ -44,16 +52,32 @@ func run() -> void:
 			await inspect(viewport,"WALK "+str(index)+" dir="+str(direction))
 	rig.queue_free()
 	await process_frame
-	for bank: String in ["fino_ultimate","cheer_assist"]:
+	for bank: String in ["fino_ultimate","cheer_assist","chill_fino"]:
 		var sprite := AnimatedSprite2D.new()
-		sprite.sprite_frames = load("res://assets/characters/phuzashi_clear/"+bank+"_frames.res")
+		sprite.sprite_frames = load("res://assets/characters/"+("phuzashi_chill/fino_ultimate" if bank == "chill_fino" else "phuzashi_clear/"+bank)+"_frames.res")
 		sprite.centered = false
 		viewport.add_child(sprite)
-		var factor: float = (188.0 if bank == "fino_ultimate" else 148.0)/float(sprite.sprite_frames.get_meta("source_height"))
+		var factor: float = (148.0 if bank == "cheer_assist" else 188.0)/float(sprite.sprite_frames.get_meta("source_height"))
 		for direction: int in [-1,1]:
 			sprite.scale = Vector2(factor*direction,factor)
 			sprite.position = Vector2(256,310)-Vector2(512*direction,960)*factor
 			for clip: StringName in sprite.sprite_frames.get_animation_names():
+				sprite.animation = clip
+				for index in range(sprite.sprite_frames.get_frame_count(clip)):
+					sprite.frame = index
+					await inspect(viewport,bank+"/"+clip+"/"+str(index))
+		sprite.queue_free()
+		await process_frame
+	for bank: String in ["guardian_auras","blood_door"]:
+		var sprite := AnimatedSprite2D.new()
+		sprite.sprite_frames = load("res://assets/effects/"+bank+"_frames.res")
+		sprite.centered = false
+		viewport.add_child(sprite)
+		for clip: StringName in sprite.sprite_frames.get_animation_names():
+			var factor: float = (252.0 if clip == "GOLD" else 230.0)/float(sprite.sprite_frames.get_meta("heights")[clip])
+			for direction: int in [-1,1]:
+				sprite.scale = Vector2(factor*direction,factor)
+				sprite.position = Vector2(256,310)-Vector2(512*direction,960)*factor
 				sprite.animation = clip
 				for index in range(sprite.sprite_frames.get_frame_count(clip)):
 					sprite.frame = index

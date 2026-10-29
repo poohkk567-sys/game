@@ -1,6 +1,8 @@
 extends CanvasLayer
 ## A short left-side portrait card. Concurrent casts queue; gameplay never pauses.
 const PORTRAITS: Texture2D = preload("res://assets/ui/ultimate_portraits.png")
+const CHILL_PORTRAIT: Texture2D = preload("res://assets/ui/phuzashi_chill_portrait.png")
+const BLACK_PORTRAIT: Texture2D = preload("res://assets/ui/black_coat_portrait.png")
 const Book = preload("res://scripts/combat/skill_book.gd")
 var cards: Array[Dictionary] = []
 var current: Dictionary = {}
@@ -59,7 +61,7 @@ func _process(delta: float) -> void:
 func _draw_card() -> void:
 	if current.is_empty(): return
 	var profile: String = current.profile
-	var color: Color = {"PHUZASHI":Color("b544ff"),"RED_CAP":Color("ffac38"),"MUAY_THAI":Color("ff4fa9")}[profile]
+	var color: Color = {"PHUZASHI":Color("b544ff"),"RED_CAP":Color("ffac38"),"MUAY_THAI":Color("ff4fa9"),"BLACK_COAT":Color("ff3559"),"PHUZASHI_CHILL":Color("b544ff")}[profile]
 	panel.draw_rect(Rect2(0,0,360,210),Color("090b16"))
 	for i in range(9):
 		var x: float = fmod(age*330+i*70,520)-160
@@ -70,7 +72,12 @@ func _draw_card() -> void:
 		"PHUZASHI": region = Rect2(0,0,size.x*0.306,size.y)
 		"RED_CAP": region = Rect2(size.x*0.309,0,size.x*0.335,size.y)
 		_: region = Rect2(size.x*0.644,0,size.x*0.356,size.y)
-	panel.draw_texture_rect_region(PORTRAITS,Rect2(88,-4,245,267),region)
+	if profile == "PHUZASHI_CHILL":
+		panel.draw_texture_rect(CHILL_PORTRAIT,Rect2(65,-12,285,285),false)
+	elif profile == "BLACK_COAT":
+		panel.draw_texture_rect(BLACK_PORTRAIT,Rect2(65,-12,285,285),false)
+	else:
+		panel.draw_texture_rect_region(PORTRAITS,Rect2(88,-4,245,267),region)
 	panel.draw_rect(Rect2(0,153,360,57),Color(0.02,0.025,0.05,0.88))
 	panel.draw_rect(Rect2(1,1,358,208),color,false,3)
 	panel.draw_line(Vector2(2,3),Vector2(358,3),Color("f6eaff"),2)

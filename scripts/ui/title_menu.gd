@@ -1,6 +1,6 @@
 extends Control
 const Rig = preload("res://scripts/character/phuzashi_rig.gd")
-const PROFILES: Array[String] = ["PHUZASHI","RED_CAP","MUAY_THAI"]
+const PROFILES: Array[String] = ["PHUZASHI","RED_CAP","MUAY_THAI","BLACK_COAT","PHUZASHI_CHILL"]
 var selectors: Array[OptionButton] = []
 var rigs: Array[Node2D] = []
 var solo_player: OptionButton
@@ -53,6 +53,8 @@ func _ready() -> void:
 		select.add_item("PHUZASHI")
 		select.add_item("ASSJIRO")
 		select.add_item("MUAY THAI")
+		select.add_item("BLACK COAT")
+		select.add_item("PHUZASHI CHILL")
 		select.select(PROFILES.find(selected[player]))
 		add_child(select)
 		selectors.append(select)

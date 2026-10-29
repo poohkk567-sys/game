@@ -29,6 +29,7 @@ def main() -> None:
                  or path.name.startswith(args.review_prefix))
         )
     paths.update((root / "docs").glob("*.md"))
+    paths.add(root / "docs/.gdignore")
     if args.video_name:
         video = root / "docs" / args.video_name
         assert video.is_file(), video
