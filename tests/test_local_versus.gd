@@ -35,6 +35,8 @@ func tap(action: String) -> void:
 func setup(left: bool = false, close: bool = true) -> void:
 	release()
 	stage.restart_match()
+	stage.p1.energy = 100
+	stage.p2.energy = 100
 	stage.phase = "FIGHT"
 	a.controls_enabled = true
 	b.controls_enabled = true

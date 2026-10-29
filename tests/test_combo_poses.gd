@@ -23,6 +23,7 @@ func frames(count: int) -> void:
 
 func begin(left: bool = false, miss: bool = false) -> void:
 	actor.reset_training()
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	target.reset_target()
 	actor.position.x = 300 if miss else (1035 if left else 820)
 	actor.facing = -1 if left else 1
@@ -40,6 +41,7 @@ func run() -> void:
 	root.add_child(stage)
 	await frames(6)
 	actor = stage.get_node("PHUZASHI")
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	target = stage.get_node("TrainingCrystal")
 	var sprite: AnimatedSprite2D = actor.rig.draft_animation
 	var new_frames: int = 0
@@ -81,6 +83,7 @@ func run() -> void:
 	check(not actor.purple_fist.active and actor.purple_fist.trail.is_empty(),"Hit interruption removes the purple fist immediately")
 	await begin()
 	actor.reset_training()
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	await frames(2)
 	check(get_nodes_in_group("purple_punch_impacts").is_empty() and not actor.purple_fist.active,"Reset removes both purple fist and impact")
 	check(sprite.animation == "IDLE" and sprite.scale.is_equal_approx(Vector2.ONE*sprite.FRAME_SCALE),"Reset restores base sprite scale and pivot")

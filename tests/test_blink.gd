@@ -29,6 +29,7 @@ func run() -> void:
 	root.add_child(stage)
 	await frames(8)
 	var actor: PhuzashiCharacter = stage.get_node("PHUZASHI")
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	var sprite: AnimatedSprite2D = actor.rig.draft_animation
 	check(sprite.sprite_frames.has_animation("BLINK"), "SpriteFrames contains BLINK")
 	check(sprite.sprite_frames.get_frame_count("BLINK") == 12, "Blink uses 12 original full-body frames")
@@ -56,12 +57,14 @@ func run() -> void:
 	await frames(28)
 	check(absf(actor.position.x - (x - 130.0)) < 3.0, "Left blink travels 130px")
 	actor.reset_training()
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	actor.energy = 5
 	await frames(4)
 	await tap("move_right")
 	await tap("move_right")
 	check(actor.blink_timer == 0.0, "Cannot blink when MP insufficient")
 	actor.reset_training()
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	check(actor.blink_timer == 0.0 and actor.blink_cooldown == 0.0, "Reset clears blink")
 	stage.queue_free()
 	await frames(2)

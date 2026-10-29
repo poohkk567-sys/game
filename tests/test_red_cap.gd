@@ -54,6 +54,7 @@ func reset(left: bool = false) -> void:
 	for action: StringName in InputMap.get_actions():
 		Input.action_release(action)
 	actor.reset_training()
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	target.reset_target()
 	actor.position.x = 1035.0 if left else 820.0
 	actor.facing = -1 if left else 1
@@ -65,6 +66,7 @@ func run() -> void:
 	root.add_child(stage)
 	await frames(6)
 	actor = stage.get_node("PHUZASHI")
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	target = stage.get_node("TrainingCrystal")
 	actor.attack_started.connect(func(action: String) -> void: started.append(action))
 	check(actor.specials_enabled and actor.fighter_profile == "PHUZASHI","Original fighter remains default")
@@ -172,6 +174,7 @@ func run() -> void:
 	for move: String in stage.NORMAL_SEQUENCE:
 		stage._release_demo()
 		actor.reset_training()
+		actor.energy = 100 # Explicit full-mana combat fixture.
 		actor.position.x = 800
 		await frames(3)
 		stage._demonstrate(move)
@@ -195,7 +198,7 @@ func run() -> void:
 	await frames(32)
 	check(not get_nodes_in_group("dark_pulses").is_empty(),"Original skill still creates its real projectile")
 	await key(KEY_TAB)
-	check(actor.fighter_profile == "RED_CAP" and get_nodes_in_group("dark_pulses").is_empty() and actor.energy == 100,"Switch clears old character effects and resets meters")
+	check(actor.fighter_profile == "RED_CAP" and get_nodes_in_group("dark_pulses").is_empty() and actor.energy == 50,"Switch clears old character effects and resets meters to 50 MP")
 	check(not actor.select_fighter("UNKNOWN") and actor.fighter_profile == "RED_CAP","Invalid selection cannot corrupt current profile")
 	stage.queue_free()
 	await frames(2)

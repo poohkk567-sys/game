@@ -32,6 +32,7 @@ func run() -> void:
 	root.add_child(stage)
 	await advance(6)
 	var fighter: PhuzashiCharacter = stage.get_node("PHUZASHI")
+	fighter.energy = 100 # Explicit full-mana combat fixture.
 	expect(fighter.effects != null and fighter.effects.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST, "Effects render independently with nearest filter")
 	fighter.position.x = 500
 	expect(fighter.start_action("SPECIAL"), "SPECIAL starts")
@@ -40,11 +41,13 @@ func run() -> void:
 	await advance(90)
 	expect(get_nodes_in_group("dark_pulses").is_empty(), "Projectile is removed after impact or timeout")
 	fighter.reset_training()
+	fighter.energy = 100 # Explicit full-mana combat fixture.
 	await advance(4)
 	expect(fighter.start_action("ULTIMATE"), "ULTIMATE starts")
 	await advance(120)
 	expect(fighter.action_timer == 0.0 and fighter.state_name == "IDLE", "ULTIMATE completes")
 	fighter.reset_training()
+	fighter.energy = 100 # Explicit full-mana combat fixture.
 	await advance(2)
 	expect(get_nodes_in_group("dark_pulses").is_empty(), "Reset clears projectiles")
 	stage.queue_free()

@@ -33,6 +33,7 @@ func reset(left: bool = false) -> void:
 	for action: StringName in InputMap.get_actions():
 		Input.action_release(action)
 	actor.reset_training()
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	target.reset_target()
 	actor.position.x = 1035.0 if left else 820.0
 	actor.facing = -1 if left else 1
@@ -47,6 +48,7 @@ func run() -> void:
 	root.add_child(stage)
 	await frames(6)
 	actor = stage.get_node("PHUZASHI")
+	actor.energy = 100 # Explicit full-mana combat fixture.
 	target = stage.get_node("TrainingCrystal")
 	actor.attack_started.connect(on_attack)
 	var sprite: AnimatedSprite2D = actor.rig.draft_animation

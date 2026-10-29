@@ -1,4 +1,5 @@
 extends Control
+const SkillBar = preload("res://scripts/ui/skill_bar.gd")
 const WHITE := Color("f6f1e8")
 const MUTED := Color("c9c4bc")
 const VIOLET := Color("bb85ff")
@@ -22,7 +23,7 @@ func _draw() -> void:
 	_text(Vector2(43,135),"HP %s/%03d    MP %03d    GUARD %03d" % [_hp(stage.p1.health),stage.p1.max_health,stage.p1.energy,stage.p1.guard_meter],11,MUTED)
 	_text(Vector2(777,135),"HP %s/%03d    MP %03d    GUARD %03d" % [_hp(stage.p2.health),stage.p2.max_health,stage.p2.energy,stage.p2.guard_meter],11,MUTED)
 	_text(Vector2(43,152),Gamepads.source_label("p1_"),10,VIOLET)
-	_text(Vector2(777,152),Gamepads.source_label("p2_")+(" / AWAKENED -30% DAMAGE" if stage.p2.red_awakened else (" / TRANSFORM TO UNLOCK SKILLS" if stage.p2.fighter_profile == "RED_CAP" else (" / NORMAL MOVES ONLY" if stage.p2.fighter_profile == "MUAY_THAI" else " / DARK PULSE"))),10,GOLD)
+	_text(Vector2(777,152),Gamepads.source_label("p2_")+(" / AWAKENED -30% DAMAGE" if stage.p2.red_awakened else (" / TRANSFORM TO UNLOCK SKILLS" if stage.p2.fighter_profile == "RED_CAP" else (" / BROWN GORILLA STAND" if stage.p2.fighter_profile == "MUAY_THAI" else " / DARK PULSE"))),10,GOLD)
 	_card(Rect2(545,20,190,140),Color("69758b"))
 	_center(640,47,"LOCAL VERSUS",13,MUTED)
 	_center(640,88,"%02d" % ceili(stage.remaining),40,WHITE)
@@ -38,13 +39,11 @@ func _draw() -> void:
 		_banner("ROUND %d" % stage.round_number,"READY" if stage.phase_time < 1.15 else "FIGHT!",GOLD)
 	elif stage.phase in ["ROUND_OVER","MATCH_OVER"]:
 		_banner(stage.result,"MATCH COMPLETE  /  START OR R REMATCH" if stage.phase == "MATCH_OVER" else "NEXT ROUND",VIOLET if stage.winner == 0 else GOLD)
-	_card(Rect2(24,632,1232,80),Color("687184"))
-	var p1_skills: String = "U PULSE  I FINO  T CHEER  S+J BIND" if stage.p1.fighter_profile == "PHUZASHI" else ("I HEADBUTT  S+J BARRAGE (AWAKENED)  O TRANSFORM" if stage.p1.fighter_profile == "RED_CAP" else "JJJ JAB/CROSS/ELBOW  KKK TEEP/KNEE/KICK")
-	var p2_skills: String = "NUM4/' PULSE  NUM5/; FINO  [ CHEER" if stage.p2.fighter_profile == "PHUZASHI" else ("NUM4/' HEADBUTT + DOWN/PUNCH BARRAGE (AWAKENED)  NUM5/; TRANSFORM" if stage.p2.fighter_profile == "RED_CAP" else "PUNCH COMBO: JAB/CROSS/ELBOW  KICK COMBO: TEEP/KNEE/KICK")
-	_text(Vector2(40,651),"P1  A/D MOVE  SPACE/W JUMP  SHIFT RUN  S CROUCH  J/K ATTACK  L GUARD  Q CHARGE  E BURST   "+p1_skills,10,WHITE)
-	_text(Vector2(40,668),"P2  ARROWS MOVE/JUMP/CROUCH  CTRL RUN  , . / ATTACK/GUARD  P CHARGE  NUM0 BURST   "+p2_skills,10,GOLD)
-	_text(Vector2(40,685),"PAD DEFAULTS / F7 CUSTOM: STICK/DPAD MOVE  A JUMP  X PUNCH  B KICK  Y ULT  LB GUARD  RB RUN  LT CHARGE  RT SKILL  DOWN+X BIND/BARRAGE  DPAD UP CHEER  L3 DASH",11,WHITE)
-	_text(Vector2(40,702),"START / ESC PAUSE   BACK / F1 CONTROLS   F8 MENU  F7 SETTINGS  E/NUM0 DASH  F5 SWAP PAD   F3 HITBOXES   R REMATCH   F6 TRAINING",10,MUTED)
+	_card(Rect2(24,626,1232,86),Color("687184"))
+	SkillBar.draw_bar(self,stage.p1,Rect2(30,630,594,46))
+	SkillBar.draw_bar(self,stage.p2,Rect2(658,630,594,46),true)
+	_text(Vector2(40,691),"P1 A/D SPACE J/K L Q | P2 ARROWS , . / P | PAD RT:1 DOWN+X:2 UP:3 RIGHT STICK UP/DOWN:4/5 Y:ULT",11,WHITE)
+	_text(Vector2(40,706),"F1 MOVE LIST  F7/R3 SETTINGS  F8 MENU  ESC/START PAUSE  Q/LT CHARGE 7 MP/S  STARTING MP: 50/100",10,MUTED)
 	if stage.show_help:
 		_help()
 	if stage.paused:
@@ -82,8 +81,8 @@ func _help() -> void:
 	 ["P1 "+stage.p1.display_name,"P2 "+stage.p2.display_name],
 	 ["A/D move   Space/W jump   Shift run","Arrows move/jump/crouch   Ctrl run"],
 	 ["J punch   K kick   L guard   S crouch","Num 1/2/3 or , . / : punch/kick/guard"],
-	 ["Q hold: charge 7 MP/s   U skill   I ultimate","P charge   Num 4 / apostrophe: HEADBUTT 25 MP"],
-	 ["S+J bind 25 MP   AA/DD blink 15 MP","Down+punch: bind / barrage   Num5 / ;: ult   [: cheer"]
+	 ["Q hold: charge 7 MP/s   U skill   I ultimate","P charge   Num4 / apostrophe: skill 1"],
+	 ["S+J skill2  T skill3  Y skill4  F skill5","Down+punch:2  [:3  Num6/]:4  Num9/-:5"]
 	]
 	for i in range(rows.size()):
 		_text(Vector2(184,259+i*26),rows[i][0],12,VIOLET if i == 0 else WHITE)
@@ -91,7 +90,7 @@ func _help() -> void:
 	_center(640,402,"GAMEPAD / XBOX LABELS (PLAYSTATION EQUIVALENTS BELOW)",13,GOLD)
 	_center(640,428,"A / CROSS jump    X / SQUARE punch    B / CIRCLE kick    Y / TRIANGLE ultimate",13,WHITE)
 	_center(640,453,"LB / L1 guard    RB / R1 run    LT / L2 charge    RT / R2 skill    Stick / D-pad move",13,WHITE)
-	_center(640,478,"Down crouches; Down + punch binds. Double-tap left/right blinks (PHUZASHI).",12,WHITE)
+	_center(640,478,"DOWN+X: skill 2   D-pad UP: skill 3   RIGHT STICK UP/DOWN: skills 4 / 5",12,WHITE)
 	_center(640,510,"1 PAD: P2 + P1 keyboard; F5 swaps pad side. 2 PADS: first=P1, second=P2.",12,GOLD)
 	_center(640,535,"Normal hit +3 MP / finisher +5. Guard regenerates after 1s released; perfect guard +3 MP.",12,MUTED)
 	_center(640,559,"Guard break: 1s stun, then 50 guard. Charge stops when moving, jumping or getting hit.",12,MUTED)

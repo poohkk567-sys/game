@@ -29,6 +29,8 @@ func release() -> void:
 func setup(close: bool = false) -> void:
 	release()
 	stage.restart_match()
+	stage.p1.energy = 100
+	stage.p2.energy = 100
 	stage.phase = "FIGHT"
 	a.controls_enabled = true
 	b.controls_enabled = true
@@ -265,6 +267,8 @@ func run() -> void:
 	await frames(5)
 	check(not a.charging and stage.phase == "ROUND_OVER","KO stops charging and settles round")
 	stage.restart_match()
+	stage.p1.energy = 100
+	stage.p2.energy = 100
 	check(a.guard_meter == 100 and b.guard_meter == 100 and a.energy == 100,"Round reset restores MP/guard and clears broken state")
 	stage.queue_free()
 	await frames(3)

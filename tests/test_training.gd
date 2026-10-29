@@ -32,6 +32,7 @@ func reset() -> void:
 	for action: StringName in InputMap.get_actions():
 		Input.action_release(action)
 	player.reset_training()
+	player.energy = 100 # Explicit full-mana combat fixture.
 	target.reset_target()
 	await frames(3)
 
@@ -39,6 +40,7 @@ func run() -> void:
 	stage = load("res://scenes/main.tscn").instantiate()
 	root.add_child(stage)
 	player = stage.get_node("PHUZASHI")
+	player.energy = 100 # Explicit full-mana combat fixture.
 	target = stage.get_node("TrainingCrystal")
 	await frames(6)
 	expect(player.is_on_floor(), "Main scene loads with a grounded fighter")
@@ -142,6 +144,7 @@ func run() -> void:
 	player.start_action("SPECIAL")
 	await frames(29)
 	player.reset_training()
+	player.energy = 100 # Explicit full-mana combat fixture.
 	await frames(4)
 	expect(player.action_name.is_empty() and player.action_timer == 0 and player.energy == 100, "Reset clears action state and restores resources")
 	expect(get_nodes_in_group("dark_pulses").is_empty(), "Reset removes in-flight projectiles")

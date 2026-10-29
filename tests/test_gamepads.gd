@@ -59,6 +59,8 @@ func neutral() -> void:
 func setup() -> void:
 	await neutral()
 	stage.restart_match()
+	stage.p1.energy = 100
+	stage.p2.energy = 100
 	pads._process(0)
 	stage.phase = "FIGHT"
 	a.controls_enabled = true
@@ -202,7 +204,7 @@ func run() -> void:
 				if event is InputEventJoypadMotion or event is InputEventJoypadButton:
 					valid = valid and event.device == int(pads.assignments[prefix])
 					count += 1
-		check(valid and count == 18,"Every gameplay pad binding has the correct explicit device: "+prefix)
+		check(valid and count == 20,"Every gameplay pad binding, including new right-stick skills, has the correct explicit device: "+prefix)
 	button(2,JOY_BUTTON_X,true)
 	button(5,JOY_BUTTON_B,true)
 	await frames(3)
@@ -285,6 +287,7 @@ func run() -> void:
 	check(stage.phuzashi.action_name == "PUNCH","Solo training accepts controller normals")
 	await neutral()
 	stage.phuzashi.reset_training()
+	stage.phuzashi.energy = 100 # Explicit full-mana combat fixture.
 	await frames(4)
 	stage.phuzashi.energy = 0
 	axis(5,JOY_AXIS_TRIGGER_LEFT,1)

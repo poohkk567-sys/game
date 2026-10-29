@@ -32,6 +32,8 @@ func setup() -> void:
 	for command: StringName in InputMap.get_actions():
 		Input.action_release(command)
 	stage.restart_match()
+	stage.p1.energy = 100
+	stage.p2.energy = 100
 	stage.phase = "FIGHT"
 	a.controls_enabled = true
 	b.controls_enabled = true
@@ -84,7 +86,7 @@ func run() -> void:
 	Input.action_press("p2_jump")
 	Input.action_press("p2_punch")
 	await frames(70)
-	check(b.red_transform_phase() == "YELLOW SAUCE" and b.rig.draft_animation.frame in [5,6,7,8,9],"Hat removal is followed by the visible yellow-bottle phase")
+	check(b.red_transform_phase() == "BLACK SOY SAUCE" and b.rig.draft_animation.frame in [5,6,7,8,9],"Hat removal is followed by the visible black-soy-bottle phase")
 	check(b.position.distance_to(origin) < 0.1 and starts == ["TRANSFORM"],"Transformation locks movement, jump and normal attack buffering")
 	check(b.energy == 0,"Mana regeneration waits until the sequence finishes")
 	Input.action_release("p2_move_left")
@@ -130,6 +132,7 @@ func run() -> void:
 	await frames(110)
 	check(a.damage_taken == 34 and b.red_awakened,"Awakened punch combo keeps all three stages and 34 damage")
 	a.reset_training()
+	a.energy = 100 # Explicit full-mana combat fixture.
 	a.position.x = 640
 	b.position.x = 750
 	await frames(5)
@@ -139,6 +142,7 @@ func run() -> void:
 	check(a.damage_taken == 52 and b.red_awakened,"Awakened kick combo keeps all three stages and 52 damage")
 	check(get_nodes_in_group("purple_punch_impacts").is_empty(),"Awakened normal finishers create no PHUZASHI purple impacts")
 	a.reset_training()
+	a.energy = 100 # Explicit full-mana combat fixture.
 	a.position.x = 640
 	b.position.x = 750
 	await frames(5)
@@ -180,6 +184,8 @@ func run() -> void:
 	b.start_action("ULTIMATE")
 	await frames(90)
 	stage.restart_match()
+	stage.p1.energy = 100
+	stage.p2.energy = 100
 	await frames(210)
 	check(not b.red_awakened and b.energy == 100 and b.action_name != "TRANSFORM","R/reset cancels pending transformation and clears its body state")
 	await setup()
@@ -189,7 +195,7 @@ func run() -> void:
 	await frames(4)
 	check(stage.phase == "ROUND_OVER" and not b.red_awakened,"Round settlement cannot complete a partly finished transformation")
 	await frames(210)
-	check(not b.red_awakened and b.energy == 100,"Automatic next round starts from capped form")
+	check(not b.red_awakened and b.energy == 50,"Automatic next round starts capped with 50 MP")
 	stage.queue_free()
 	await frames(3)
 	stage = load("res://scenes/main.tscn").instantiate()
@@ -197,6 +203,7 @@ func run() -> void:
 	await frames(6)
 	b = stage.phuzashi
 	b.select_fighter("RED_CAP")
+	b.energy = 100 # Explicit solo transformation fixture.
 	await frames(5)
 	await tap("red_ultimate")
 	check(b.action_name == "TRANSFORM","Solo training O key uses Red Cap's own ultimate")
@@ -205,7 +212,8 @@ func run() -> void:
 	b.select_fighter("PHUZASHI")
 	await frames(5)
 	check(not b.red_awakened and not b.rig.red_awakened and b.display_name == "PHUZASHI" and b.specials_enabled,"Switching fighters resets the form without corrupting PHUZASHI")
-	check(b.start_action("ULTIMATE") and is_equal_approx(b.energy,40),"PHUZASHI still uses the original 60-MP dragon ultimate")
+	b.energy = 100 # Explicit Fino cost fixture.
+	check(b.start_action("ULTIMATE") and is_equal_approx(b.energy,40),"PHUZASHI retains the 60-MP Fino ultimate")
 	stage.queue_free()
 	await frames(3)
 	check(get_nodes_in_group("bind_targets").is_empty(),"Scene exit frees all form actors")

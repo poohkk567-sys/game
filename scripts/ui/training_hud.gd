@@ -1,4 +1,6 @@
 extends Control
+const SkillBar = preload("res://scripts/ui/skill_bar.gd")
+const SkillBook = preload("res://scripts/combat/skill_book.gd")
 const INK := Color("0b1120")
 const WHITE := Color("f3efff")
 const MUTED := Color("aebbd0")
@@ -71,10 +73,11 @@ func _draw() -> void:
 		_panel(Rect2(445,203,390,46), PURPLE)
 		_text(Vector2(463,232), "SHOWCASE  %02d / %02d   %s" % [stage.showcase_index+1, stage.SEQUENCE.size(), stage.SEQUENCE[maxi(0,stage.showcase_index)].replace("_", " ")], 16, WHITE)
 	# Footer is inside the safe screen area, with every control visible.
-	_panel(Rect2(26,646,1228,56), Color("69728c"))
-	var normal_controls: String = "A/D MOVE   SHIFT RUN   Q CHARGE   SPACE JUMP   J/J/J PUNCH COMBO   K/K/K KICK COMBO   SPACE+J/K AIR"
-	_text(Vector2(44,668),normal_controls + ("   S+J BIND 25MP   U/I SKILLS" if player.specials_enabled else "   I HEADBUTT  S+J BARRAGE  O ULT"),12,WHITE)
-	_text(Vector2(44,690),"TAB SWITCH   S CROUCH   L GUARD   H/N HIT/FALL   R RESET   F1 HELP   F2 DEMO   F3 BOXES   F4 ART   ESC PAUSE" + ("   AA/DD BLINK" if player.specials_enabled else ""),12,MUTED)
+	_panel(Rect2(26,634,1228,68),Color("69728c"))
+	SkillBar.draw_bar(self,player,Rect2(34,638,680,46))
+	_text(Vector2(730,655),"A/D MOVE  SPACE JUMP  J/K COMBO  L GUARD",11,WHITE)
+	_text(Vector2(730,673),"Q/LT CHARGE  F1 HELP  F7 SETTINGS  F8 MENU",11,MUTED)
+	_text(Vector2(42,696),"PAD: RT SKILL1 | DOWN+X SKILL2 | UP SKILL3 | RIGHT STICK UP/DOWN SKILL4/5 | Y ULT | TAB SWITCH | R RESET",10,MUTED)
 	if player.debug_hitboxes:
 		_text(Vector2(1021,627), "HITBOXES ON", 12, CYAN)
 	if stage.show_help:
@@ -88,30 +91,19 @@ func _draw_move_list() -> void:
 	_panel(Rect2(343,174,640,480), PURPLE)
 	_text(Vector2(367,210), "MOVE LIST / " + player.display_name, 23, WHITE)
 	var rows: Array = [
-		["A / D", "Walk · Shift to run", "—"], ["A+A / D+D", "Shadow Blink 130px", "15 MP"], ["SPACE", "Jump · control direction in the air", "—"],
-		["SPACE + J", "Jump punch · keep moving in the air", "9 DMG"],
-		["SPACE + K", "Jump kick · landing ends the attack", "15 DMG"],
-		["S / DOWN", "Crouch · lower hurtbox", "—"], ["L / LB", "Guard · timed press: Perfect Guard", "GD 100"],
-		["S + J", "Demon Bind · lock target 0.7 s", "25 MP"],
-		["J / J / J", "Punch combo · three separate taps", "8 / 10 / 16"], ["K / K / K", "Kick combo · three separate taps", "14 / 16 / 22"],
-		["U", "Dark Pulse · traveling projectile", "25 MP / 24 DMG"],
-		["I", "Ultimate · purple Fino ram", "60 MP / 60 DMG"],
-		["H / N", "Test hit / fall + automatic recovery", "—"], ["R", "Reset position, HP, MP and target", "—"]
+		["A/D + Shift","Walk / run",""],["Space + J/K","Jump attacks",""],
+		["JJJ / KKK","Three-hit normal combos",""],["L / LB","Guard; timed press: Perfect Guard","GD 100"],
+		["Q / LT","Charge mana; rounds start at 50","7 MP/s"]
 	]
-	if not player.specials_enabled:
-		rows = rows.filter(func(row: Array) -> bool: return row[0] not in ["A+A / D+D","S + J","U","I"])
-		if player.fighter_profile == "RED_CAP":
-			rows.append(["I / RT","Carrot Headbutt (awaken first)","25 MP"])
-			rows.append(["S+J","Carrot Barrage (awaken first)","30 MP"])
-			rows.append(["O / Y","Cap Off: 30% less damage taken","100 MP"])
-		else:
-			rows.append(["JJJ","Jab / cross / elbow","8 / 10 / 18"])
-			rows.append(["KKK","Teep / knee / high kick","14 / 16 / 22"])
-	rows.append(["Q / LT","Hold to charge · move or release to cancel","7 MP/s"])
-	if player.fighter_profile == "PHUZASHI":
-		rows.append(["T / UP","Cheer: bind 1.1s, move +10%, 8s","30 MP"])
-	rows.append(["E / L3","Dash / Blink; F7 settings; F8 menu","—"])
-	rows.append(["TAB","Switch PHUZASHI / Assjiro / MUAY THAI","—"])
+	var keys: Array[String] = SkillBook.keys(player.fighter_profile)
+	var moves: Array = SkillBook.ROSTER[player.fighter_profile]
+	for slot in range(6):
+		rows.append([keys[slot],SkillBook.NAMES[moves[slot]],"%d MP" % SkillBook.cost(moves[slot])])
+	rows.append(["PAD","RT / Down+X / Up / R-stick up/down / Y",""])
+	rows.append(["ASSJIRO","Attack skills require bald awakened form",""])
+	rows.append(["E / L3","Dash / PHUZASHI Blink","15 MP Blink"])
+	rows.append(["Tab / R","Switch fighter / reset (50 MP)",""])
+	rows.append(["F7 / R3","Assign and remap controllers",""])
 	for i in range(rows.size()):
 		var y: float = 241+i*18
 		_text(Vector2(368,y), rows[i][0], 13, PURPLE)
