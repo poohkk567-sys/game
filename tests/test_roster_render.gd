@@ -68,7 +68,7 @@ func run() -> void:
 					await inspect(viewport,bank+"/"+clip+"/"+str(index))
 		sprite.queue_free()
 		await process_frame
-	for bank: String in ["guardian_auras","blood_door"]:
+	for bank: String in ["side_guardians","blood_door"]:
 		var sprite := AnimatedSprite2D.new()
 		sprite.sprite_frames = load("res://assets/effects/"+bank+"_frames.res")
 		sprite.centered = false
