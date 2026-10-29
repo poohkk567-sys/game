@@ -1,4 +1,7 @@
-PHUZASHI — DARK PULSE / รุ่นสามตัวละคร
+PHUZASHI — DARK PULSE / ตัวช่วยหญิงลายเส้น PHUZASHI
+
+ปรับหน้าและสัดส่วนตัวช่วยหญิง คงผมยาว ชุดเดิม และรองเท้าชมพู
+T / P2 [ / D-pad ขึ้น เรียกเชียร์ รายละเอียด docs/CHEER_STYLE_TH.md
 
 1. แตก ZIP ทั้งหมด
 2. เปิด Godot4.2.2+ → Import → เลือก project.godot → Import & Edit

@@ -2,7 +2,17 @@
 
 เกมต่อสู้2D Godot4.2.2+ มีหน้าเลือกตัวละคร PHUZASHI / ASSJIRO / MUAY THAI เล่นสองคนด้วยคีย์บอร์ดหรือจอย ตั้งจอยแต่ละฝั่งและผูกปุ่มเองได้
 
-## ล่าสุด: ตั้งค่าจอย · สามตัวละคร · ฟีโน่ม่วงดำ · ตัวช่วยเชียร์
+## ล่าสุด: ตัวช่วยหญิงลายเส้นเดียวกับ PHUZASHI
+
+[ดาวน์โหลดเกม Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/cheer-assist-style/docs/downloads/PHUZASHI_Cheer_Style_Godot.zip?raw=true) — แตก ZIP → Import `project.godot` ด้วย Godot 4.2.2+ → F5
+
+ปรับหน้า ตา เส้นขอบ และสัดส่วนตัวช่วยหญิงให้เข้ากับ PHUZASHI ช่วงตัวและแขนขายาวขึ้น คงผมยาวสีน้ำตาล เสื้อชมพู กระโปรงน้ำตาลลายจุดขาว และรองเท้าชมพู มีท่าวิ่ง 8 เฟรมกับท่าเชียร์ 8 เฟรม ใช้ **T / P2 `[` / D-pad ขึ้น** เรียกเหมือนเดิม
+
+[รายละเอียดและผลตรวจ](docs/CHEER_STYLE_TH.md) · [วิดีโอในเกม](docs/PHUZASHI_Cheer_Style.mp4) · [คู่มือปุ่มทั้งหมด](docs/ROSTER_CONTROLLERS_TH.md)
+
+![ตัวช่วยหญิงแบบใหม่ข้าง PHUZASHI](docs/screenshots/cheer_style_cheer_1.png)
+
+## รุ่นก่อน: ตั้งค่าจอย · สามตัวละคร · ฟีโน่ม่วงดำ · ตัวช่วยเชียร์
 
 [ดาวน์โหลดเกม Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/roster-fino-controller-settings/docs/downloads/PHUZASHI_Roster_Fino_Godot.zip?raw=true) — แตกZIP → Import `project.godot` → F5 → เลือกตัวละครแล้วเริ่มเกม ไม่มีEXEใหม่
 
