@@ -1,5 +1,5 @@
 extends "res://tools/import_side_guardians.gd"
-## Separate compact gripping poses. Keep eye/core stable while scarf smoke moves.
+## Separate small standing chain poses. Keep eye/core stable while scarf moves.
 func build() -> void:
 	var texture: Texture2D = load("res://assets/effects/ninja_grapple/ninja_grapple.png")
 	var picture: Image = texture.get_image()
@@ -32,11 +32,14 @@ func build() -> void:
 						low = Vector2i(mini(low.x,x),mini(low.y,y))
 						high = Vector2i(maxi(high.x,x+1),maxi(high.y,y+1))
 					var q: Vector2 = Vector2(x-cell.position.x,y-cell.position.y)/Vector2(cell.size)
-					if q.x > 0.65 and q.x < 0.94 and q.y > 0.22 and q.y < 0.64:
+					if q.x > 0.35 and q.x < 0.94 and q.y > 0.20 and q.y < 0.65:
 						var weight: float = pow(maxf(0,minf(color.r,minf(color.g,color.b))-0.5),2)*color.a
 						weighted += Vector2(x,y)*weight
 						weights += weight
-			assert(high.y > low.y and weights > 0,"Missing grappler or eye highlight")
+			if high.y <= low.y or weights <= 0:
+				push_error("Missing standing ninja or eye highlight, cell="+str(row*4+column))
+				quit(1)
+				return
 			height = maxf(height,high.y-low.y)
 			var core: Vector2 = weighted/weights
 			if row == 0 and column == 0: reference_offset = Vector2(low.x+(high.x-low.x)*0.58,high.y)-core
@@ -47,9 +50,10 @@ func build() -> void:
 			atlas.margin = Rect2(Vector2(512,960)-(anchor-Vector2(cell.position)),Vector2(1024,1024)-Vector2(cell.size))
 			atlas.filter_clip = true
 			atlas.set_meta("core",core-Vector2(cell.position))
+			atlas.set_meta("ink_bounds",Rect2(Vector2(low-cell.position),Vector2(high-low)))
 			frames.add_frame("GRIP",atlas)
 	frames.set_meta("height",height)
 	frames.set_meta("pivot",Vector2(512,960))
 	assert(ResourceSaver.save(frames,"res://assets/effects/ninja_grapple_frames.res",ResourceSaver.FLAG_COMPRESS) == OK)
-	print("IMPORTED 8 compact ninja grappling frames, height=",height)
+	print("IMPORTED 8 small standing ninja chain frames, height=",height)
 	quit()
