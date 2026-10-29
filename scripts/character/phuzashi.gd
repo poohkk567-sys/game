@@ -9,6 +9,8 @@ const CHARGE_RATE: float = 7.0
 const STARTING_MANA: float = 50.0
 const SkillBook = preload("res://scripts/combat/skill_book.gd")
 const SkillController = preload("res://scripts/combat/skill_controller.gd")
+const Reaction = preload("res://scripts/combat/combat_reaction.gd")
+const UltimateCutin = preload("res://scripts/ui/ultimate_cutin.gd")
 const PERFECT_GUARD_WINDOW: float = 0.12
 const GUARD_REGEN_RATE: float = 20.0
 const GUARD_REGEN_DELAY: float = 1.0
@@ -18,7 +20,7 @@ const GUARD_COSTS: Dictionary = {
  "KICK":14.0, "KICK_2":14.0, "AIR_KICK":14.0, "KICK_3":24.0,
  "SPECIAL":20.0, "ULTIMATE":40.0, "CARROT_HEADBUTT":20.0, "CARROT_RUSH":4.0, "CARROT_RUSH_FINISH":12.0
 }
-const RED_TRANSFORM_COST: float = 100.0
+const RED_TRANSFORM_COST: float = 70.0
 const RED_TRANSFORM_DURATION: float = 3.2
 const DASH_DURATION: float = 0.22
 const DASH_SPEED: float = 440.0
@@ -33,7 +35,7 @@ const FLOOR_Y: float = 586.0
 const SPAWN := Vector2(360, FLOOR_Y)
 const BLINK_DURATION: float = 0.4
 const BLINK_DISTANCE: float = 130.0
-const BLINK_COST: float = 15.0
+const BLINK_COST: float = 5.0
 const BLINK_WINDOW: float = 0.28
 const BLINK_COOLDOWN: float = 0.5
 const COMBO_LINK_PHASE: float = 0.72
@@ -80,7 +82,11 @@ var health: float = 100.0
 var energy: float = STARTING_MANA
 var skills: Node2D
 var impact_pause: float = 0
+var hit_shake: float = 0
+var hit_shake_power: float = 0
+var reaction_clock: float = 0
 var launched_once: bool = false
+var skill_input_modifier: bool = false
 var guard_meter: float = 100.0
 var guard_break_remaining: float = 0.0
 var guard_recovery_delay: float = 0.0
@@ -167,7 +173,7 @@ func enable_duel(prefix: String, enemy: PhuzashiCharacter, spawn: Vector2) -> vo
 
 func receive_attack(damage: int, move_name: String, attacker: Node2D) -> int:
 	last_hit_blocked = false
-	if not duel_mode or not controls_enabled or health <= 0.0 or blink_invulnerable():
+	if not duel_mode or not controls_enabled or health <= 0.0 or attack_invulnerable():
 		return -1
 	return _receive_hit(damage,move_name,attacker)
 
@@ -208,6 +214,7 @@ func _defense_flash(kind: String) -> void:
 func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 	last_hit_blocked = false
 	if is_instance_valid(skills) and skills.incoming(move_name,attacker):
+		Reaction.hit(self,attacker,0,move_name,true)
 		return 0
 	var guarded: bool = can_guard()
 	if is_instance_valid(attacker):
@@ -229,6 +236,7 @@ func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 			energy = minf(100.0,energy+3.0)
 			_defense_flash("PERFECT GUARD")
 			announce("PERFECT GUARD / +3 MP")
+			Reaction.hit(self,attacker,0,move_name,true)
 			return 0
 		var costs: Dictionary = {"DARK_RIFT":22,"SHADOW_REPRISAL":18,"CARROT_UPROOT":22,"SOY_BOMB":18,"CARROT_SPIN":26,"GORILLA_ELBOW":28,"GORILLA_KNEE":24,"GORILLA_QUAKE":22,"GORILLA_ROAR":12,"GORILLA_KING":5,"GORILLA_KING_FINISH":20}
 		var guard_cost: float = float(GUARD_COSTS.get(move_name,costs.get(move_name,14)))
@@ -244,6 +252,7 @@ func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 	if guarded and guard_meter > 0.0 and health > 0.0:
 		effects.play_defense_sound("GUARD")
 		announce("GUARD / 2 CHIP")
+		Reaction.hit(self,attacker,damage,move_name,true)
 		return roundi(actual)
 	dash_timer = 0.0
 	skills.guard_buff = 0
@@ -262,8 +271,13 @@ func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 		action_name = "FALL" if move_name in ["KICK_3","ULTIMATE","GORILLA_KING_FINISH"] or health <= 0 else "HIT"
 		action_duration = 1.4 if action_name == "FALL" else 0.48
 	action_timer = action_duration
-	velocity.x = -facing*95.0
+	Reaction.hit(self,attacker,damage,move_name,false)
 	_set_state(action_name)
+	if is_instance_valid(fino_visual): fino_visual.visible = false
+	rig.visible = true
+	rig.rotation = 0
+	rig.animate("HIT" if action_name == "GUARD_BREAK" else action_name,0,facing,0.15)
+	skills.present()
 	_update_body_shape()
 	return roundi(actual)
 
@@ -307,8 +321,15 @@ func _ready() -> void:
 	skills.name = "Skills"
 	add_child(skills)
 	move_child(skills,0)
+	var aura: Node2D = load("res://scripts/effects/fino_aura.gd").new()
+	aura.name = "FinoAura"
+	add_child(aura)
+	move_child(aura,0)
 
 func _physics_process(delta: float) -> void:
+	reaction_clock += delta
+	hit_shake = maxf(0,hit_shake-delta)
+	rig.position = _reaction_offset()
 	if impact_pause > 0:
 		impact_pause = maxf(0,impact_pause-delta)
 		return
@@ -324,7 +345,7 @@ func _physics_process(delta: float) -> void:
 	charging = false
 	if not duel_mode or (controls_enabled and health > 0):
 		_tick_defense(delta)
-	rig.position = Vector2(sin(guard_impact*125.0)*2.5,cos(guard_impact*110.0)*1.0)*(guard_impact/0.24)
+	rig.position = _reaction_offset()
 	dash_cooldown = maxf(0.0,dash_cooldown-delta)
 	if duel_mode and health <= 0.0:
 		velocity.x = 0.0
@@ -402,17 +423,21 @@ func _physics_process(delta: float) -> void:
 		jump_buffer = 0.0
 		coyote = 0.0
 		_clear_combo()
-	var bind_pressed: bool = crouching and pressed("punch") and (just_pressed("punch") or just_pressed("crouch"))
-	if bind_pressed:
-		request_skill_slot(1)
-	elif not crouching and not guarding:
-		for binding: String in ["skill_four","skill_five","cheer", "pad_ultimate", "red_ultimate", "ultimate", "special", "kick", "punch"]:
+	var chord: bool = false
+	if crouching:
+		for binding: String in ["punch","chord_three","chord_four","chord_five"]:
+			if just_pressed(binding):
+				chord = true
+				jump_buffer = 0
+				skill_input_modifier = true
+				request_skill_slot({"punch":1,"chord_three":2,"chord_four":3,"chord_five":4}[binding])
+				skill_input_modifier = false
+				break
+	if not chord and not crouching and not guarding:
+		for binding: String in ["pad_ultimate", "red_ultimate", "ultimate", "special", "kick", "punch"]:
 			if binding == "red_ultimate" and fighter_profile != "RED_CAP":
 				continue
 			if just_pressed(binding):
-				if binding in ["skill_four","skill_five","cheer"]:
-					request_skill_slot({"skill_four":3,"skill_five":4,"cheer":2}[binding])
-					break
 				var requested: String = binding.to_upper()
 				if binding in ["pad_ultimate","red_ultimate"]:
 					requested = "ULTIMATE"
@@ -547,7 +572,7 @@ func _start_blink(direction: int) -> bool:
 	if not is_on_floor() or pressed("crouch") or pressed("guard"):
 		return false
 	if energy < BLINK_COST:
-		announce("Shadow Blink requires 15 MP")
+		announce("Shadow Blink requires 5 MP")
 		return false
 	charging = false
 	energy -= BLINK_COST
@@ -560,7 +585,7 @@ func _start_blink(direction: int) -> bool:
 	velocity = Vector2.ZERO
 	jump_buffer = 0.0
 	_set_state("BLINK")
-	announce("SHADOW BLINK / 15 MP")
+	announce("SHADOW BLINK / 5 MP")
 	var blink_effect: Node2D = ShadowBlinkVFX.new()
 	blink_effect.configure(self)
 	get_parent().add_child(blink_effect)
@@ -578,7 +603,7 @@ func _start_dash(direction: int) -> bool:
 		return false
 	dash_direction = direction
 	facing = direction
-	dash_timer = DASH_DURATION
+	dash_timer = dash_duration()
 	dash_cooldown = DASH_COOLDOWN
 	charging = false
 	jump_buffer = 0
@@ -588,21 +613,41 @@ func _start_dash(direction: int) -> bool:
 
 func _step_dash(delta: float) -> void:
 	dash_timer = maxf(0.0,dash_timer-delta)
-	velocity = Vector2(dash_direction*DASH_SPEED,GRAVITY*delta)
+	var phase: float = clampf(1-dash_timer/dash_duration(),0,1)
+	var speed: float = DASH_SPEED*(sin(phase*PI) if fighter_profile == "MUAY_THAI" else 1)
+	velocity = Vector2(dash_direction*speed,GRAVITY*delta)
 	move_and_slide()
 	position.x = clampf(position.x,75,1205)
 	_set_state("DASH")
-	rig.animate("RUN",delta,facing)
+	rig.animate("DASH" if fighter_profile == "MUAY_THAI" else "RUN",delta,facing,phase if fighter_profile == "MUAY_THAI" else -1)
+	skills.present()
 	queue_redraw()
 	effects.queue_redraw()
 	if dash_timer <= 0:
 		velocity.x = 0
+
+func dash_duration() -> float:
+	return 0.32 if fighter_profile == "MUAY_THAI" else DASH_DURATION
+
+func skill_mana_cost(action: String) -> float:
+	if fighter_profile == "RED_CAP" and red_awakened and action in SkillBook.ROSTER.RED_CAP.slice(0,5): return 0
+	return SkillBook.cost(action)
 
 func blink_progress() -> float:
 	return clampf(1.0 - blink_timer / BLINK_DURATION, 0.0, 1.0)
 
 func blink_invulnerable() -> bool:
 	return blink_timer > 0.0 and blink_progress() >= 4.0/12.0 and blink_progress() < 8.0/12.0
+
+func cyclone_active() -> bool:
+	return fighter_profile == "RED_CAP" and red_awakened and action_name == "CARROT_SPIN" and action_timer > 0
+
+func attack_invulnerable() -> bool:
+	return blink_invulnerable() or cyclone_active()
+
+func _reaction_offset() -> Vector2:
+	var shield := Vector2(sin(guard_impact*125.0)*2.5,cos(guard_impact*110.0))*(guard_impact/0.24)
+	return shield+Vector2(sin(reaction_clock*151),cos(reaction_clock*127)*0.4)*hit_shake_power*hit_shake/0.20
 
 func _step_blink(delta: float) -> void:
 	blink_timer = maxf(0.0, blink_timer - delta)
@@ -645,7 +690,7 @@ func start_action(action: String) -> bool:
 		return false
 	if dash_timer > 0 or guard_break_remaining > 0.0 or is_movement_locked() or blink_timer > 0.0:
 		return false
-	if pressed("guard") or (pressed("crouch") and action != "DEMON_BIND"):
+	if not skill_input_modifier and (pressed("guard") or (pressed("crouch") and action != "DEMON_BIND")):
 		return false
 	if action in ["PUNCH", "KICK"]:
 		return _request_normal_attack(action)
@@ -666,7 +711,7 @@ func bind_lock_duration() -> float:
 func _start_cheer() -> bool:
 	if fighter_profile != "PHUZASHI" or cheer_cooldown > 0 or energy < 30 or action_timer > 0 or dash_timer > 0 or blink_timer > 0 or guard_break_remaining > 0 or is_movement_locked():
 		return false
-	if (duel_mode and (not controls_enabled or health <= 0)) or not is_on_floor() or velocity.y < 0 or pressed("guard") or pressed("crouch"):
+	if (duel_mode and (not controls_enabled or health <= 0)) or not is_on_floor() or velocity.y < 0 or (not skill_input_modifier and (pressed("guard") or pressed("crouch"))):
 		return false
 	energy -= 30
 	cheer_cooldown = 14
@@ -681,16 +726,18 @@ func _start_red_skill(action: String) -> bool:
 		return false
 	if (duel_mode and (not controls_enabled or health <= 0)) or dash_timer > 0 or action_timer > 0 or is_movement_locked() or blink_timer > 0 or guard_break_remaining > 0:
 		return false
-	if not is_on_floor() or velocity.y < 0 or pressed("guard") or (action != "CARROT_RUSH" and pressed("crouch")):
+	if not is_on_floor() or velocity.y < 0 or (not skill_input_modifier and (pressed("guard") or (action != "CARROT_RUSH" and pressed("crouch")))):
 		return false
-	var cost: float = float(ATTACKS[action][1])
+	if float(skills.cooldowns.get(action,0)) > 0: return false
+	var cost: float = skill_mana_cost(action)
 	if energy < cost:
 		announce("CARROT POWER / Requires %d MP" % cost)
 		return false
 	energy -= cost
+	skills.cooldowns[action] = SkillBook.COOLDOWNS[action]
 	_clear_combo()
 	_begin_attack(action)
-	announce("CARROT HEADBUTT / 25 MP" if action == "CARROT_HEADBUTT" else "CARROT BARRAGE / 30 MP")
+	announce(("CARROT HEADBUTT" if action == "CARROT_HEADBUTT" else "CARROT BARRAGE")+" / FREE AWAKENED SKILL")
 	return true
 
 func _start_red_transform() -> bool:
@@ -701,7 +748,7 @@ func _start_red_transform() -> bool:
 	if not is_on_floor() or velocity.y < 0 or pressed("crouch") or pressed("guard"):
 		return false
 	if energy < RED_TRANSFORM_COST:
-		announce("CAP OFF / Requires 100 MP")
+		announce("CAP OFF / Requires 70 MP")
 		return false
 	charging = false
 	energy -= RED_TRANSFORM_COST
@@ -714,7 +761,8 @@ func _start_red_transform() -> bool:
 	action_timer = action_duration
 	_set_state("TRANSFORM")
 	attack_started.emit("TRANSFORM")
-	announce("CAP OFF / BLACK SOY SAUCE / 100 MP")
+	UltimateCutin.play_for(self)
+	announce("CAP OFF / BLACK SOY SAUCE / 70 MP")
 	return true
 
 func _finish_red_transform() -> void:
@@ -774,6 +822,7 @@ func _begin_attack(action: String) -> void:
 	jump_buffer = 0.0
 	_set_state(action)
 	attack_started.emit(action)
+	if (fighter_profile == "PHUZASHI" and action == "ULTIMATE") or action == "GORILLA_KING": UltimateCutin.play_for(self)
 	if combo_step > 0:
 		announce("%s COMBO / %d OF 3" % [combo_family, combo_step])
 	elif is_air_attack():
@@ -790,11 +839,13 @@ func get_bind_anchor() -> Vector2:
 func apply_movement_lock(seconds: float) -> bool:
 	if duel_mode and health <= 0:
 		return false
-	if blink_invulnerable():
+	if attack_invulnerable():
 		return false
 	charging = false
 	dash_timer = 0.0
 	movement_lock.apply(seconds)
+	hit_shake = 0.16
+	hit_shake_power = 2.5
 	velocity = Vector2.ZERO
 	action_name = ""
 	action_timer = 0.0
@@ -913,7 +964,7 @@ func _process_attack() -> void:
 				if inflicted < 0:
 					continue
 			else:
-				target.take_hit(inflicted,hit_move)
+				target.take_hit(inflicted,hit_move,self)
 			award_normal_hit(action_name,target.was_last_hit_blocked() if target.has_method("was_last_hit_blocked") else false)
 			struck[target.get_instance_id()] = true
 			target_struck.emit(inflicted)
@@ -924,7 +975,7 @@ func _process_attack() -> void:
 				get_parent().add_child(impact)
 
 func receive_training_hit(knockdown: bool) -> void:
-	if blink_invulnerable() or action_name == "FALL":
+	if attack_invulnerable() or action_name == "FALL":
 		return
 	_receive_hit(18 if knockdown else 8,"KICK_3" if knockdown else "PUNCH",null)
 
@@ -966,7 +1017,10 @@ func reset_training() -> void:
 	last_received = ""
 	energy = STARTING_MANA
 	impact_pause = 0
+	hit_shake = 0
+	hit_shake_power = 0
 	launched_once = false
+	skill_input_modifier = false
 	if is_instance_valid(skills): skills.reset()
 	guard_meter = 100.0
 	guard_break_remaining = 0.0
@@ -1009,6 +1063,7 @@ func reset_training() -> void:
 	_update_body_shape()
 	get_tree().call_group("dark_pulses", "queue_free")
 	get_tree().call_group("six_skill_effects", "queue_free")
+	get_tree().call_group("ultimate_cutins","clear")
 	get_tree().call_group("shadow_blink_effects", "queue_free")
 	get_tree().call_group("purple_punch_impacts", "queue_free")
 	get_tree().call_group("demon_bind_effects", "queue_free")

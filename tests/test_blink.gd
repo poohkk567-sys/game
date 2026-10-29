@@ -39,7 +39,7 @@ func run() -> void:
 	await tap("move_right")
 	check(actor.blink_timer > 0.0, "D double tap activates blink")
 	x = actor.blink_origin
-	check(actor.energy >= 84.0 and actor.energy < 87.0, "Blink costs 15 MP")
+	check(actor.energy >= 94.0 and actor.energy < 97.0, "Blink costs 5 MP")
 	await frames(9)
 	check(actor.blink_invulnerable(), "Blink has intangible frames")
 	var hp: float = actor.health
@@ -58,7 +58,7 @@ func run() -> void:
 	check(absf(actor.position.x - (x - 130.0)) < 3.0, "Left blink travels 130px")
 	actor.reset_training()
 	actor.energy = 100 # Explicit full-mana combat fixture.
-	actor.energy = 5
+	actor.energy = 4.9
 	await frames(4)
 	await tap("move_right")
 	await tap("move_right")

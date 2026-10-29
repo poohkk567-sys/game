@@ -19,6 +19,10 @@ var pause_reason: String = ""
 func _enter_tree() -> void:
 	InputSetup.install()
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	# Resolve contact after both fighters have completed this physics tick.
+	process_priority = 10
+	for property: Dictionary in get_property_list():
+		if property.name == "process_physics_priority": set("process_physics_priority",10)
 
 func _ready() -> void:
 	for child: Node in get_children():
@@ -103,21 +107,32 @@ func _physics_process(delta: float) -> void:
 		start_round()
 
 func _separate_fighters() -> void:
-	# Gentle pushboxes on the ground; jumping and Blink can cross sides.
-	if p1.is_fino_active() or p2.is_fino_active() or p1.blink_timer > 0 or p2.blink_timer > 0 or not p1.is_on_floor() or not p2.is_on_floor():
+	# Solid ground pressure; airborne crossings and intangible moves remain legal.
+	if p1.is_fino_active() or p2.is_fino_active() or p1.cyclone_active() or p2.cyclone_active() or p1.blink_timer > 0 or p2.blink_timer > 0 or not p1.is_on_floor() or not p2.is_on_floor():
 		return
 	var distance: float = absf(p2.position.x-p1.position.x)
-	if distance >= 54:
+	var gap: float = (48.0 if p1.fighter_profile == "MUAY_THAI" else 44.0)+(48.0 if p2.fighter_profile == "MUAY_THAI" else 44.0)
+	if distance >= gap:
 		return
 	var sign_x: float = 1.0 if p2.position.x >= p1.position.x else -1.0
-	var correction: float = (54-distance)*0.5
-	if not p1.is_movement_locked() and not p2.is_movement_locked():
-		p1.position.x = clampf(p1.position.x-sign_x*correction,75,1205)
-		p2.position.x = clampf(p2.position.x+sign_x*correction,75,1205)
-	elif p1.is_movement_locked():
-		p2.position.x = clampf(p1.position.x+sign_x*54,75,1205)
-	else:
-		p1.position.x = clampf(p2.position.x-sign_x*54,75,1205)
+	var penetration: float = gap-distance
+	var toward1: bool = p1.velocity.x*sign_x > 10
+	var toward2: bool = p2.velocity.x*sign_x < -10
+	var share1: float = 0.5
+	if p1.is_movement_locked(): share1 = 0
+	elif p2.is_movement_locked(): share1 = 1
+	elif toward1 and not toward2: share1 = 0.75 if p2.can_guard() else 0.0
+	elif toward2 and not toward1: share1 = 0.25 if p1.can_guard() else 1.0
+	var old1: float = p1.position.x
+	var old2: float = p2.position.x
+	p1.position.x = clampf(old1-sign_x*penetration*share1,75,1205)
+	p2.position.x = clampf(old2+sign_x*penetration*(1-share1),75,1205)
+	# If the receiver hits the arena edge, all remaining pressure stops the mover.
+	var remainder: float = gap-absf(p2.position.x-p1.position.x)
+	if remainder > 0.001:
+		if is_equal_approx(p2.position.x,75) or is_equal_approx(p2.position.x,1205):
+			p1.position.x = clampf(p2.position.x-sign_x*gap,75,1205)
+		else: p2.position.x = clampf(p1.position.x+sign_x*gap,75,1205)
 
 func _release_inputs() -> void:
 	for command: StringName in InputMap.get_actions():

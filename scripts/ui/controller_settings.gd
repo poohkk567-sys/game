@@ -104,7 +104,7 @@ func _ready() -> void:
 		listening = ""
 		_refresh_bindings())
 	mapping_tab.add_child(player_selector)
-	mapping_tab.add_child(_label("คลิกคำสั่ง แล้วกดปุ่มหรือขยับแกนจอย • ปุ่มซ้ำจะสลับกัน • R3 เปิดตั้งค่าเสมอ",15))
+	mapping_tab.add_child(_label("ตั้งปุ่มปกติได้ตามต้องการ • สกิลใช้ลง+ต่อย/กระโดด/เตะ/วิ่ง • R3 เปิดตั้งค่า",15))
 	var scroll := ScrollContainer.new()
 	scroll.follow_focus = true
 	scroll.custom_minimum_size = Vector2(920,262)

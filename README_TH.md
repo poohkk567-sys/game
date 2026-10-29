@@ -1,8 +1,8 @@
 # PHUZASHI — DARK PULSE / คู่มือภาษาไทย
 
-รุ่นปัจจุบัน: [ตัวละ 6 สกิล ซีอิ๊วดำ และกอริลล่าน้ำตาล](docs/SIX_SKILLS_TH.md) เริ่มทุกยก 50 มานา ใช้คีย์บอร์ดสองคนหรือจอยตั้งปุ่มเองได้
+รุ่นปัจจุบัน: [ปุ่มนั่ง+สกิล ดันตัว แรงปะทะ ฟีโน่คู่ซ้อนและคัตอิน](docs/CONTACT_UPDATE_TH.md) เริ่ม 50 MP, ASSJIRO แปลง 70 แล้วสกิลฟรี, PHUZASHI Blink 5 MP
 
-[ดาวน์โหลดเกม Godot](https://github.com/poohkk567-sys/game/blob/codex/six-skills-black-soy/docs/downloads/PHUZASHI_Six_Skills_Godot.zip?raw=true) → แตกZIP → Import project.godot → F5
+[ดาวน์โหลดเกม Godot](https://github.com/poohkk567-sys/game/blob/codex/chord-push-fino-duo/docs/downloads/PHUZASHI_Contact_Update_Godot.zip?raw=true) → แตกZIP → Import project.godot → F5
 
 [คู่มือสามตัวละคร ตั้งค่าจอย อัลติฟีโน่และบัฟเชียร์](docs/ROSTER_CONTROLLERS_TH.md) **F7/R3 ตั้งค่าจอย · F8 หน้าแรก · เลือกตัวละครก่อนเริ่มเกม**
 

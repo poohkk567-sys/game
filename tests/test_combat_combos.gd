@@ -97,7 +97,7 @@ func run() -> void:
 	check(started == ["PUNCH", "PUNCH_2", "PUNCH_3"], "A fourth buffered tap cannot extend the three-hit chain")
 	await reset()
 	await tap("punch")
-	await frames(23)
+	await frames(26) # Real contact now adds a short hit pause before recovery ends.
 	check(actor.action_timer == 0.0 and actor.combo_grace > 0.0, "Brief post-recovery continuation window exists")
 	await tap("punch")
 	check(actor.action_name == "PUNCH_2", "A slightly late second press continues the chain")

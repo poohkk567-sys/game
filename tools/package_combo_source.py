@@ -13,8 +13,11 @@ def main() -> None:
     parser.add_argument("--folder-name", default="PHUZASHI_Air_Combos")
     parser.add_argument("--review-prefix", help="Include only matching screenshot filenames")
     parser.add_argument("--video-name", help="Include only this review video from docs")
+    parser.add_argument("--no-video", action="store_true", help="Keep the source ZIP small; host the review video separately")
     parser.add_argument("--extra-review-file", action="append", default=[])
     args = parser.parse_args()
+    if args.no_video and args.video_name:
+        parser.error("--no-video cannot be combined with --video-name")
     output = root / "docs/downloads" / args.output_name
     output.parent.mkdir(parents=True, exist_ok=True)
     paths = set()
@@ -30,7 +33,7 @@ def main() -> None:
         video = root / "docs" / args.video_name
         assert video.is_file(), video
         paths.add(video)
-    else:
+    elif not args.no_video:
         paths.update((root / "docs").glob("*.mp4"))
     for name in args.extra_review_file:
         path = (root / name).resolve()

@@ -47,7 +47,7 @@ func _on_target(target: Area2D) -> void:
 		if inflicted < 0:
 			return
 	else:
-		target.take_hit(24,"SPECIAL")
+		target.take_hit(24,"SPECIAL",source)
 	hit = true
 	# Delay collision disable to avoid mutating physics flags in a callback.
 	set_deferred("monitoring", false)

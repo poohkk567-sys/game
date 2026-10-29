@@ -96,7 +96,7 @@ func run() -> void:
 	check(a._start_blink(1),"Blink is still available with sufficient mana")
 	Input.action_press("p1_charge")
 	await frames(10)
-	check(a.energy == 35 and not a.charging,"Blink cannot simultaneously charge or refund its cost")
+	check(a.energy == 45 and not a.charging,"Blink cannot simultaneously charge or refund its cost")
 	await setup()
 	a.energy = 0
 	a.apply_movement_lock(0.7)
@@ -118,7 +118,7 @@ func run() -> void:
 	b.start_action("ULTIMATE")
 	Input.action_press("p2_charge")
 	await frames(60)
-	check(b.energy == 0 and not b.charging,"Cap removal transformation cannot charge during its animation")
+	check(b.energy == 30 and not b.charging,"Cap removal transformation cannot charge during its animation")
 	await setup(true)
 	a.energy = 0
 	a.start_action("PUNCH")
@@ -194,18 +194,18 @@ func run() -> void:
 	b.guard_meter = 10
 	var blocked_damage: int = b.receive_attack(8,"PUNCH",a)
 	check(blocked_damage == 2 and b.guard_meter == 0 and b.action_name == "GUARD_BREAK","Last block breaks guard once and applies only 2 chip")
-	check(b.defense_feedback == "GUARD BREAK" and b.action_timer == 1,"Break gives a visible one-second stun")
+	check(b.defense_feedback == "GUARD BREAK" and b.action_timer == 1 and b.rig.draft_animation.visible,"Break gives a visible one-second stun without hiding the fighter during hit pause")
 	check(not b.start_action("PUNCH") and not b.start_action("ULTIMATE"),"Guard break prevents normals and transformation")
 	var x: float = b.position.x
 	Input.action_press("p2_move_left")
 	Input.action_press("p2_jump")
 	Input.action_press("p2_charge")
 	await frames(20)
-	check(b.is_on_floor() and absf(b.position.x-x) < 3 and absf(b.velocity.x) < 1 and not b.charging,"Guard break prevents walking, jumping and charging")
+	check(b.is_on_floor() and b.position.x >= x and absf(b.velocity.x) < 1 and not b.charging,"Guard break ignores left/jump/charge input while allowing physical recoil away from the attacker")
 	var remaining_stun: float = b.action_timer
 	b.receive_attack(8,"PUNCH",a)
 	check(b.health == 90 and b.action_timer <= remaining_stun+0.001,"A follow-up is unblocked and does not shorten or reset guard-break stun")
-	await frames(42)
+	await frames(48) # Includes hit pauses from the breaking hit and follow-up.
 	check(b.guard_meter == 50 and b.action_timer <= 0,"Guard break restores 50 guard after the one-second stun")
 	await setup(true)
 	await held_guard()
