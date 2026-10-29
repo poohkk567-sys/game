@@ -1,8 +1,8 @@
 # PHUZASHI — DARK PULSE / คู่มือภาษาไทย
 
-รุ่นปัจจุบัน: [ปุ่มนั่ง+สกิล ดันตัว แรงปะทะ ฟีโน่คู่ซ้อนและคัตอิน](docs/CONTACT_UPDATE_TH.md) เริ่ม 50 MP, ASSJIRO แปลง 70 แล้วสกิลฟรี, PHUZASHI Blink 5 MP
+รุ่นปัจจุบัน: [แก้ปุ่มจอยให้ตรงกับคีย์บอร์ด](docs/CONTROLLER_PARITY_TH.md) ลง+ปุ่มเตะ K เรียกเชียร์ (ค่าเริ่มต้นลง+B) · [คู่มือเกม](docs/CONTACT_UPDATE_TH.md) เริ่ม 50 MP, ASSJIRO แปลง 70 แล้วสกิลฟรี, PHUZASHI Blink 5 MP
 
-[ดาวน์โหลดเกม Godot](https://github.com/poohkk567-sys/game/blob/codex/chord-push-fino-duo/docs/downloads/PHUZASHI_Contact_Update_Godot.zip?raw=true) → แตกZIP → Import project.godot → F5
+[ดาวน์โหลดเกม Godot](https://github.com/poohkk567-sys/game/blob/codex/controller-keyboard-parity/docs/downloads/PHUZASHI_Controller_Parity_Godot.zip?raw=true) → แตกZIP → Import project.godot → F5
 
 [คู่มือสามตัวละคร ตั้งค่าจอย อัลติฟีโน่และบัฟเชียร์](docs/ROSTER_CONTROLLERS_TH.md) **F7/R3 ตั้งค่าจอย · F8 หน้าแรก · เลือกตัวละครก่อนเริ่มเกม**
 

@@ -425,6 +425,7 @@ func _physics_process(delta: float) -> void:
 		_clear_combo()
 	var chord: bool = false
 	if crouching:
+		jump_buffer = 0
 		for binding: String in ["punch","chord_three","chord_four","chord_five"]:
 			if just_pressed(binding):
 				chord = true

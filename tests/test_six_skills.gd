@@ -169,7 +169,7 @@ func run() -> void:
 		Input.parse_input_event(down)
 	Input.flush_buffered_events()
 	await frames(2)
-	for spec: Array in [[2,JOY_BUTTON_B],[5,JOY_BUTTON_RIGHT_SHOULDER]]:
+	for spec: Array in [[2,JOY_BUTTON_LEFT_SHOULDER],[5,JOY_BUTTON_RIGHT_SHOULDER]]:
 		var event := InputEventJoypadButton.new()
 		event.device = spec[0]
 		event.button_index = spec[1]
@@ -180,7 +180,7 @@ func run() -> void:
 	check(a.action_name == "DARK_RIFT" and b.action_name == "SHADOW_COUNTER","Two pad crouch chords independently trigger slots four and five")
 	check(a.energy == 70 and b.energy == 70,"Each assigned controller spends only its own fighter's mana")
 	for device: int in [2,5]:
-		for code: int in [JOY_BUTTON_DPAD_DOWN,JOY_BUTTON_B,JOY_BUTTON_RIGHT_SHOULDER]:
+		for code: int in [JOY_BUTTON_DPAD_DOWN,JOY_BUTTON_LEFT_SHOULDER,JOY_BUTTON_RIGHT_SHOULDER]:
 			var event := InputEventJoypadButton.new()
 			event.device = device
 			event.button_index = code

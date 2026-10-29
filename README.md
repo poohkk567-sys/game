@@ -2,7 +2,17 @@
 
 เกมต่อสู้2D Godot4.2.2+ มีหน้าเลือกตัวละคร PHUZASHI / ASSJIRO / MUAY THAI เล่นสองคนด้วยคีย์บอร์ดหรือจอย ตั้งจอยแต่ละฝั่งและผูกปุ่มเองได้
 
-## ล่าสุด: ปุ่มนั่ง+สกิล · ดันตัวและแรงปะทะ · ฟีโน่คู่ซ้อน · คัตอินอัลติ
+## ล่าสุด: แก้ปุ่มจอยให้ตรง J/K/L บนคีย์บอร์ด
+
+[ดาวน์โหลดเกมรุ่นแก้ปุ่มจอย (.zip)](https://github.com/poohkk567-sys/game/blob/codex/controller-keyboard-parity/docs/downloads/PHUZASHI_Controller_Parity_Godot.zip?raw=true) — แตก ZIP → Godot 4.2.2+ Import `project.godot` → F5
+
+**PHUZASHI กดลง+ปุ่มเตะ K เพื่อเรียกเชียร์** ค่าเริ่มต้นคือ **ลง+B / Circle** ตรงกับ S+K ทุกตัวใช้สกิลนั่งตามปุ่มปกติ: ลง+ต่อย X / ลง+เตะ B / ลง+ป้องกัน LB / ลง+วิ่ง RB ตั้งปุ่มเองแล้วสกิลตามคำสั่งเดิมทั้ง P1/P2 และสนามฝึก
+
+[ตารางปุ่มและผลตรวจ](docs/CONTROLLER_PARITY_TH.md) · [คู่มือเกม](docs/CONTACT_UPDATE_TH.md)
+
+![จอยลง+ปุ่มเตะเรียกเชียร์จริง](docs/screenshots/parity_preview_cheer.png)
+
+## รุ่นก่อน: ปุ่มนั่ง+สกิล · ดันตัวและแรงปะทะ · ฟีโน่คู่ซ้อน · คัตอินอัลติ
 
 [ดาวน์โหลดเกม Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/chord-push-fino-duo/docs/downloads/PHUZASHI_Contact_Update_Godot.zip?raw=true) — แตก ZIP → Godot 4.2.2+ Import `project.godot` → F5
 
