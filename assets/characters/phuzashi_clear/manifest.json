@@ -1,0 +1,1694 @@
+{
+	"canvas": [
+		1024,
+		1024
+	],
+	"frames": [
+		{
+			"clip": "IDLE",
+			"floor_y": 300,
+			"foot_x": 207,
+			"frame": 0,
+			"region": [
+				104,
+				7,
+				180,
+				293
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 300,
+			"foot_x": 550,
+			"frame": 1,
+			"region": [
+				442,
+				14,
+				185,
+				286
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 300,
+			"foot_x": 886,
+			"frame": 2,
+			"region": [
+				780,
+				8,
+				182,
+				292
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 300,
+			"foot_x": 1240,
+			"frame": 3,
+			"region": [
+				1133,
+				10,
+				183,
+				290
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 600,
+			"foot_x": 214,
+			"frame": 4,
+			"region": [
+				104,
+				309,
+				188,
+				291
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 600,
+			"foot_x": 550,
+			"frame": 5,
+			"region": [
+				440,
+				309,
+				188,
+				291
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 600,
+			"foot_x": 894,
+			"frame": 6,
+			"region": [
+				774,
+				308,
+				198,
+				292
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 600,
+			"foot_x": 1242,
+			"frame": 7,
+			"region": [
+				1124,
+				309,
+				196,
+				291
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 863,
+			"foot_x": 221,
+			"frame": 0,
+			"region": [
+				105,
+				607,
+				179,
+				256
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 864,
+			"foot_x": 496,
+			"frame": 1,
+			"region": [
+				437,
+				608,
+				189,
+				256
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 861,
+			"foot_x": 898,
+			"frame": 2,
+			"region": [
+				779,
+				614,
+				179,
+				247
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 863,
+			"foot_x": 1248,
+			"frame": 3,
+			"region": [
+				1136,
+				610,
+				173,
+				253
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 1122,
+			"foot_x": 172,
+			"frame": 4,
+			"region": [
+				105,
+				871,
+				179,
+				251
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 1122,
+			"foot_x": 564,
+			"frame": 5,
+			"region": [
+				444,
+				867,
+				182,
+				255
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 1122,
+			"foot_x": 840,
+			"frame": 6,
+			"region": [
+				784,
+				867,
+				181,
+				255
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 1122,
+			"foot_x": 1248,
+			"frame": 7,
+			"region": [
+				1138,
+				872,
+				172,
+				250
+			],
+			"source": "res://assets/characters/phuzashi_clear/idle_walk.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 290,
+			"foot_x": 246,
+			"frame": 0,
+			"region": [
+				68,
+				15,
+				257,
+				275
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 287,
+			"foot_x": 603,
+			"frame": 1,
+			"region": [
+				394,
+				16,
+				268,
+				271
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 294,
+			"foot_x": 954,
+			"frame": 2,
+			"region": [
+				733,
+				17,
+				293,
+				277
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 294,
+			"foot_x": 1149,
+			"frame": 3,
+			"region": [
+				1095,
+				18,
+				257,
+				276
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 582,
+			"foot_x": 246,
+			"frame": 4,
+			"region": [
+				55,
+				305,
+				258,
+				277
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 586,
+			"foot_x": 446,
+			"frame": 5,
+			"region": [
+				412,
+				305,
+				223,
+				281
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 589,
+			"foot_x": 928,
+			"frame": 6,
+			"region": [
+				735,
+				304,
+				272,
+				285
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 579,
+			"foot_x": 1103,
+			"frame": 7,
+			"region": [
+				1082,
+				307,
+				253,
+				272
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 845,
+			"foot_x": 218,
+			"frame": 0,
+			"region": [
+				69,
+				590,
+				220,
+				255
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 846,
+			"foot_x": 531,
+			"frame": 1,
+			"region": [
+				419,
+				645,
+				191,
+				201
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 848,
+			"foot_x": 814,
+			"frame": 2,
+			"region": [
+				771,
+				595,
+				217,
+				253
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 806,
+			"foot_x": 1226,
+			"frame": 3,
+			"region": [
+				1110,
+				582,
+				186,
+				224
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 1080,
+			"foot_x": 181,
+			"frame": 4,
+			"region": [
+				84,
+				852,
+				179,
+				228
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 1107,
+			"foot_x": 523,
+			"frame": 5,
+			"region": [
+				417,
+				863,
+				213,
+				244
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 1108,
+			"foot_x": 860,
+			"frame": 6,
+			"region": [
+				749,
+				925,
+				230,
+				183
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 1108,
+			"foot_x": 1247,
+			"frame": 7,
+			"region": [
+				1102,
+				849,
+				216,
+				259
+			],
+			"source": "res://assets/characters/phuzashi_clear/run_jump.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 295,
+			"foot_x": 247,
+			"frame": 0,
+			"region": [
+				122,
+				8,
+				192,
+				287
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 295,
+			"foot_x": 606,
+			"frame": 1,
+			"region": [
+				476,
+				38,
+				206,
+				257
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 295,
+			"foot_x": 971,
+			"frame": 2,
+			"region": [
+				836,
+				68,
+				220,
+				227
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 297,
+			"foot_x": 1282,
+			"frame": 3,
+			"region": [
+				1184,
+				115,
+				236,
+				182
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 503,
+			"foot_x": 225,
+			"frame": 4,
+			"region": [
+				88,
+				316,
+				251,
+				187
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 503,
+			"foot_x": 627,
+			"frame": 5,
+			"region": [
+				453,
+				323,
+				251,
+				180
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 503,
+			"foot_x": 986,
+			"frame": 6,
+			"region": [
+				826,
+				326,
+				261,
+				177
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 502,
+			"foot_x": 1317,
+			"frame": 7,
+			"region": [
+				1193,
+				343,
+				242,
+				159
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 781,
+			"foot_x": 248,
+			"frame": 0,
+			"region": [
+				113,
+				510,
+				207,
+				271
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 781,
+			"foot_x": 615,
+			"frame": 1,
+			"region": [
+				476,
+				520,
+				212,
+				261
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 781,
+			"foot_x": 976,
+			"frame": 2,
+			"region": [
+				829,
+				523,
+				224,
+				258
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 781,
+			"foot_x": 1349,
+			"frame": 3,
+			"region": [
+				1199,
+				521,
+				227,
+				260
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 1013,
+			"foot_x": 242,
+			"frame": 4,
+			"region": [
+				89,
+				790,
+				230,
+				223
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 1013,
+			"foot_x": 610,
+			"frame": 5,
+			"region": [
+				447,
+				796,
+				244,
+				217
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 1013,
+			"foot_x": 992,
+			"frame": 6,
+			"region": [
+				806,
+				799,
+				269,
+				214
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 1013,
+			"foot_x": 1355,
+			"frame": 7,
+			"region": [
+				1190,
+				804,
+				247,
+				209
+			],
+			"source": "res://assets/characters/phuzashi_clear/crouch_guard.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 264,
+			"foot_x": 182,
+			"frame": 0,
+			"region": [
+				54,
+				10,
+				197,
+				254
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 264,
+			"foot_x": 589,
+			"frame": 1,
+			"region": [
+				456,
+				11,
+				204,
+				253
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 264,
+			"foot_x": 971,
+			"frame": 2,
+			"region": [
+				833,
+				11,
+				245,
+				253
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 264,
+			"foot_x": 1375,
+			"frame": 3,
+			"region": [
+				1236,
+				10,
+				250,
+				254
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 526,
+			"foot_x": 198,
+			"frame": 4,
+			"region": [
+				67,
+				275,
+				201,
+				251
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 526,
+			"foot_x": 595,
+			"frame": 5,
+			"region": [
+				456,
+				275,
+				209,
+				251
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 526,
+			"foot_x": 979,
+			"frame": 6,
+			"region": [
+				844,
+				275,
+				206,
+				251
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 526,
+			"foot_x": 1383,
+			"frame": 7,
+			"region": [
+				1250,
+				275,
+				203,
+				251
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 781,
+			"foot_x": 186,
+			"frame": 0,
+			"region": [
+				58,
+				540,
+				196,
+				241
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 781,
+			"foot_x": 543,
+			"frame": 1,
+			"region": [
+				476,
+				540,
+				175,
+				241
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 781,
+			"foot_x": 927,
+			"frame": 2,
+			"region": [
+				849,
+				540,
+				227,
+				241
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 781,
+			"foot_x": 1308,
+			"frame": 3,
+			"region": [
+				1230,
+				540,
+				252,
+				241
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 1016,
+			"foot_x": 132,
+			"frame": 4,
+			"region": [
+				87,
+				788,
+				154,
+				228
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 1016,
+			"foot_x": 601,
+			"frame": 5,
+			"region": [
+				489,
+				788,
+				172,
+				228
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 1016,
+			"foot_x": 974,
+			"frame": 6,
+			"region": [
+				854,
+				789,
+				187,
+				227
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 1016,
+			"foot_x": 1386,
+			"frame": 7,
+			"region": [
+				1264,
+				789,
+				189,
+				227
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 252,
+			"foot_x": 234,
+			"frame": 0,
+			"region": [
+				107,
+				7,
+				204,
+				245
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 252,
+			"foot_x": 616,
+			"frame": 1,
+			"region": [
+				487,
+				7,
+				211,
+				245
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 252,
+			"foot_x": 998,
+			"frame": 2,
+			"region": [
+				866,
+				8,
+				208,
+				244
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 252,
+			"foot_x": 1375,
+			"frame": 3,
+			"region": [
+				1242,
+				12,
+				221,
+				240
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 506,
+			"foot_x": 245,
+			"frame": 4,
+			"region": [
+				102,
+				263,
+				227,
+				243
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 506,
+			"foot_x": 618,
+			"frame": 5,
+			"region": [
+				483,
+				263,
+				212,
+				243
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 506,
+			"foot_x": 918,
+			"frame": 6,
+			"region": [
+				865,
+				262,
+				212,
+				244
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 506,
+			"foot_x": 1375,
+			"frame": 7,
+			"region": [
+				1242,
+				263,
+				211,
+				243
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 764,
+			"foot_x": 162,
+			"frame": 0,
+			"region": [
+				106,
+				516,
+				206,
+				248
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 764,
+			"foot_x": 545,
+			"frame": 1,
+			"region": [
+				492,
+				567,
+				205,
+				197
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 764,
+			"foot_x": 907,
+			"frame": 2,
+			"region": [
+				852,
+				525,
+				225,
+				239
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 764,
+			"foot_x": 1284,
+			"frame": 3,
+			"region": [
+				1229,
+				520,
+				225,
+				244
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 1019,
+			"foot_x": 153,
+			"frame": 4,
+			"region": [
+				93,
+				768,
+				228,
+				251
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 1018,
+			"foot_x": 624,
+			"frame": 5,
+			"region": [
+				477,
+				788,
+				227,
+				230
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 1018,
+			"foot_x": 999,
+			"frame": 6,
+			"region": [
+				863,
+				777,
+				214,
+				241
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 1018,
+			"foot_x": 1375,
+			"frame": 7,
+			"region": [
+				1242,
+				775,
+				211,
+				243
+			],
+			"source": "res://assets/characters/phuzashi_clear/punch_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 260,
+			"foot_x": 218,
+			"frame": 0,
+			"region": [
+				69,
+				10,
+				221,
+				250
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 260,
+			"foot_x": 617,
+			"frame": 1,
+			"region": [
+				453,
+				8,
+				236,
+				252
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 259,
+			"foot_x": 936,
+			"frame": 2,
+			"region": [
+				836,
+				8,
+				211,
+				251
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 263,
+			"foot_x": 1248,
+			"frame": 3,
+			"region": [
+				1163,
+				9,
+				289,
+				254
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 518,
+			"foot_x": 196,
+			"frame": 4,
+			"region": [
+				111,
+				269,
+				182,
+				249
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 518,
+			"foot_x": 520,
+			"frame": 5,
+			"region": [
+				467,
+				270,
+				213,
+				248
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 518,
+			"foot_x": 973,
+			"frame": 6,
+			"region": [
+				827,
+				272,
+				225,
+				246
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 518,
+			"foot_x": 1367,
+			"frame": 7,
+			"region": [
+				1218,
+				273,
+				222,
+				245
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 769,
+			"foot_x": 218,
+			"frame": 0,
+			"region": [
+				71,
+				532,
+				220,
+				237
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 778,
+			"foot_x": 560,
+			"frame": 1,
+			"region": [
+				494,
+				530,
+				160,
+				248
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 777,
+			"foot_x": 912,
+			"frame": 2,
+			"region": [
+				841,
+				525,
+				187,
+				252
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 778,
+			"foot_x": 1290,
+			"frame": 3,
+			"region": [
+				1209,
+				536,
+				245,
+				242
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 1012,
+			"foot_x": 142,
+			"frame": 4,
+			"region": [
+				76,
+				780,
+				262,
+				232
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 1009,
+			"foot_x": 631,
+			"frame": 5,
+			"region": [
+				475,
+				783,
+				231,
+				226
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 1009,
+			"foot_x": 981,
+			"frame": 6,
+			"region": [
+				838,
+				780,
+				215,
+				229
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 1014,
+			"foot_x": 1363,
+			"frame": 7,
+			"region": [
+				1218,
+				785,
+				218,
+				229
+			],
+			"source": "res://assets/characters/phuzashi_clear/kick_combo.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 330,
+			"foot_x": 189,
+			"frame": 0,
+			"region": [
+				50,
+				20,
+				222,
+				310
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 331,
+			"foot_x": 556,
+			"frame": 1,
+			"region": [
+				401,
+				39,
+				238,
+				292
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 331,
+			"foot_x": 935,
+			"frame": 2,
+			"region": [
+				736,
+				27,
+				286,
+				304
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 331,
+			"foot_x": 1278,
+			"frame": 3,
+			"region": [
+				1099,
+				55,
+				264,
+				276
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 634,
+			"foot_x": 201,
+			"frame": 4,
+			"region": [
+				43,
+				380,
+				252,
+				254
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 637,
+			"foot_x": 563,
+			"frame": 5,
+			"region": [
+				410,
+				342,
+				247,
+				295
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 637,
+			"foot_x": 931,
+			"frame": 6,
+			"region": [
+				775,
+				348,
+				243,
+				289
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 637,
+			"foot_x": 1325,
+			"frame": 7,
+			"region": [
+				1175,
+				345,
+				234,
+				292
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 891,
+			"foot_x": 187,
+			"frame": 0,
+			"region": [
+				56,
+				638,
+				206,
+				253
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 891,
+			"foot_x": 529,
+			"frame": 1,
+			"region": [
+				429,
+				645,
+				269,
+				246
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 889,
+			"foot_x": 977,
+			"frame": 2,
+			"region": [
+				791,
+				694,
+				226,
+				195
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 885,
+			"foot_x": 1202,
+			"frame": 3,
+			"region": [
+				1163,
+				689,
+				303,
+				196
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 1012,
+			"foot_x": 199,
+			"frame": 4,
+			"region": [
+				44,
+				882,
+				295,
+				130
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 1009,
+			"foot_x": 606,
+			"frame": 5,
+			"region": [
+				407,
+				906,
+				324,
+				103
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 1009,
+			"foot_x": 956,
+			"frame": 6,
+			"region": [
+				778,
+				904,
+				310,
+				105
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 1007,
+			"foot_x": 1312,
+			"frame": 7,
+			"region": [
+				1142,
+				912,
+				374,
+				95
+			],
+			"source": "res://assets/characters/phuzashi_clear/hit_fall.png"
+		},
+		{
+			"clip": "SPECIAL",
+			"floor_y": 256,
+			"foot_x": 194,
+			"frame": 0,
+			"region": [
+				82,
+				8,
+				181,
+				248
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "SPECIAL",
+			"floor_y": 257,
+			"foot_x": 595,
+			"frame": 1,
+			"region": [
+				464,
+				38,
+				203,
+				219
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "SPECIAL",
+			"floor_y": 258,
+			"foot_x": 980,
+			"frame": 2,
+			"region": [
+				816,
+				16,
+				236,
+				242
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "SPECIAL",
+			"floor_y": 258,
+			"foot_x": 1329,
+			"frame": 3,
+			"region": [
+				1164,
+				15,
+				235,
+				243
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "SPECIAL",
+			"floor_y": 512,
+			"foot_x": 258,
+			"frame": 4,
+			"region": [
+				67,
+				270,
+				268,
+				242
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "SPECIAL",
+			"floor_y": 512,
+			"foot_x": 625,
+			"frame": 5,
+			"region": [
+				440,
+				270,
+				272,
+				242
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "SPECIAL",
+			"floor_y": 512,
+			"foot_x": 996,
+			"frame": 6,
+			"region": [
+				821,
+				265,
+				251,
+				247
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "SPECIAL",
+			"floor_y": 512,
+			"foot_x": 1363,
+			"frame": 7,
+			"region": [
+				1248,
+				267,
+				185,
+				245
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "ULTIMATE",
+			"floor_y": 770,
+			"foot_x": 200,
+			"frame": 0,
+			"region": [
+				84,
+				519,
+				186,
+				251
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "ULTIMATE",
+			"floor_y": 771,
+			"foot_x": 590,
+			"frame": 1,
+			"region": [
+				456,
+				577,
+				209,
+				194
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "ULTIMATE",
+			"floor_y": 773,
+			"foot_x": 994,
+			"frame": 2,
+			"region": [
+				831,
+				522,
+				241,
+				251
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "ULTIMATE",
+			"floor_y": 773,
+			"foot_x": 1363,
+			"frame": 3,
+			"region": [
+				1218,
+				516,
+				217,
+				257
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "ULTIMATE",
+			"floor_y": 1015,
+			"foot_x": 237,
+			"frame": 4,
+			"region": [
+				59,
+				777,
+				280,
+				238
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "ULTIMATE",
+			"floor_y": 1015,
+			"foot_x": 619,
+			"frame": 5,
+			"region": [
+				443,
+				777,
+				275,
+				238
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "ULTIMATE",
+			"floor_y": 1016,
+			"foot_x": 1001,
+			"frame": 6,
+			"region": [
+				817,
+				774,
+				263,
+				242
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		},
+		{
+			"clip": "ULTIMATE",
+			"floor_y": 1014,
+			"foot_x": 1363,
+			"frame": 7,
+			"region": [
+				1247,
+				775,
+				185,
+				239
+			],
+			"source": "res://assets/characters/phuzashi_clear/powers.png"
+		}
+	],
+	"pivot": [
+		512,
+		960
+	],
+	"scales": {
+		"CROUCH": 0.996515679442509,
+		"FALL": 1.1304347826087,
+		"GUARD": 1.05535055350553,
+		"HIT": 0.92258064516129,
+		"IDLE": 0.976109215017065,
+		"JUMP": 1.12156862745098,
+		"KICK": 1.18672199170124,
+		"KICK_2": 1.144,
+		"KICK_3": 1.20675105485232,
+		"PUNCH": 1.1259842519685,
+		"PUNCH_2": 1.16734693877551,
+		"PUNCH_3": 1.15322580645161,
+		"RUN": 1.04,
+		"SPECIAL": 1.15322580645161,
+		"ULTIMATE": 1.1394422310757,
+		"WALK": 1.1171875
+	}
+}

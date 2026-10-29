@@ -1,0 +1,210 @@
+{
+	"alpha_threshold": 0.5,
+	"canvas": [
+		320,
+		362
+	],
+	"frames": [
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 0,
+			"region": [
+				68,
+				56,
+				155,
+				267
+			],
+			"waist_x": 156
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 1,
+			"region": [
+				340,
+				64,
+				156,
+				259
+			],
+			"waist_x": 428
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 2,
+			"region": [
+				611,
+				62,
+				155,
+				261
+			],
+			"waist_x": 700
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 3,
+			"region": [
+				882,
+				77,
+				157,
+				246
+			],
+			"waist_x": 971
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 4,
+			"region": [
+				1153,
+				73,
+				158,
+				250
+			],
+			"waist_x": 1240
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 5,
+			"region": [
+				1425,
+				64,
+				156,
+				259
+			],
+			"waist_x": 1513
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 6,
+			"region": [
+				1694,
+				56,
+				158,
+				267
+			],
+			"waist_x": 1786
+		},
+		{
+			"animation": "IDLE",
+			"floor_y": 323,
+			"frame": 7,
+			"region": [
+				1966,
+				56,
+				156,
+				267
+			],
+			"waist_x": 2055
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 0,
+			"region": [
+				51,
+				387,
+				174,
+				286
+			],
+			"waist_x": 145
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 1,
+			"region": [
+				320,
+				387,
+				179,
+				286
+			],
+			"waist_x": 417
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 2,
+			"region": [
+				594,
+				387,
+				175,
+				286
+			],
+			"waist_x": 692
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 3,
+			"region": [
+				866,
+				387,
+				180,
+				286
+			],
+			"waist_x": 963
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 4,
+			"region": [
+				1142,
+				387,
+				168,
+				286
+			],
+			"waist_x": 1234
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 5,
+			"region": [
+				1443,
+				388,
+				131,
+				285
+			],
+			"waist_x": 1505
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 6,
+			"region": [
+				1679,
+				387,
+				181,
+				286
+			],
+			"waist_x": 1778
+		},
+		{
+			"animation": "WALK",
+			"floor_y": 673,
+			"frame": 7,
+			"region": [
+				1954,
+				387,
+				171,
+				286
+			],
+			"waist_x": 2046
+		}
+	],
+	"pivot": [
+		160,
+		340
+	],
+	"size": [
+		2172,
+		724
+	],
+	"source": "res://assets/characters/drafts/idle_walk_draft.png"
+}
