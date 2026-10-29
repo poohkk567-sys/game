@@ -20,8 +20,8 @@ const MOVES: Dictionary = {
 	"GORILLA_ROAR":[0.90,25.0,10,0.40,0.59,220.0,160.0],
 	"GORILLA_KING":[2.40,100.0,8,0.25,0.80,160.0,175.0]
 }
-const COSTS: Dictionary = {"SPECIAL":25,"DEMON_BIND":25,"CHEER":30,"ULTIMATE":60,"CARROT_HEADBUTT":25,"CARROT_RUSH":30,"TRANSFORM":100}
-const COOLDOWNS: Dictionary = {"DARK_RIFT":8.0,"SHADOW_COUNTER":8.0,"CARROT_UPROOT":7.0,"SOY_BOMB":7.0,"CARROT_SPIN":9.0,"GORILLA_ELBOW":7.0,"GORILLA_KNEE":8.0,"GORILLA_QUAKE":8.0,"GORILLA_GUARD":12.0,"GORILLA_ROAR":8.0,"GORILLA_KING":18.0}
+const COSTS: Dictionary = {"SPECIAL":25,"DEMON_BIND":25,"CHEER":30,"ULTIMATE":60,"CARROT_HEADBUTT":25,"CARROT_RUSH":30,"TRANSFORM":70}
+const COOLDOWNS: Dictionary = {"CARROT_HEADBUTT":6.0,"CARROT_RUSH":8.0,"DARK_RIFT":8.0,"SHADOW_COUNTER":8.0,"CARROT_UPROOT":7.0,"SOY_BOMB":7.0,"CARROT_SPIN":9.0,"GORILLA_ELBOW":7.0,"GORILLA_KNEE":8.0,"GORILLA_QUAKE":8.0,"GORILLA_GUARD":12.0,"GORILLA_ROAR":8.0,"GORILLA_KING":18.0}
 const NAMES: Dictionary = {
 	"SPECIAL":"DARK PULSE","DEMON_BIND":"DEMON BIND","CHEER":"HEART SUPPORT","ULTIMATE":"FINO DARK RIDE",
 	"DARK_RIFT":"DARK RIFT","SHADOW_COUNTER":"SHADOW COUNTER","SHADOW_REPRISAL":"SHADOW COUNTER",
@@ -37,5 +37,5 @@ static func cost(action: String) -> float:
 
 static func keys(profile: String, second: bool = false) -> Array[String]:
 	if second:
-		return ["Num4/'","↓+Num1", "[", "Num6/]", "Num9/-", "Num5/;"]
-	return ["I / U" if profile == "RED_CAP" else "U","S+J","T","Y","F","O" if profile == "RED_CAP" else "I"]
+		return ["Num4/'","↓+Num1", "↓+Num2", "↓+Num3", "↓+Ctrl", "Num5/;"]
+	return ["I / U" if profile == "RED_CAP" else "U","S+J","S+K","S+L","S+Shift","O" if profile == "RED_CAP" else "I"]

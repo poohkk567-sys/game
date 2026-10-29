@@ -77,7 +77,7 @@ func _draw() -> void:
 	SkillBar.draw_bar(self,player,Rect2(34,638,680,46))
 	_text(Vector2(730,655),"A/D MOVE  SPACE JUMP  J/K COMBO  L GUARD",11,WHITE)
 	_text(Vector2(730,673),"Q/LT CHARGE  F1 HELP  F7 SETTINGS  F8 MENU",11,MUTED)
-	_text(Vector2(42,696),"PAD: RT SKILL1 | DOWN+X SKILL2 | UP SKILL3 | RIGHT STICK UP/DOWN SKILL4/5 | Y ULT | TAB SWITCH | R RESET",10,MUTED)
+	_text(Vector2(42,696),"PAD: RT:1 | DOWN+X:2 | DOWN+A:3 | DOWN+B:4 | DOWN+RB:5 | Y:ULT | TAB SWITCH | R RESET",10,MUTED)
 	if player.debug_hitboxes:
 		_text(Vector2(1021,627), "HITBOXES ON", 12, CYAN)
 	if stage.show_help:
@@ -98,10 +98,10 @@ func _draw_move_list() -> void:
 	var keys: Array[String] = SkillBook.keys(player.fighter_profile)
 	var moves: Array = SkillBook.ROSTER[player.fighter_profile]
 	for slot in range(6):
-		rows.append([keys[slot],SkillBook.NAMES[moves[slot]],"%d MP" % SkillBook.cost(moves[slot])])
-	rows.append(["PAD","RT / Down+X / Up / R-stick up/down / Y",""])
+		rows.append([keys[slot],SkillBook.NAMES[moves[slot]],"%d MP" % player.skill_mana_cost(moves[slot])])
+	rows.append(["PAD","RT / Down+X / Down+A / Down+B / Down+RB / Y",""])
 	rows.append(["ASSJIRO","Attack skills require bald awakened form",""])
-	rows.append(["E / L3","Dash / PHUZASHI Blink","15 MP Blink"])
+	rows.append(["E / L3","Dash / PHUZASHI Blink","5 MP Blink"])
 	rows.append(["Tab / R","Switch fighter / reset (50 MP)",""])
 	rows.append(["F7 / R3","Assign and remap controllers",""])
 	for i in range(rows.size()):

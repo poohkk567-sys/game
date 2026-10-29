@@ -150,8 +150,8 @@ func run() -> void:
 	actor.energy = 0
 	for action: String in ["SPECIAL","DEMON_BIND"]:
 		check(not actor.start_action(action) and actor.energy == 0,"Carrot skill rejects insufficient MP: "+action)
-	actor.energy = 99.0
-	check(not actor.start_action("ULTIMATE") and actor.energy == 99.0,"Cap Off requires the full 100 MP")
+	actor.energy = 69.0
+	check(not actor.start_action("ULTIMATE") and actor.energy == 69.0,"Cap Off requires 70 MP")
 	actor.energy = 100.0
 	check(not actor._start_blink(1) and actor.energy == 100,"Red Cap cannot borrow Shadow Blink")
 	actor.energy = 0

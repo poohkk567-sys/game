@@ -9,7 +9,7 @@ const Setup = preload("res://scripts/character/input_setup.gd")
 const Profile = preload("res://scripts/input/controller_profile.gd")
 const Settings = preload("res://scripts/ui/controller_settings.gd")
 const DEADZONE: float = 0.28
-const COMMANDS: Array[String] = ["move_left","move_right","jump","crouch","run","guard","punch","kick","charge","special","ultimate","red_ultimate","pad_ultimate","dash","pad_pause","pad_help","cheer","skill_four","skill_five"]
+const COMMANDS: Array[String] = ["move_left","move_right","jump","crouch","run","guard","punch","kick","charge","special","ultimate","red_ultimate","pad_ultimate","dash","pad_pause","pad_help","chord_three","chord_four","chord_five"]
 var profile = Profile.new()
 var device_info: Dictionary = {}
 var manual_devices: Dictionary = {}
@@ -195,11 +195,17 @@ func _apply_layout() -> void:
 		for command: String in Profile.COMMANDS:
 			if settings_open or (waiting_neutral and command not in ["pad_pause","pad_help"]):
 				continue
-			for binding: Dictionary in profile.bindings[player][command]:
-				if binding.type == "button":
-					_button(prefix+command,device,binding.code)
-				else:
-					_axis(prefix+command,device,binding.code,float(binding.sign))
+			_bind_command(prefix+command,device,profile.bindings[player][command])
+		if not settings_open and not waiting_neutral:
+			# Modifier actions share the remapped normal button but have separate keys.
+			for command: String in ["chord_three","chord_four","chord_five"]:
+				var base: String = {"chord_three":"jump","chord_four":"kick","chord_five":"run"}[command]
+				_bind_command(prefix+command,device,profile.bindings[player][base])
+
+func _bind_command(action: String, device: int, bindings: Array) -> void:
+	for binding: Dictionary in bindings:
+		if binding.type == "button": _button(action,device,binding.code)
+		else: _axis(action,device,binding.code,float(binding.sign))
 
 func _button(action: String, device: int, code: int) -> void:
 	var event := InputEventJoypadButton.new()

@@ -21,7 +21,7 @@ func _sync() -> void:
 	shape.position = Vector2(0,-height*0.5)
 
 func can_be_hit_by(attacker: Node2D) -> bool:
-	return attacker != fighter and fighter.health > 0.0 and not fighter.blink_invulnerable()
+	return attacker != fighter and fighter.health > 0.0 and not fighter.attack_invulnerable()
 
 func receive_attack(damage: int, move_name: String, attacker: Node2D) -> int:
 	return fighter.receive_attack(damage,move_name,attacker)

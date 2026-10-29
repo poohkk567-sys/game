@@ -1,6 +1,6 @@
 extends RefCounted
 ## Portable player preferences; runtime device IDs are deliberately not saved.
-const COMMANDS: Array[String] = ["move_left","move_right","jump","crouch","run","guard","punch","kick","charge","special","pad_ultimate","dash","pad_pause","pad_help","cheer","skill_four","skill_five"]
+const COMMANDS: Array[String] = ["move_left","move_right","jump","crouch","run","guard","punch","kick","charge","special","pad_ultimate","dash","pad_pause","pad_help"]
 const NAMES: Dictionary = {
  "move_left":"เดินซ้าย / A", "move_right":"เดินขวา / D", "jump":"กระโดด / Space",
  "crouch":"หมอบ / S", "run":"วิ่ง / Shift", "guard":"ป้องกัน / L",
@@ -20,10 +20,9 @@ static func axis(code: int, sign_value: int) -> Dictionary:
 
 static func defaults() -> Dictionary:
 	return {
-	 "skill_four":[axis(JOY_AXIS_RIGHT_Y,-1)], "skill_five":[axis(JOY_AXIS_RIGHT_Y,1)],
-	 "move_left":[button(JOY_BUTTON_DPAD_LEFT),axis(JOY_AXIS_LEFT_X,-1)],
+		 "move_left":[button(JOY_BUTTON_DPAD_LEFT),axis(JOY_AXIS_LEFT_X,-1)],
 	 "move_right":[button(JOY_BUTTON_DPAD_RIGHT),axis(JOY_AXIS_LEFT_X,1)],
-	 "jump":[button(JOY_BUTTON_A)], "cheer":[button(JOY_BUTTON_DPAD_UP)],
+	 "jump":[button(JOY_BUTTON_A)],
 	 "crouch":[button(JOY_BUTTON_DPAD_DOWN),axis(JOY_AXIS_LEFT_Y,1)],
 	 "run":[button(JOY_BUTTON_RIGHT_SHOULDER)], "guard":[button(JOY_BUTTON_LEFT_SHOULDER)],
 	 "punch":[button(JOY_BUTTON_X)], "kick":[button(JOY_BUTTON_B)],
@@ -83,21 +82,9 @@ func load_settings() -> void:
 		preferences.p2_ = {"mode":"auto"}
 
 static func upgrade_map(mapping: Dictionary) -> Dictionary:
-	# Preserve old custom mappings; allocate unused inputs for the two new slots.
+	# Chords inherit the saved normal buttons; obsolete direct skill buttons retire.
 	var result: Dictionary = mapping.duplicate(true)
-	var used: Dictionary = {}
-	for entries: Variant in result.values():
-		if entries is Array:
-			for entry: Variant in entries:
-				if entry is Dictionary: used[binding_key(entry)] = true
-	for command: String in ["skill_four","skill_five"]:
-		if result.has(command): continue
-		var candidates: Array = [axis(JOY_AXIS_RIGHT_Y,-1 if command == "skill_four" else 1),axis(JOY_AXIS_RIGHT_X,-1),axis(JOY_AXIS_RIGHT_X,1),button(15),button(16),button(17)]
-		for candidate: Dictionary in candidates:
-			if valid_binding(candidate) and not used.has(binding_key(candidate)):
-				result[command] = [candidate]
-				used[binding_key(candidate)] = true
-				break
+	for command: String in ["cheer","skill_four","skill_five"]: result.erase(command)
 	return result
 
 func save_settings(choices: Dictionary, mappings: Dictionary) -> Error:

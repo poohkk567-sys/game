@@ -2,7 +2,21 @@
 
 เกมต่อสู้2D Godot4.2.2+ มีหน้าเลือกตัวละคร PHUZASHI / ASSJIRO / MUAY THAI เล่นสองคนด้วยคีย์บอร์ดหรือจอย ตั้งจอยแต่ละฝั่งและผูกปุ่มเองได้
 
-## ล่าสุด: ตัวละ 6 สกิล · สแตนด์กอริลล่าน้ำตาล · ซีอิ๊วดำ · เปิด 50 มานา
+## ล่าสุด: ปุ่มนั่ง+สกิล · ดันตัวและแรงปะทะ · ฟีโน่คู่ซ้อน · คัตอินอัลติ
+
+[ดาวน์โหลดเกม Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/chord-push-fino-duo/docs/downloads/PHUZASHI_Contact_Update_Godot.zip?raw=true) — แตก ZIP → Godot 4.2.2+ Import `project.godot` → F5
+
+- **ปุ่มใหม่:** คง U/RT กับอัลติ สกิลอื่นใช้ S+J / S+K / S+L / S+Shift หรือจอย ลง+X / ลง+A / ลง+B / ลง+RB
+- **เดินชนแล้วดัน:** ไม่ซ้อนหรือทะลุกัน ติดขอบแล้วหยุด โดนหมัด/เตะ/สกิลแล้วสั่นและถอยตามน้ำหนัก
+- **ฟีโน่:** ตัวช่วยหญิงซ้อนท้าย ไฟม่วงกับปีศาจม่วง มีคัตอินกรอบหน้าด้านซ้ายให้อัลติทั้งสามตัว
+- **ASSJIRO:** แปลง 70 MP เก็บมานาที่เหลือ สกิลร่างแปลงไม่เสียมานาแต่มีคูลดาวน์ พายุแครอทแทนตัวคนและอมตะเฉพาะระหว่างท่า
+- **มวยไทย:** ท่ายืนและแดชใหม่ เคลื่อนที่ต่อเนื่อง แก้เศษเฟรมติดมา **PHUZASHI Blink เหลือ 5 MP**
+
+[คู่มือปุ่มและการเปลี่ยนแปลง](docs/CONTACT_UPDATE_TH.md) · [วิดีโอในเกม](https://github.com/poohkk567-sys/game/blob/codex/chord-push-fino-duo/docs/PHUZASHI_Contact_Update.mp4?raw=true) · [ผลทดสอบ](docs/CONTACT_TEST_REPORT.md)
+
+![ฟีโน่คู่ซ้อนพร้อมไฟและปีศาจม่วง](docs/screenshots/contact_preview_fino.png)
+
+## รุ่นก่อน: ตัวละ 6 สกิล · สแตนด์กอริลล่าน้ำตาล · ซีอิ๊วดำ · เปิด 50 มานา
 
 [ดาวน์โหลดเกม Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/six-skills-black-soy/docs/downloads/PHUZASHI_Six_Skills_Godot.zip?raw=true) — แตก ZIP → Import `project.godot` ด้วย Godot 4.2.2+ → F5
 

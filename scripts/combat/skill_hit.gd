@@ -1,6 +1,5 @@
 extends RefCounted
 ## One authoritative damage path for melee, waves and thrown bottles.
-const Feedback = preload("res://scripts/combat/skill_feedback.gd")
 
 static func apply(source: Node2D, target: Node2D, damage: int, move: String, launch: bool = false, push: float = 150) -> int:
 	if not is_instance_valid(source) or not is_instance_valid(target): return -1
@@ -11,22 +10,20 @@ static func apply(source: Node2D, target: Node2D, damage: int, move: String, lau
 	if target.has_method("receive_attack"):
 		amount = target.receive_attack(damage,move,source)
 	elif target.has_method("take_hit"):
-		target.take_hit(damage,move)
+		target.take_hit(damage,move,source)
 	else: return -1
 	if amount < 0: return -1
 	var blocked: bool = target.was_last_hit_blocked() if target.has_method("was_last_hit_blocked") else false
 	if victim.has_method("bind_lock_duration"):
 		if not blocked:
-			victim.skills.push_velocity = source.facing*push
+			victim.skills.push_velocity = load("res://scripts/combat/combat_reaction.gd").direction(victim,source)*push
 			victim.skills.push_remaining = 0.14
+			victim.velocity.x = victim.skills.push_velocity
 			if launch and not victim.launched_once:
 				victim.launched_once = true
 				victim.velocity.y = -470
 				victim.action_duration = maxf(victim.action_duration,0.55)
 				victim.action_timer = maxf(victim.action_timer,0.55)
-		victim.impact_pause = maxf(victim.impact_pause,0.035 if blocked else 0.065)
-	source.impact_pause = maxf(source.impact_pause,0.035 if blocked else 0.065)
-	Feedback.obtain(source.get_parent()).impact(1.5 if blocked else (4.0 if damage >= 24 else 2.5))
 	source.target_struck.emit(amount)
 	return amount
 

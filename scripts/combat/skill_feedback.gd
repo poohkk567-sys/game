@@ -27,14 +27,15 @@ func impact(power: float, kind: String = "HIT") -> void:
 		var sound := AudioStreamWAV.new()
 		sound.format = AudioStreamWAV.FORMAT_16_BITS
 		sound.mix_rate = 22050
-		var duration: float = 0.42 if kind == "ROAR" else 0.18
+		var duration: float = 0.42 if kind == "ROAR" else (0.09 if kind == "LIGHT" else 0.18)
 		var data := PackedByteArray()
 		data.resize(int(duration*22050)*2)
 		for i in range(data.size()/2):
 			var t: float = float(i)/22050
 			var envelope: float = pow(1-t/duration,2)*minf(1,t/0.005)
 			var noise: float = sin(i*12.9898)*sin(i*78.233)
-			var tone: float = sin(TAU*(85-45*t/duration)*t)
+			var base: float = 190 if kind == "LIGHT" else (120 if kind == "KICK" else 85)
+			var tone: float = sin(TAU*(base-base*0.55*t/duration)*t)
 			if kind == "ROAR": tone = sin(TAU*65*t)*(0.6+0.4*sin(t*85))
 			data.encode_s16(i*2,int(clampf((tone*0.65+noise*0.3)*envelope,-1,1)*24000))
 		sound.data = data

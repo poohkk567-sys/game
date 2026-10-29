@@ -19,6 +19,7 @@ var stand: AnimatedSprite2D
 var extra_body: AnimatedSprite2D
 var ghost: AnimatedSprite2D
 var stand_fade: float = 0
+var cyclone: AnimatedSprite2D
 
 func _ready() -> void:
 	fighter = get_parent()
@@ -42,6 +43,11 @@ func _ready() -> void:
 	ghost.visible = false
 	ghost.modulate = Color(0.34,0.08,0.60,0.6)
 	add_child(ghost)
+	cyclone = AnimatedSprite2D.new()
+	cyclone.sprite_frames = load("res://assets/effects/carrot_cyclone_frames.res")
+	cyclone.centered = false
+	cyclone.visible = false
+	add_child(cyclone)
 
 func tick(delta: float) -> void:
 	for action: String in cooldowns:
@@ -60,20 +66,21 @@ func reset() -> void:
 	if is_instance_valid(stand): stand.visible = false
 	if is_instance_valid(extra_body): extra_body.visible = false
 	if is_instance_valid(ghost): ghost.visible = false
+	if is_instance_valid(cyclone): cyclone.visible = false
 
 func start(action: String) -> bool:
 	if action not in Book.ROSTER[fighter.fighter_profile] or not Book.MOVES.has(action): return false
 	if fighter.fighter_profile == "RED_CAP" and not fighter.red_awakened:
-		fighter.announce("AWAKEN FIRST / 100 MP")
+		fighter.announce("AWAKEN FIRST / 70 MP")
 		return false
 	if not fighter.duel_mode and not fighter.rig.use_clear_model and fighter.fighter_profile == "PHUZASHI":
 		fighter.rig.set_clear_enabled(true)
 	if (fighter.duel_mode and (not fighter.controls_enabled or fighter.health <= 0)) or fighter.action_timer > 0 or fighter.dash_timer > 0 or fighter.blink_timer > 0 or fighter.guard_break_remaining > 0 or fighter.is_movement_locked(): return false
-	if not fighter.is_on_floor() or fighter.velocity.y < 0 or fighter.pressed("guard") or (fighter.pressed("crouch") and action != "GORILLA_KNEE"): return false
+	if not fighter.is_on_floor() or fighter.velocity.y < 0 or (not fighter.skill_input_modifier and (fighter.pressed("guard") or (fighter.pressed("crouch") and action != "GORILLA_KNEE"))): return false
 	if float(cooldowns.get(action,0)) > 0:
 		fighter.announce("%s / COOLDOWN %.1fs" % [Book.SHORT_NAMES[action],cooldowns[action]])
 		return false
-	var cost: float = Book.cost(action)
+	var cost: float = fighter.skill_mana_cost(action)
 	if fighter.energy < cost:
 		fighter.announce("%s / NEED %d MP" % [Book.SHORT_NAMES[action],cost])
 		return false
@@ -206,13 +213,21 @@ func present() -> void:
 		stand.scale = Vector2(factor*fighter.facing,factor)
 		stand.position = Vector2(-fighter.facing*40,0)-Vector2(512*fighter.facing,960)*factor
 		stand.modulate = Color(1,0.91,0.94,stand_fade*0.82)
-	extra_body.visible = action in ["SOY_BOMB","CARROT_SPIN"]
+	extra_body.visible = action == "SOY_BOMB"
 	if extra_body.visible:
 		var factor: float = 156.0/float(extra_body.sprite_frames.get_meta("source_height"))
 		extra_body.scale = Vector2(factor*fighter.facing,factor)
 		extra_body.position = -Vector2(512*fighter.facing,960)*factor
 		extra_body.animation = action
 		extra_body.frame = mini(7,floori(p*8))
+		fighter.rig.visible = false
+	cyclone.visible = fighter.cyclone_active()
+	if cyclone.visible:
+		var factor: float = 190.0/float(cyclone.sprite_frames.get_meta("source_height"))
+		cyclone.scale = Vector2(factor*fighter.facing,factor)
+		cyclone.position = -Vector2(512*fighter.facing,960)*factor
+		cyclone.animation = "CYCLONE"
+		cyclone.frame = mini(15,floori(p*16))
 		fighter.rig.visible = false
 	ghost.visible = action in ["SHADOW_COUNTER","SHADOW_REPRISAL"]
 	if ghost.visible:

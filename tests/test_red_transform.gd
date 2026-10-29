@@ -56,9 +56,9 @@ func run() -> void:
 			keys.append(binding.physical_keycode)
 	check(KEY_KP_5 in keys and KEY_SEMICOLON in keys,"P2 has numpad5 and semicolon ultimate keys")
 	check(not b.specials_enabled and not b._start_blink(-1),"Capped form does not borrow PHUZASHI special powers")
-	for mp: float in [0.0,25.0,99.0,99.9]:
+	for mp: float in [0.0,25.0,69.0,69.9]:
 		b.energy = mp
-		check(not b.start_action("ULTIMATE") and b.energy == mp and not b.red_awakened,"Requires full 100 MP: "+str(mp))
+		check(not b.start_action("ULTIMATE") and b.energy == mp and not b.red_awakened,"Requires 70 MP: "+str(mp))
 	await setup()
 	Input.action_press("p2_guard")
 	check(not b.start_action("ULTIMATE") and b.energy == 100,"Guard blocks transformation without MP loss")
@@ -77,7 +77,7 @@ func run() -> void:
 	await setup()
 	Input.action_press("p2_ultimate")
 	await frames(2)
-	check(b.action_name == "TRANSFORM" and not b.red_awakened and b.energy == 0,"P2 ultimate input starts transformation and charges exactly 100 MP")
+	check(b.action_name == "TRANSFORM" and not b.red_awakened and b.energy == 30,"P2 ultimate input starts transformation and charges exactly 70 MP")
 	check(starts == ["TRANSFORM"] and b.action_duration == 3.2,"One transformation action uses the full authored sequence")
 	check(b.red_transform_phase() == "CAP OFF","Animation starts by removing the cap")
 	check(b.rig.draft_animation.animation == "TRANSFORM" and b.rig.draft_animation.sprite_frames.get_frame_count("TRANSFORM") == 16,"Sixteen transformation drawings are used in gameplay")
@@ -88,7 +88,7 @@ func run() -> void:
 	await frames(70)
 	check(b.red_transform_phase() == "BLACK SOY SAUCE" and b.rig.draft_animation.frame in [5,6,7,8,9],"Hat removal is followed by the visible black-soy-bottle phase")
 	check(b.position.distance_to(origin) < 0.1 and starts == ["TRANSFORM"],"Transformation locks movement, jump and normal attack buffering")
-	check(b.energy == 0,"Mana regeneration waits until the sequence finishes")
+	check(b.energy == 30,"Mana regeneration waits until the sequence finishes")
 	Input.action_release("p2_move_left")
 	Input.action_release("p2_jump")
 	Input.action_release("p2_punch")
@@ -107,7 +107,7 @@ func run() -> void:
 	await frames(70)
 	Input.action_release("p2_ultimate")
 	check(b.red_awakened and b.rig.red_awakened and b.action_timer == 0,"Completion switches to the bald shirtless body")
-	check(starts == ["TRANSFORM"] and b.energy < 5,"Holding ultimate cannot trigger it twice")
+	check(starts == ["TRANSFORM"] and b.energy == 30,"Holding ultimate cannot trigger it twice")
 	check(not b.specials_enabled and not b.purple_fist.active,"New form does not borrow PHUZASHI powers")
 	var sprite: AnimatedSprite2D = b.rig.draft_animation
 	var count: int = 0
@@ -123,7 +123,7 @@ func run() -> void:
 		var atlas: AtlasTexture = sprite.sprite_frames.get_frame_texture(clip,4)
 		check(str(atlas.get_meta("original_source",atlas.atlas.resource_path)).contains("/red_awakened/"),"Awakened artwork also persists for "+clip)
 	b.energy = 100
-	check(not b.start_action("ULTIMATE") and b.energy == 100,"Already-awakened form cannot consume another 100 MP")
+	check(not b.start_action("ULTIMATE") and b.energy == 100,"Already-awakened form cannot consume another 70 MP")
 	b.position.x = 750
 	a.position.x = 640
 	await frames(5)

@@ -42,7 +42,7 @@ func _draw() -> void:
 	_card(Rect2(24,626,1232,86),Color("687184"))
 	SkillBar.draw_bar(self,stage.p1,Rect2(30,630,594,46))
 	SkillBar.draw_bar(self,stage.p2,Rect2(658,630,594,46),true)
-	_text(Vector2(40,691),"P1 A/D SPACE J/K L Q | P2 ARROWS , . / P | PAD RT:1 DOWN+X:2 UP:3 RIGHT STICK UP/DOWN:4/5 Y:ULT",11,WHITE)
+	_text(Vector2(40,691),"P1 A/D SPACE J/K L Q | P2 ARROWS , . / P | PAD RT:1 DOWN+X:2 DOWN+A:3 DOWN+B:4 DOWN+RB:5 Y:ULT",11,WHITE)
 	_text(Vector2(40,706),"F1 MOVE LIST  F7/R3 SETTINGS  F8 MENU  ESC/START PAUSE  Q/LT CHARGE 7 MP/S  STARTING MP: 50/100",10,MUTED)
 	if stage.show_help:
 		_help()
@@ -82,7 +82,7 @@ func _help() -> void:
 	 ["A/D move   Space/W jump   Shift run","Arrows move/jump/crouch   Ctrl run"],
 	 ["J punch   K kick   L guard   S crouch","Num 1/2/3 or , . / : punch/kick/guard"],
 	 ["Q hold: charge 7 MP/s   U skill   I ultimate","P charge   Num4 / apostrophe: skill 1"],
-	 ["S+J skill2  T skill3  Y skill4  F skill5","Down+punch:2  [:3  Num6/]:4  Num9/-:5"]
+	 ["S+J:2 S+K:3 S+L:4 S+Shift:5","Down+Num1/2/3:2/3/4 Down+Ctrl:5"]
 	]
 	for i in range(rows.size()):
 		_text(Vector2(184,259+i*26),rows[i][0],12,VIOLET if i == 0 else WHITE)
@@ -90,7 +90,7 @@ func _help() -> void:
 	_center(640,402,"GAMEPAD / XBOX LABELS (PLAYSTATION EQUIVALENTS BELOW)",13,GOLD)
 	_center(640,428,"A / CROSS jump    X / SQUARE punch    B / CIRCLE kick    Y / TRIANGLE ultimate",13,WHITE)
 	_center(640,453,"LB / L1 guard    RB / R1 run    LT / L2 charge    RT / R2 skill    Stick / D-pad move",13,WHITE)
-	_center(640,478,"DOWN+X: skill 2   D-pad UP: skill 3   RIGHT STICK UP/DOWN: skills 4 / 5",12,WHITE)
+	_center(640,478,"DOWN+X:2   DOWN+A:3   DOWN+B:4   DOWN+RB:5   RT:1   Y:ULT",12,WHITE)
 	_center(640,510,"1 PAD: P2 + P1 keyboard; F5 swaps pad side. 2 PADS: first=P1, second=P2.",12,GOLD)
 	_center(640,535,"Normal hit +3 MP / finisher +5. Guard regenerates after 1s released; perfect guard +3 MP.",12,MUTED)
 	_center(640,559,"Guard break: 1s stun, then 50 guard. Charge stops when moving, jumping or getting hit.",12,MUTED)

@@ -40,7 +40,8 @@ func _process(delta: float) -> void:
 			refill_clock = 0.0
 	queue_redraw()
 
-func take_hit(damage: int, move_name: String) -> void:
+func take_hit(damage: int, move_name: String, attacker: Node2D = null) -> void:
+	load("res://scripts/combat/combat_reaction.gd").practice(attacker,damage,move_name)
 	health = maxi(0, health - damage)
 	total_damage += damage
 	last_damage = damage

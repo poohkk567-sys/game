@@ -80,9 +80,9 @@ func run() -> void:
 	awaken()
 	check(b.start_action("DEMON_BIND"),"Awakened form unlocks carrot barrage")
 	await setup()
-	check(b.start_action("ULTIMATE"),"Capped form retains its 100-MP transformation")
+	check(b.start_action("ULTIMATE"),"Capped form retains its 70-MP transformation")
 	await frames(200)
-	check(b.red_awakened and b.energy == 0,"Transformation still completes before unlocking skills")
+	check(b.red_awakened and b.energy == 30,"Transformation still completes before unlocking skills")
 	for left: bool in [false,true]:
 		await setup(left)
 		var x: float = a.position.x
@@ -92,7 +92,7 @@ func run() -> void:
 		await frames(95)
 		check(b.health == 140 and b.damage_taken == 60,"Fino rams the opponent exactly once for 60 damage")
 		check(absf(a.position.x-x) > 250,"Fino's impact follows actual forward travel")
-		await frames(6)
+		await frames(12) # Includes the new ultimate impact pause.
 		check(not a.fino_visual.visible and a.rig.visible,"Fino recovery restores the normal fighter")
 	await setup()
 	a.start_action("ULTIMATE")

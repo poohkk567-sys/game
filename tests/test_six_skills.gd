@@ -69,10 +69,10 @@ func run() -> void:
 		for spec: Array in [["PHUZASHI","DARK_RIFT",26,215],["RED_CAP","CARROT_UPROOT",24,100],["RED_CAP","SOY_BOMB",22,300],["RED_CAP","CARROT_SPIN",30,100],["MUAY_THAI","GORILLA_ELBOW",30,110],["MUAY_THAI","GORILLA_KNEE",26,100],["MUAY_THAI","GORILLA_QUAKE",24,230],["MUAY_THAI","GORILLA_ROAR",10,150],["MUAY_THAI","GORILLA_KING",60,105]]:
 			await setup(spec[0],left,spec[3])
 			check(a.start_action(spec[1]),"Cast "+spec[1]+" left="+str(left))
-			check(a.energy == 100-Book.cost(spec[1]),"Mana deducted exactly once: "+spec[1])
+			check(a.energy == 100-a.skill_mana_cost(spec[1]),"Mana deducted exactly once: "+spec[1])
 			await frames(200)
 			check(is_equal_approx(b.damage_taken,spec[2]),"Actual hit damage %d for %s left=%s, got %.1f" % [spec[2],spec[1],str(left),b.damage_taken])
-			check(a.energy == 100-Book.cost(spec[1]),"Skills never award normal-hit mana: "+spec[1])
+			check(a.energy == 100-a.skill_mana_cost(spec[1]),"Skills never award normal-hit mana: "+spec[1])
 	await setup("PHUZASHI",false,215)
 	a.start_action("DARK_RIFT")
 	await frames(32)
@@ -120,7 +120,7 @@ func run() -> void:
 	await frames(75)
 	check(a.red_transform_phase() == "BLACK SOY SAUCE","Transformation phase explicitly identifies black soy sauce")
 	await frames(130)
-	check(a.red_awakened and a.energy == 0,"Black soy transformation finishes at exactly 100 MP")
+	check(a.red_awakened and a.energy == 30,"Black soy transformation finishes at exactly 70 MP")
 	await setup("MUAY_THAI")
 	a.start_action("GORILLA_GUARD")
 	await frames(45)
@@ -143,9 +143,11 @@ func run() -> void:
 	await frames(160)
 	check(b.damage_taken == 0,"Gorilla ultimate cannot auto-connect from across the arena")
 	await setup("PHUZASHI")
-	Input.action_press("p1_skill_four")
+	Input.action_press("p1_crouch")
+	Input.action_press("p1_chord_four")
 	await frames(2)
-	Input.action_release("p1_skill_four")
+	Input.action_release("p1_chord_four")
+	Input.action_release("p1_crouch")
 	check(a.action_name == "DARK_RIFT","New slot four input starts its assigned real skill")
 	await frames(22)
 	check(not get_nodes_in_group("six_skill_effects").is_empty(),"Real persistent effect is spawned")
@@ -159,37 +161,51 @@ func run() -> void:
 	pads.configure_devices([2,5],{2:{"guid":"six-1","name":"Pad 1"},5:{"guid":"six-2","name":"Pad 2"}})
 	pads.waiting_neutral = false
 	pads._apply_layout()
-	for spec: Array in [[2,-1.0],[5,1.0]]:
-		var event := InputEventJoypadMotion.new()
+	for device: int in [2,5]:
+		var down := InputEventJoypadButton.new()
+		down.device = device
+		down.button_index = JOY_BUTTON_DPAD_DOWN
+		down.pressed = true
+		Input.parse_input_event(down)
+	Input.flush_buffered_events()
+	await frames(2)
+	for spec: Array in [[2,JOY_BUTTON_B],[5,JOY_BUTTON_RIGHT_SHOULDER]]:
+		var event := InputEventJoypadButton.new()
 		event.device = spec[0]
-		event.axis = JOY_AXIS_RIGHT_Y
-		event.axis_value = spec[1]
+		event.button_index = spec[1]
+		event.pressed = true
 		Input.parse_input_event(event)
 	Input.flush_buffered_events()
 	await frames(2)
-	check(a.action_name == "DARK_RIFT" and b.action_name == "SHADOW_COUNTER","Two real pad motion events independently trigger right-stick slots four and five")
+	check(a.action_name == "DARK_RIFT" and b.action_name == "SHADOW_COUNTER","Two pad crouch chords independently trigger slots four and five")
 	check(a.energy == 70 and b.energy == 70,"Each assigned controller spends only its own fighter's mana")
 	for device: int in [2,5]:
-		var event := InputEventJoypadMotion.new()
-		event.device = device
-		event.axis = JOY_AXIS_RIGHT_Y
-		event.axis_value = 0
-		Input.parse_input_event(event)
+		for code: int in [JOY_BUTTON_DPAD_DOWN,JOY_BUTTON_B,JOY_BUTTON_RIGHT_SHOULDER]:
+			var event := InputEventJoypadButton.new()
+			event.device = device
+			event.button_index = code
+			event.pressed = false
+			Input.parse_input_event(event)
 	Input.flush_buffered_events()
 	pads.configure_devices([])
 	paused = false
 	stage.paused = false
 	await setup("PHUZASHI")
-	var key := InputEventKey.new()
-	key.physical_keycode = KEY_BRACKETRIGHT
-	key.keycode = KEY_BRACKETRIGHT
-	key.pressed = true
-	Input.parse_input_event(key)
+	for code: int in [KEY_DOWN,KEY_SLASH]:
+		var key := InputEventKey.new()
+		key.physical_keycode = code
+		key.keycode = code
+		key.pressed = true
+		Input.parse_input_event(key)
 	Input.flush_buffered_events()
 	await frames(2)
-	check(b.action_name == "DARK_RIFT" and a.action_name == "","P2 bracket-right keyboard key fires its own fourth skill")
-	key.pressed = false
-	Input.parse_input_event(key)
+	check(b.action_name == "DARK_RIFT" and a.action_name == "","P2 down+slash keyboard chord fires its own fourth skill")
+	for code: int in [KEY_DOWN,KEY_SLASH]:
+		var key := InputEventKey.new()
+		key.physical_keycode = code
+		key.keycode = code
+		key.pressed = false
+		Input.parse_input_event(key)
 	Input.flush_buffered_events()
 	stage.queue_free()
 	await frames(3)
