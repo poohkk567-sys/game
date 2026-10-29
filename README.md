@@ -4,15 +4,25 @@
 
 ![Twelve illustrated moves](docs/screenshots/pose_gallery.png)
 
-[ชมอัลติแปลงร่างในเกมจริง](docs/PHUZASHI_Red_Transform.mp4)
+[ชมมานา การ์ด และสกิลแครอทในเกมจริง](docs/PHUZASHI_Mana_Carrot_Gamepads.mp4)
 
-## ล่าสุด: อัลติ Red Cap ใช้มานา100 แปลงร่างหัวโล้นถอดเสื้อ
+## ล่าสุด: ชาร์จมานา · เกจป้องกัน · สกิลแครอท · จอยสองผู้เล่น
+
+[ดาวน์โหลดเกม Godot รุ่นล่าสุด (.zip)](https://github.com/poohkk567-sys/game/blob/codex/mana-guard-carrot-gamepads/docs/downloads/PHUZASHI_Mana_Carrot_Gamepads_Godot.zip?raw=true) — แตก ZIP → Godot Import `project.godot` → F5
+
+**Q/P ชาร์จ7 MP/วินาที** ต่อยเตะโดนได้3 MP ท่าที่สามได้5 MP ไม่มีฟื้นเอง เพิ่มเกจ GUARD100 การ์ดแตกเสียหลัก1วินาที และ Perfect Guard0.12วินาที
+
+RED CAP มีหัวพุ่ง25 MP และหมัดรัวแครอท30 MP ทั้งสองร่าง **P2: Num4 หรือ ' หัวพุ่ง / ลง+ต่อย หมัดรัว / Num5 หรือ ; ถอดหมวก100 MP** ในสนามฝึกเลือก RED CAP: **I หัวพุ่ง / S+J หมัดรัว / O ถอดหมวก** PHUZASHI คง Iมังกรเดิม
+
+รองรับจอย1อัน+คีย์บอร์ด หรือจอย2อัน: Aกระโดด/Xต่อย/Bเตะ/Yอัลติ/LBการ์ด/RBวิ่ง/LTชาร์จ/RTสกิล Startพักเกม Backดูปุ่ม **F5 สลับฝั่งเมื่อมีจอย1อัน** ดู [คู่มือปุ่มและกติกา](docs/MANA_GUARD_CARROT_GAMEPADS_TH.md) / [วิดีโอ](docs/PHUZASHI_Mana_Carrot_Gamepads.mp4) ไม่มี EXE ใหม่
+
+## รุ่นก่อน: อัลติ Red Cap ใช้มานา100 แปลงร่างหัวโล้นถอดเสื้อ
 
 [ดาวน์โหลดเกม Godot รุ่นแปลงร่าง (.zip)](https://github.com/poohkk567-sys/game/blob/codex/red-cap-ultimate-transform/docs/downloads/PHUZASHI_Red_Cap_Transform_Godot.zip?raw=true) — แตก ZIP → Import project.godot → F5
 
-ผู้เล่น2กด **Numpad5 หรือ ;** เพื่อถอดหมวก → เหยาะซอสขวดเหลืองบนหัว → ถอดเสื้อเป็นร่างต่อสู้ใหม่ ใช้มานา100 คงร่างจนจบยก มีท่าใหม่ครบ112เฟรมและแปลงร่าง16เฟรม ในสนามฝึกเลือก Red Cap แล้วกด I อ่าน [วิธีใช้และภาพในเกม](docs/RED_CAP_TRANSFORM_TH.md) / [วิดีโอ](docs/PHUZASHI_Red_Transform.mp4)
+ผู้เล่น2กด **Numpad5 หรือ ;** เพื่อถอดหมวก → เหยาะซอสขวดเหลืองบนหัว → ถอดเสื้อเป็นร่างต่อสู้ใหม่ ใช้มานา100 คงร่างจนจบยก มีท่าใหม่ครบ112เฟรมและแปลงร่าง16เฟรม ในรุ่นปัจจุบันสนามฝึกเลือก Red Cap แล้วกด O (I เป็นหัวพุ่ง) อ่าน [วิธีใช้และภาพในเกม](docs/RED_CAP_TRANSFORM_TH.md) / [วิดีโอ](docs/PHUZASHI_Red_Transform.mp4)
 
-ร่างปกติยังใช้ท่าปกติและอัลติแปลงร่าง สกิล/เอฟเฟกต์ของ PHUZASHI และสนามโรงเรียนสองผู้เล่นคงเดิม ไม่มี EXE ใหม่
+รุ่นนี้เพิ่มอัลติแปลงร่าง; รุ่นล่าสุดมีสกิลแครอทเพิ่มตามคู่มือด้านบน สกิล/เอฟเฟกต์ของ PHUZASHI และสนามโรงเรียนสองผู้เล่นคงเดิม ไม่มี EXE ใหม่
 
 ## PHUZASHI แบบใหม่ · สนามโรงเรียน · 2 ผู้เล่น
 

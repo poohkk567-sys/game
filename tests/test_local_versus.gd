@@ -182,7 +182,7 @@ func run() -> void:
 	await frames(14)
 	check(a.blink_invulnerable(),"Blink keeps its original invulnerable window")
 	check(a.receive_attack(14,"KICK",b) < 0 and a.health == 100,"Opponent cannot damage an invulnerable Blink")
-	check(not b._start_blink(-1) and not b.start_action("SPECIAL"),"Red Cap still has no assigned special skills")
+	check(not b._start_blink(-1) and not b.specials_enabled,"Red Cap cannot borrow PHUZASHI blink or purple effects")
 	await setup()
 	for _i in range(3):
 		a.start_action("PUNCH")

@@ -1,11 +1,13 @@
 # Red Cap: อัลติถอดหมวก / ซอสเหลือง / ถอดเสื้อ
 
-[ดาวน์โหลดเกมทดสอบ Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/red-cap-ultimate-transform/docs/downloads/PHUZASHI_Red_Cap_Transform_Godot.zip?raw=true)
+> รุ่นปัจจุบัน: [มานา/การ์ด/จอยและสกิลแครอท](MANA_GUARD_CARROT_GAMEPADS_TH.md) สนามฝึกใช้ **O แปลงร่าง** เพราะ I เปลี่ยนเป็นหัวพุ่งแล้ว; P2 ยังคง Num5 / ; และจอย Y
+
+[ดาวน์โหลดเกมทดสอบ Godot (.zip)](https://github.com/poohkk567-sys/game/blob/codex/mana-guard-carrot-gamepads/docs/downloads/PHUZASHI_Mana_Carrot_Gamepads_Godot.zip?raw=true)
 
 แตก ZIP → Godot4.2.2+ Import project.godot → F5 เกมเปิดสนามโรงเรียนแบบสองผู้เล่นเหมือนรุ่นก่อน
 
 - ผู้เล่น2 RED CAP กด **Numpad5 หรือ ;** ขณะมานาเต็ม100และยืนพร้อมออกท่า
-- ในสนามฝึก F6 เลือก RED CAP ด้วย Tab แล้วกด **I**
+- ในสนามฝึก F6 เลือก RED CAP ด้วย Tab แล้วกด **O**
 - ใช้มานา100ทันที แสดงแอนิเมชัน3.2วินาที: ถอดหมวกเผยหัวโล้น → หยิบขวดซอสเหลืองเหยาะหัว → ถอดเสื้อและกระเป๋า → ตั้งการ์ดร่างใหม่
 - ร่างใหม่คงอยู่จนจบยก/รีเซ็ต ไม่กลับเป็นร่างใส่หมวกเมื่อเดิน กระโดด ต่อย เตะ โดนโจมตี หรือถูกปีศาจล็อก
 - กดซ้ำเมื่อแปลงแล้วไม่เสียมานาเพิ่ม กดค้างออกท่าครั้งเดียว

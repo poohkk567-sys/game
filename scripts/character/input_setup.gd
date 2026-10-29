@@ -4,15 +4,16 @@ extends RefCounted
 static func install() -> void:
 	var bindings: Dictionary = {
 		"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT],
-		"run": [KEY_SHIFT], "jump": [KEY_SPACE], "crouch": [KEY_S, KEY_DOWN],
+		"charge": [KEY_Q], "run": [KEY_SHIFT], "jump": [KEY_SPACE], "crouch": [KEY_S, KEY_DOWN],
 		"guard": [KEY_L], "punch": [KEY_J], "kick": [KEY_K],
-		"special": [KEY_U], "ultimate": [KEY_I], "test_hit": [KEY_H],
+		"special": [KEY_U], "ultimate": [KEY_I], "red_ultimate": [KEY_O], "test_hit": [KEY_H],
 		"test_fall": [KEY_N], "reset": [KEY_R], "help": [KEY_F1],
 		"showcase": [KEY_F2], "hitboxes": [KEY_F3], "sprite_trial": [KEY_F4], "pause": [KEY_ESCAPE],
 		"switch_fighter": [KEY_TAB]
 	}
 	var players: Dictionary = {
 	 "p1_move_left":[KEY_A], "p1_move_right":[KEY_D], "p1_jump":[KEY_SPACE,KEY_W],
+	 "p1_charge":[KEY_Q], "p2_charge":[KEY_P], "p2_special":[KEY_KP_4,KEY_APOSTROPHE], "p1_red_ultimate":[KEY_O],
 	 "p1_crouch":[KEY_S], "p1_run":[KEY_SHIFT], "p1_guard":[KEY_L],
 	 "p1_punch":[KEY_J], "p1_kick":[KEY_K], "p1_special":[KEY_U], "p1_ultimate":[KEY_I],
 	 "p2_move_left":[KEY_LEFT], "p2_move_right":[KEY_RIGHT], "p2_jump":[KEY_UP],

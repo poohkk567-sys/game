@@ -13,6 +13,7 @@ var winner: int = -1
 var result: String = ""
 var show_help: bool = false
 var paused: bool = false
+var pause_reason: String = ""
 
 func _enter_tree() -> void:
 	InputSetup.install()
@@ -26,13 +27,37 @@ func _ready() -> void:
 	p1.rig.set_clear_enabled(true)
 	p1.enable_duel("p1_",p2,SPAWNS[0])
 	p2.enable_duel("p2_",p1,SPAWNS[1])
+	Gamepads.set_context("VERSUS")
+	Gamepads.pause_requested.connect(toggle_pause)
+	Gamepads.help_requested.connect(toggle_help)
+	Gamepads.device_changed.connect(controller_changed)
 	start_round()
 
+func toggle_help() -> void:
+	show_help = not show_help
+
+func toggle_pause() -> void:
+	if phase == "MATCH_OVER" and not paused:
+		restart_match()
+		return
+	paused = not paused
+	pause_reason = ""
+	Gamepads.suspend_until_neutral()
+	get_tree().paused = paused
+
+func controller_changed() -> void:
+	paused = true
+	pause_reason = "CONTROLLER CHANGED / CHECK P1 & P2"
+	_release_inputs()
+	get_tree().paused = true
+
 func _input(event: InputEvent) -> void:
+	if event is InputEventJoypadButton and event.pressed and event.device in Gamepads.assignments.values() and paused and event.button_index == JOY_BUTTON_Y:
+		restart_match()
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.physical_keycode == KEY_ESCAPE:
-			paused = not paused
-			get_tree().paused = paused
+			toggle_pause()
 		elif event.physical_keycode == KEY_F1:
 			show_help = not show_help
 		elif event.physical_keycode == KEY_F3:
@@ -120,6 +145,7 @@ func _settle_round() -> void:
 	for group: String in ["dark_pulses","demon_bind_effects","shadow_blink_effects","purple_punch_impacts"]:
 		get_tree().call_group(group,"queue_free")
 	for fighter: PhuzashiCharacter in [p1,p2]:
+		fighter.charging = false
 		fighter.action_timer = 0
 		fighter.action_name = ""
 		fighter.blink_timer = 0
@@ -129,6 +155,8 @@ func _settle_round() -> void:
 
 func restart_match() -> void:
 	paused = false
+	pause_reason = ""
+	Gamepads.suspend_until_neutral()
 	get_tree().paused = false
 	scores = [0,0]
 	round_number = 1
@@ -137,6 +165,8 @@ func restart_match() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_node_ready():
 		_release_inputs()
+		Gamepads.suspend_until_neutral()
+		pause_reason = "WINDOW LOST FOCUS"
 		paused = true
 		get_tree().paused = true
 

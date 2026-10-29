@@ -117,7 +117,7 @@ func run() -> void:
 	Input.action_release("crouch")
 	Input.action_release("punch")
 	check(casts == 1,"Holding S+J casts once without auto-repeating")
-	check(actor.energy > 85 and actor.energy < 89,"Holding the chord spends only one 25-MP cost")
+	check(actor.energy == 75,"Holding the chord spends only one 25-MP cost")
 	check(target.hit_count == 0,"S+J takes priority over a normal punch")
 	await reset()
 	Input.action_press("crouch")

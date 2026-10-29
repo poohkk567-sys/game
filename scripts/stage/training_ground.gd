@@ -24,6 +24,24 @@ func _ready() -> void:
 	for child: Node in get_children():
 		child.process_mode = Node.PROCESS_MODE_PAUSABLE
 	$HUD.process_mode = Node.PROCESS_MODE_ALWAYS
+	Gamepads.set_context("TRAINING")
+	Gamepads.pause_requested.connect(toggle_pause)
+	Gamepads.help_requested.connect(toggle_help)
+	Gamepads.device_changed.connect(controller_changed)
+
+func toggle_help() -> void:
+	show_help = not show_help
+
+func toggle_pause() -> void:
+	paused = not paused
+	Gamepads.suspend_until_neutral()
+	get_tree().paused = paused
+
+func controller_changed() -> void:
+	if showcase:
+		set_showcase(false)
+	paused = true
+	get_tree().paused = true
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_F6:
@@ -34,8 +52,7 @@ func _input(event: InputEvent) -> void:
 		switch_fighter()
 		return
 	if event.is_action_pressed("pause") and not event.is_echo():
-		paused = not paused
-		get_tree().paused = paused
+		toggle_pause()
 	if event.is_action_pressed("help") and not event.is_echo():
 		show_help = not show_help
 	if event.is_action_pressed("hitboxes") and not event.is_echo():
@@ -45,7 +62,7 @@ func _input(event: InputEvent) -> void:
 		phuzashi.announce("RED CAP / Whole-body sprites" if not phuzashi.specials_enabled else ("SPRITESHEET: ALL 12 MOVES" if phuzashi.rig.use_draft_spritesheet else "Original master animation"))
 	if event.is_action_pressed("showcase") and not event.is_echo():
 		set_showcase(not showcase)
-	elif showcase and event is InputEventKey and event.pressed and not event.echo and not event.is_action("pause") and not event.is_action("help") and not event.is_action("hitboxes") and not event.is_action("sprite_trial"):
+	elif showcase and (event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion) and not event.is_echo() and (not event is InputEventJoypadButton or event.pressed) and not event.is_action("pause") and not event.is_action("help") and not event.is_action("hitboxes") and not event.is_action("sprite_trial"):
 		set_showcase(false)
 
 func switch_fighter() -> void:
@@ -123,6 +140,9 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_node_ready():
 		if showcase:
 			set_showcase(false)
+		Gamepads.suspend_until_neutral()
+		paused = true
+		get_tree().paused = true
 		for action: StringName in InputMap.get_actions():
 			Input.action_release(action)
 

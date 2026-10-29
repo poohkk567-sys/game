@@ -5,6 +5,16 @@ signal attack_started(action: String)
 signal state_changed(state: String)
 signal target_struck(damage: int)
 
+const CHARGE_RATE: float = 7.0
+const PERFECT_GUARD_WINDOW: float = 0.12
+const GUARD_REGEN_RATE: float = 20.0
+const GUARD_REGEN_DELAY: float = 1.0
+const GUARD_BREAK_DURATION: float = 1.0
+const GUARD_COSTS: Dictionary = {
+ "PUNCH":10.0, "PUNCH_2":10.0, "AIR_PUNCH":10.0, "PUNCH_3":20.0,
+ "KICK":14.0, "KICK_2":14.0, "AIR_KICK":14.0, "KICK_3":24.0,
+ "SPECIAL":20.0, "ULTIMATE":40.0, "CARROT_HEADBUTT":20.0, "CARROT_RUSH":4.0, "CARROT_RUSH_FINISH":12.0
+}
 const RED_TRANSFORM_COST: float = 100.0
 const RED_TRANSFORM_DURATION: float = 3.2
 const WALK_SPEED: float = 190.0
@@ -32,6 +42,8 @@ const ATTACKS: Dictionary = {
 	"KICK_3": [0.64, 0.0, 22, 0.34, 0.65, 174.0, 92.0],
 	"AIR_PUNCH": [0.32, 0.0, 9, 0.24, 0.60, 104.0, 76.0],
 	"AIR_KICK": [0.42, 0.0, 15, 0.30, 0.66, 146.0, 88.0],
+	"CARROT_HEADBUTT": [0.85, 25.0, 22, 0.20, 0.67, 128.0, 112.0],
+	"CARROT_RUSH": [1.28, 30.0, 4, 0.20, 0.80, 155.0, 130.0],
 	"DEMON_BIND": [0.62, 25.0, 0, 0.32, 0.48, 620.0, 180.0],
 	"SPECIAL": [0.90, 25.0, 24, 0.42, 0.55, 0.0, 0.0],
 	"ULTIMATE": [1.80, 60.0, 60, 0.48, 0.80, 620.0, 180.0]
@@ -49,6 +61,16 @@ const DemonBind = preload("res://scripts/effects/demon_bind.gd")
 @onready var attack_shape: CollisionShape2D = $AttackArea/CollisionShape2D
 var health: float = 100.0
 var energy: float = 100.0
+var guard_meter: float = 100.0
+var guard_break_remaining: float = 0.0
+var guard_recovery_delay: float = 0.0
+var guard_press_age: float = 999.0
+var guard_was_held: bool = false
+var perfect_guard_used: bool = false
+var charging: bool = false
+var last_hit_blocked: bool = false
+var defense_feedback: String = ""
+var defense_feedback_time: float = 0.0
 var facing: int = 1
 var state_name: String = "IDLE"
 var action_name: String = ""
@@ -77,6 +99,8 @@ var effects: Node2D
 var purple_fist: Node2D
 var movement_lock: Node
 var demon_spawned: bool = false
+var carrot_pulse: int = -1
+var headbutt_launched: bool = false
 var fighter_profile: String = "PHUZASHI"
 var display_name: String = "PHUZASHI"
 var specials_enabled: bool = true
@@ -111,29 +135,96 @@ func enable_duel(prefix: String, enemy: PhuzashiCharacter, spawn: Vector2) -> vo
 	add_child(hurt_area)
 
 func receive_attack(damage: int, move_name: String, attacker: Node2D) -> int:
+	last_hit_blocked = false
 	if not duel_mode or not controls_enabled or health <= 0.0 or blink_invulnerable():
 		return -1
-	var guarded: bool = pressed("guard") and is_on_floor() and action_timer <= 0.0
+	return _receive_hit(damage,move_name,attacker)
+
+func can_guard() -> bool:
+	return pressed("guard") and is_on_floor() and velocity.y >= 0.0 and action_timer <= 0.0 and blink_timer <= 0.0 and not is_movement_locked() and guard_meter > 0.0 and guard_break_remaining <= 0.0 and not charging
+
+func _tick_defense(delta: float) -> void:
+	if guard_break_remaining > 0:
+		guard_break_remaining = maxf(0.0,guard_break_remaining-delta)
+		if guard_break_remaining <= 0:
+			guard_meter = maxf(50.0,guard_meter)
+	defense_feedback_time = maxf(0,defense_feedback_time-delta)
+	var held: bool = pressed("guard")
+	if held and not guard_was_held:
+		guard_press_age = 0.0
+		perfect_guard_used = false
+	elif held:
+		guard_press_age += delta
+	else:
+		guard_press_age = 999.0
+	guard_was_held = held
+	if held or guard_break_remaining > 0.0 or action_name == "GUARD_BREAK":
+		guard_recovery_delay = GUARD_REGEN_DELAY
+		return
+	# Consume the waiting time before applying only the remaining regeneration time.
+	var recovery: float = maxf(0.0,delta-guard_recovery_delay)
+	guard_recovery_delay = maxf(0.0,guard_recovery_delay-delta)
+	guard_meter = minf(100.0,guard_meter+GUARD_REGEN_RATE*recovery)
+
+func _defense_flash(kind: String) -> void:
+	defense_feedback = kind
+	defense_feedback_time = 0.45 if kind == "PERFECT GUARD" else GUARD_BREAK_DURATION
+	if is_instance_valid(effects):
+		effects.play_defense_sound(kind)
+
+func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
+	last_hit_blocked = false
+	var guarded: bool = can_guard()
 	if is_instance_valid(attacker):
 		guarded = guarded and (attacker.global_position.x-global_position.x)*facing >= 0.0
-	var actual: int = 2 if guarded else damage
-	health = maxf(0.0,health-actual)
-	damage_taken += actual
+	guard_recovery_delay = GUARD_REGEN_DELAY
 	last_received = move_name
 	if guarded:
+		last_hit_blocked = true
+		# Also recognize a press arriving earlier in this same physics tick.
+		var fresh: bool = not guard_was_held or guard_press_age < PERFECT_GUARD_WINDOW
+		if fresh and not perfect_guard_used:
+			if not guard_was_held:
+				guard_press_age = 0.0
+			guard_was_held = true
+			perfect_guard_used = true
+			energy = minf(100.0,energy+3.0)
+			_defense_flash("PERFECT GUARD")
+			announce("PERFECT GUARD / +3 MP")
+			return 0
+		guard_meter = maxf(0.0,guard_meter-float(GUARD_COSTS.get(move_name,14.0)))
+	var was_broken: bool = guard_break_remaining > 0.0
+	var break_remaining: float = guard_break_remaining
+	var actual: int = mini(2,damage) if guarded else damage
+	health = maxf(0.0,health-actual)
+	damage_taken += actual
+	if guarded and guard_meter > 0.0 and health > 0.0:
 		announce("GUARD / 2 CHIP")
 		return actual
+	charging = false
 	_clear_combo()
 	purple_fist.clear()
 	blink_timer = 0.0
 	jump_buffer = 0.0
-	action_name = "FALL" if move_name in ["KICK_3","ULTIMATE"] or health <= 0 else "HIT"
-	action_duration = 1.4 if action_name == "FALL" else 0.48
+	if (was_broken or (guarded and guard_meter <= 0.0)) and health > 0.0:
+		action_name = "GUARD_BREAK"
+		action_duration = break_remaining if was_broken else GUARD_BREAK_DURATION
+		guard_break_remaining = maxf(guard_break_remaining,action_duration)
+		_defense_flash("GUARD BREAK")
+		announce("GUARD BREAK / 1 SECOND")
+	else:
+		action_name = "FALL" if move_name in ["KICK_3","ULTIMATE"] or health <= 0 else "HIT"
+		action_duration = 1.4 if action_name == "FALL" else 0.48
 	action_timer = action_duration
 	velocity.x = -facing*95.0
 	_set_state(action_name)
 	_update_body_shape()
 	return actual
+
+func award_normal_hit(move_name: String, blocked: bool) -> void:
+	if blocked or move_name not in ["PUNCH","PUNCH_2","PUNCH_3","KICK","KICK_2","KICK_3","AIR_PUNCH","AIR_KICK"]:
+		return
+	energy = minf(100.0,energy+(5.0 if move_name in ["PUNCH_3","KICK_3"] else 3.0))
 
 
 func select_fighter(profile: String) -> bool:
@@ -145,7 +236,7 @@ func select_fighter(profile: String) -> bool:
 	rig.set_character_profile(profile)
 	visited = {"IDLE":true}
 	reset_training()
-	announce(display_name + (" / I: Cap Off Ultimate 100 MP" if not specials_enabled else " / Dark Pulse"))
+	announce(display_name + (" / I: Carrot Headbutt / S+J: Barrage / O: Cap Off" if not specials_enabled else " / Dark Pulse"))
 	return true
 
 func _ready() -> void:
@@ -164,6 +255,10 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	elapsed += delta
+	rig.rotation = 0.0
+	charging = false
+	if not duel_mode or (controls_enabled and health > 0):
+		_tick_defense(delta)
 	if duel_mode and health <= 0.0:
 		velocity.x = 0.0
 		if not is_on_floor():
@@ -178,8 +273,6 @@ func _physics_process(delta: float) -> void:
 	if duel_mode and is_instance_valid(opponent) and action_timer <= 0.0 and blink_timer <= 0.0 and absf(opponent.position.x-position.x) > 2.0:
 		facing = 1 if opponent.position.x > position.x else -1
 	message_time = maxf(0.0, message_time - delta)
-	if action_name != "TRANSFORM":
-		energy = minf(100.0, energy + delta * 9.0)
 	blink_cooldown = maxf(0.0, blink_cooldown - delta)
 	if action_timer <= 0.0 and combo_grace > 0.0:
 		combo_grace = maxf(0.0, combo_grace - delta)
@@ -197,6 +290,10 @@ func _physics_process(delta: float) -> void:
 		queue_redraw()
 		effects.queue_redraw()
 		return
+	if guard_break_remaining > 0.0 and action_name != "GUARD_BREAK":
+		action_name = "GUARD_BREAK"
+		action_duration = guard_break_remaining
+		action_timer = guard_break_remaining
 	if not duel_mode and just_pressed("test_hit"):
 		receive_training_hit(false)
 	elif not duel_mode and just_pressed("test_fall"):
@@ -222,7 +319,7 @@ func _physics_process(delta: float) -> void:
 		return
 	var axis: float = movement_axis()
 	var crouching: bool = pressed("crouch")
-	var guarding: bool = pressed("guard")
+	var guarding: bool = can_guard()
 	if axis != 0.0 and action_timer <= 0.0 and not duel_mode:
 		facing = 1 if axis > 0.0 else -1
 	# Resolve jump first, so Space+J/K on the same frame is an aerial attack.
@@ -235,18 +332,35 @@ func _physics_process(delta: float) -> void:
 	if bind_pressed:
 		start_action("DEMON_BIND")
 	elif not crouching and not guarding:
-		for binding: String in ["ultimate", "special", "kick", "punch"]:
+		for binding: String in ["pad_ultimate", "red_ultimate", "ultimate", "special", "kick", "punch"]:
+			if binding == "red_ultimate" and fighter_profile != "RED_CAP":
+				continue
 			if just_pressed(binding):
-				start_action(binding.to_upper())
+				var requested: String = binding.to_upper()
+				if binding in ["pad_ultimate","red_ultimate"]:
+					requested = "ULTIMATE"
+				elif binding == "ultimate" and fighter_profile == "RED_CAP" and input_prefix != "p2_":
+					requested = "SPECIAL"
+				start_action(requested)
 				break
 	if action_timer <= 0.0 and (crouching or guarding):
 		_clear_combo()
+	charging = pressed("charge") and action_timer <= 0.0 and was_grounded and velocity.y >= 0.0 and axis == 0.0 and not crouching and not guarding
+	if charging:
+		energy = minf(100.0,energy+CHARGE_RATE*delta)
+		_clear_combo()
 	var airborne: bool = not was_grounded or velocity.y < 0.0
-	var locked: bool = (action_timer > 0.0 and not is_air_attack()) or (not airborne and (crouching or guarding))
+	var locked: bool = (action_timer > 0.0 and not is_air_attack()) or charging or (not airborne and (crouching or guarding))
 	var speed: float = RUN_SPEED if pressed("run") else WALK_SPEED
 	var desired: float = 0.0 if locked else axis * (AIR_SPEED if airborne else speed)
 	if not airborne and action_name in ["PUNCH_2", "PUNCH_3", "KICK_2", "KICK_3"] and action_progress() >= 0.15 and action_progress() < 0.45:
 		desired = facing * (80.0 if combo_step == 3 else 45.0)
+	if action_name == "CARROT_HEADBUTT" and action_timer > 0:
+		if action_progress() >= 0.18 and not headbutt_launched:
+			velocity.y = -260.0
+			headbutt_launched = true
+		if action_progress() >= 0.18 and action_progress() < 0.67:
+			desired = facing*520.0
 	velocity.x = move_toward(velocity.x, desired, ACCELERATION * delta)
 	if not was_grounded or velocity.y < 0.0:
 		velocity.y += GRAVITY * delta
@@ -272,6 +386,8 @@ func _physics_process(delta: float) -> void:
 		elif action_timer <= 0.0:
 			if action_name == "TRANSFORM":
 				_finish_red_transform()
+			elif action_name == "GUARD_BREAK":
+				guard_meter = maxf(guard_meter,50.0)
 			action_name = ""
 			if combo_step > 0 and combo_step < 3:
 				combo_grace = COMBO_GRACE
@@ -282,6 +398,8 @@ func _physics_process(delta: float) -> void:
 		next = action_name
 	elif not is_on_floor():
 		next = "JUMP"
+	elif charging:
+		next = "CHARGE"
 	elif crouching:
 		next = "CROUCH"
 	elif guarding:
@@ -295,7 +413,17 @@ func _physics_process(delta: float) -> void:
 		phase = action_progress()
 	elif state_name == "JUMP":
 		phase = clampf((velocity.y - JUMP_VELOCITY) / (-2.0 * JUMP_VELOCITY), 0.0, 1.0)
-	rig.animate(state_name, delta, facing, phase)
+	var pose: String = "GUARD" if charging else ("HIT" if state_name == "GUARD_BREAK" else state_name)
+	if charging or state_name == "GUARD_BREAK":
+		phase = 0.8 if charging else 0.35
+	if state_name == "CARROT_HEADBUTT":
+		pose = "RUN"
+		phase = 0.3
+	elif state_name == "CARROT_RUSH":
+		pose = "PUNCH_3" if carrot_pulse == 6 else ("PUNCH_2" if maxi(0,carrot_pulse)%2 else "PUNCH")
+		phase = 0.38 if carrot_pulse >= 0 else 0.15
+	rig.rotation = facing*0.25 if state_name == "CARROT_HEADBUTT" and headbutt_launched else 0.0
+	rig.animate(pose, delta, facing, phase)
 	queue_redraw()
 	effects.queue_redraw()
 
@@ -304,13 +432,14 @@ func _start_blink(direction: int) -> bool:
 		return false
 	if not specials_enabled:
 		return false
-	if is_movement_locked() or blink_timer > 0.0 or blink_cooldown > 0.0 or action_timer > 0.0:
+	if guard_break_remaining > 0.0 or is_movement_locked() or blink_timer > 0.0 or blink_cooldown > 0.0 or action_timer > 0.0:
 		return false
 	if not is_on_floor() or pressed("crouch") or pressed("guard"):
 		return false
 	if energy < BLINK_COST:
 		announce("Shadow Blink requires 15 MP")
 		return false
+	charging = false
 	energy -= BLINK_COST
 	_clear_combo()
 	blink_timer = BLINK_DURATION
@@ -351,6 +480,8 @@ func _step_blink(delta: float) -> void:
 		_set_state("IDLE")
 
 func start_action(action: String) -> bool:
+	if fighter_profile == "RED_CAP" and action in ["SPECIAL","DEMON_BIND"]:
+		return _start_red_skill("CARROT_HEADBUTT" if action == "SPECIAL" else "CARROT_RUSH")
 	if fighter_profile == "RED_CAP" and action == "ULTIMATE":
 		return _start_red_transform()
 	if duel_mode and (not controls_enabled or health <= 0):
@@ -358,7 +489,7 @@ func start_action(action: String) -> bool:
 	if not specials_enabled and action in ["SPECIAL","ULTIMATE","DEMON_BIND"]:
 		announce("RED CAP / Special skills are not assigned yet")
 		return false
-	if is_movement_locked() or blink_timer > 0.0:
+	if guard_break_remaining > 0.0 or is_movement_locked() or blink_timer > 0.0:
 		return false
 	if pressed("guard") or (pressed("crouch") and action != "DEMON_BIND"):
 		return false
@@ -368,15 +499,30 @@ func start_action(action: String) -> bool:
 		return false
 	var config: Array = ATTACKS[action]
 	if energy < float(config[1]):
-		announce("Not enough MP — wait for regeneration or press R")
+		announce("Not enough MP / hold charge or land normal hits")
 		return false
 	energy -= float(config[1])
 	_clear_combo()
 	_begin_attack(action)
 	return true
 
+func _start_red_skill(action: String) -> bool:
+	if (duel_mode and (not controls_enabled or health <= 0)) or action_timer > 0 or is_movement_locked() or blink_timer > 0 or guard_break_remaining > 0:
+		return false
+	if not is_on_floor() or velocity.y < 0 or pressed("guard") or (action != "CARROT_RUSH" and pressed("crouch")):
+		return false
+	var cost: float = float(ATTACKS[action][1])
+	if energy < cost:
+		announce("CARROT POWER / Requires %d MP" % cost)
+		return false
+	energy -= cost
+	_clear_combo()
+	_begin_attack(action)
+	announce("CARROT HEADBUTT / 25 MP" if action == "CARROT_HEADBUTT" else "CARROT BARRAGE / 30 MP")
+	return true
+
 func _start_red_transform() -> bool:
-	if red_awakened or action_timer > 0.0 or is_movement_locked() or blink_timer > 0.0 or health <= 0:
+	if guard_break_remaining > 0.0 or red_awakened or action_timer > 0.0 or is_movement_locked() or blink_timer > 0.0 or health <= 0:
 		return false
 	if duel_mode and not controls_enabled:
 		return false
@@ -385,6 +531,7 @@ func _start_red_transform() -> bool:
 	if energy < RED_TRANSFORM_COST:
 		announce("CAP OFF / Requires 100 MP")
 		return false
+	charging = false
 	energy -= RED_TRANSFORM_COST
 	_clear_combo()
 	struck.clear()
@@ -436,6 +583,7 @@ func _request_normal_attack(family: String) -> bool:
 	return true
 
 func _begin_attack(action: String) -> void:
+	charging = false
 	var config: Array = ATTACKS[action]
 	action_name = action
 	action_duration = float(config[0])
@@ -443,6 +591,8 @@ func _begin_attack(action: String) -> void:
 	struck.clear()
 	pulse_spawned = false
 	demon_spawned = false
+	carrot_pulse = -1
+	headbutt_launched = false
 	if not is_air_attack():
 		velocity.x = 0.0
 	jump_buffer = 0.0
@@ -466,6 +616,7 @@ func apply_movement_lock(seconds: float) -> bool:
 		return false
 	if blink_invulnerable():
 		return false
+	charging = false
 	movement_lock.apply(seconds)
 	velocity = Vector2.ZERO
 	action_name = ""
@@ -546,6 +697,11 @@ func _process_attack() -> void:
 			pulse.position = global_position + Vector2(facing * 85.0, -84.0)
 			get_parent().add_child(pulse)
 		return
+	if action_name == "CARROT_RUSH":
+		var pulse: int = mini(6,floori((phase-0.20)/0.085))
+		if pulse != carrot_pulse:
+			carrot_pulse = pulse
+			struck.clear()
 	attack_shape.shape.size = Vector2(float(config[5]), float(config[6]))
 	var strike_y: float = -116.0 if action_name == "PUNCH_3" else (-64.0 if action_name == "AIR_KICK" else (-78.0 if action_name == "AIR_PUNCH" else -82.0))
 	attack_shape.position = Vector2(facing * (float(config[5]) * 0.5 + 18.0), strike_y)
@@ -558,15 +714,17 @@ func _process_attack() -> void:
 	for result: Dictionary in get_world_2d().direct_space_state.intersect_shape(query):
 		var target: Object = result.collider
 		if (target.has_method("take_hit") or target.has_method("receive_attack")) and not struck.has(target.get_instance_id()):
-			var inflicted: int = int(config[2])
+			var inflicted: int = 8 if action_name == "CARROT_RUSH" and carrot_pulse == 6 else int(config[2])
+			var hit_move: String = "CARROT_RUSH_FINISH" if action_name == "CARROT_RUSH" and carrot_pulse == 6 else action_name
 			if target.has_method("receive_attack"):
 				if not target.can_be_hit_by(self):
 					continue
-				inflicted = target.receive_attack(int(config[2]),action_name,self)
+				inflicted = target.receive_attack(inflicted,hit_move,self)
 				if inflicted < 0:
 					continue
 			else:
-				target.take_hit(int(config[2]), action_name)
+				target.take_hit(inflicted,hit_move)
+			award_normal_hit(action_name,target.was_last_hit_blocked() if target.has_method("was_last_hit_blocked") else false)
 			struck[target.get_instance_id()] = true
 			target_struck.emit(inflicted)
 			if action_name == "PUNCH_3" and specials_enabled:
@@ -576,27 +734,9 @@ func _process_attack() -> void:
 				get_parent().add_child(impact)
 
 func receive_training_hit(knockdown: bool) -> void:
-	if blink_invulnerable():
-		announce("SHADOW BLINK / attack avoided")
+	if blink_invulnerable() or action_name == "FALL":
 		return
-	if action_name == "FALL":
-		return
-	var blocked: bool = pressed("guard") and is_on_floor() and action_timer <= 0.0
-	health = maxf(0.0, health - (2.0 if blocked else (18.0 if knockdown else 8.0)))
-	if blocked:
-		announce("GUARD — impact absorbed (2 chip damage)")
-		return
-	_clear_combo()
-	if is_instance_valid(purple_fist):
-		purple_fist.clear()
-	action_name = "FALL" if knockdown else "HIT"
-	action_duration = 1.4 if knockdown else 0.48
-	action_timer = action_duration
-	struck.clear()
-	jump_buffer = 0.0
-	velocity.x = -facing * (140.0 if knockdown else 70.0)
-	_set_state(action_name)
-	announce("KNOCKDOWN / automatic recovery" if knockdown else "HIT / recovery")
+	_receive_hit(18 if knockdown else 8,"KICK_3" if knockdown else "PUNCH",null)
 
 func _update_body_shape() -> void:
 	var low: bool = state_name == "CROUCH" or state_name == "FALL"
@@ -624,6 +764,16 @@ func reset_training() -> void:
 	damage_taken = 0
 	last_received = ""
 	energy = 100.0
+	guard_meter = 100.0
+	guard_break_remaining = 0.0
+	guard_recovery_delay = 0.0
+	guard_press_age = 999.0
+	guard_was_held = false
+	perfect_guard_used = false
+	charging = false
+	last_hit_blocked = false
+	defense_feedback = ""
+	defense_feedback_time = 0.0
 	facing = 1
 	action_name = ""
 	action_timer = 0.0
@@ -646,6 +796,9 @@ func reset_training() -> void:
 	get_tree().call_group("demon_bind_effects", "queue_free")
 	get_tree().call_group("movement_locks", "clear")
 	demon_spawned = false
+	carrot_pulse = -1
+	headbutt_launched = false
+	rig.rotation = 0.0
 	if is_instance_valid(purple_fist):
 		purple_fist.clear()
 	announce("Training reset")

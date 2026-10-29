@@ -91,7 +91,7 @@ func run() -> void:
 	await frames(3)
 	expect(player.body_shape.shape.size.y == 144, "Standing restores the full collision shape")
 	Input.action_press("guard")
-	await frames(5)
+	await frames(12)
 	player.receive_training_hit(false)
 	expect(player.health == 98 and player.action_timer == 0, "Guard absorbs test hit as chip damage")
 	expect(not player.start_action("KICK"), "Held guard prevents attack startup")
@@ -114,7 +114,7 @@ func run() -> void:
 	player.position.x = 500
 	await frames(3)
 	await tap("special")
-	expect(player.energy > 75 and player.energy < 77, "Special spends 25 MP and regenerates")
+	expect(player.energy == 75, "Special spends 25 MP without passive regeneration")
 	await frames(75)
 	expect(target.hit_count == 1 and target.last_damage == 24, "Traveling pulse collides and deals 24 damage once")
 	expect(get_nodes_in_group("dark_pulses").is_empty(), "Pulse is freed after impact")
@@ -182,7 +182,8 @@ func run() -> void:
 	Input.action_press("move_right")
 	stage._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
 	expect(player.health == 73 and player.position.x == 610, "Losing focus preserves manual training progress")
-	expect(not Input.is_action_pressed("move_right"), "Losing focus releases held movement")
+	expect(stage.paused and not Input.is_action_pressed("move_right"), "Losing focus pauses and releases held movement")
+	stage.toggle_pause()
 	await reset()
 
 	# Every timeline must differ from its rest pose and contain finite channels.
@@ -215,6 +216,8 @@ func run() -> void:
 	var demonstrated: bool = true
 	for move: String in player.rig.CLIPS + ["AIR_PUNCH", "AIR_KICK", "PUNCH_2", "PUNCH_3", "KICK_2", "KICK_3", "BLINK", "DEMON_BIND"]:
 		demonstrated = demonstrated and player.visited.has(move)
+	if not demonstrated:
+		print("DEMONSTRATED STATES: ",player.visited.keys())
 	expect(demonstrated, "Automatic showcase exercises base moves, aerial attacks, combo stages and Blink")
 	expect(not Input.is_action_pressed("run") and not Input.is_action_pressed("move_right"), "Leaving showcase releases synthetic input")
 

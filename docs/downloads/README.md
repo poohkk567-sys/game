@@ -1,5 +1,7 @@
 # ดาวน์โหลด PHUZASHI — DARK PULSE
 
+[รุ่นล่าสุด: มานา การ์ด สกิลแครอท และจอยสองผู้เล่น](https://github.com/poohkk567-sys/game/blob/codex/mana-guard-carrot-gamepads/docs/downloads/PHUZASHI_Mana_Carrot_Gamepads_Godot.zip?raw=true) — แตก ZIP → Godot Import project.godot → F5
+
 รุ่นล่าสุด: [Red Cap อัลติ100MP แปลงร่าง (.zip)](https://github.com/poohkk567-sys/game/blob/codex/red-cap-ultimate-transform/docs/downloads/PHUZASHI_Red_Cap_Transform_Godot.zip?raw=true) รวมสนามโรงเรียนและสองผู้เล่น ไม่มี EXE ใหม่ ดู [วิธีใช้](../RED_CAP_TRANSFORM_TH.md)
 
 รุ่นก่อน: [สนามโรงเรียน สองผู้เล่น และโมเดลใหม่ (.zip)](https://github.com/poohkk567-sys/game/blob/codex/school-local-versus/docs/downloads/PHUZASHI_School_2P_Godot.zip?raw=true) เปิด Godot Import `project.godot` → F5 ดู [ปุ่มสองผู้เล่น](../LOCAL_VERSUS_TH.md) ไม่มี EXE ใหม่
