@@ -1,0 +1,1484 @@
+{
+	"canvas": [
+		1024,
+		1024
+	],
+	"frames": [
+		{
+			"clip": "IDLE",
+			"floor_y": 281,
+			"foot_x": 216,
+			"frame": 0,
+			"region": [
+				107,
+				26,
+				176,
+				255
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 281,
+			"foot_x": 558,
+			"frame": 1,
+			"region": [
+				437,
+				27,
+				186,
+				254
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 281,
+			"foot_x": 889,
+			"frame": 2,
+			"region": [
+				777,
+				27,
+				178,
+				254
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 281,
+			"foot_x": 1240,
+			"frame": 3,
+			"region": [
+				1118,
+				28,
+				191,
+				253
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 552,
+			"foot_x": 225,
+			"frame": 4,
+			"region": [
+				104,
+				302,
+				188,
+				250
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 551,
+			"foot_x": 555,
+			"frame": 5,
+			"region": [
+				437,
+				297,
+				185,
+				254
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 551,
+			"foot_x": 888,
+			"frame": 6,
+			"region": [
+				773,
+				301,
+				182,
+				250
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "IDLE",
+			"floor_y": 551,
+			"foot_x": 1240,
+			"frame": 7,
+			"region": [
+				1129,
+				299,
+				176,
+				252
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 820,
+			"foot_x": 219,
+			"frame": 0,
+			"region": [
+				103,
+				570,
+				189,
+				250
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 819,
+			"foot_x": 567,
+			"frame": 1,
+			"region": [
+				438,
+				576,
+				186,
+				243
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 819,
+			"foot_x": 869,
+			"frame": 2,
+			"region": [
+				800,
+				569,
+				149,
+				250
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 819,
+			"foot_x": 1234,
+			"frame": 3,
+			"region": [
+				1133,
+				569,
+				169,
+				250
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 1088,
+			"foot_x": 231,
+			"frame": 4,
+			"region": [
+				105,
+				835,
+				190,
+				253
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 1088,
+			"foot_x": 572,
+			"frame": 5,
+			"region": [
+				438,
+				839,
+				188,
+				249
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 1088,
+			"foot_x": 870,
+			"frame": 6,
+			"region": [
+				794,
+				834,
+				147,
+				254
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "WALK",
+			"floor_y": 1088,
+			"foot_x": 1226,
+			"frame": 7,
+			"region": [
+				1128,
+				833,
+				171,
+				255
+			],
+			"source": "res://assets/characters/red_cap/idle_walk.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 287,
+			"foot_x": 247,
+			"frame": 0,
+			"region": [
+				78,
+				39,
+				235,
+				248
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 288,
+			"foot_x": 569,
+			"frame": 1,
+			"region": [
+				420,
+				44,
+				213,
+				244
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 289,
+			"foot_x": 941,
+			"frame": 2,
+			"region": [
+				751,
+				45,
+				258,
+				244
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 288,
+			"foot_x": 1203,
+			"frame": 3,
+			"region": [
+				1135,
+				42,
+				196,
+				246
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 556,
+			"foot_x": 247,
+			"frame": 4,
+			"region": [
+				59,
+				315,
+				241,
+				241
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 556,
+			"foot_x": 592,
+			"frame": 5,
+			"region": [
+				418,
+				312,
+				236,
+				244
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 555,
+			"foot_x": 792,
+			"frame": 6,
+			"region": [
+				757,
+				308,
+				245,
+				247
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "RUN",
+			"floor_y": 556,
+			"foot_x": 1208,
+			"frame": 7,
+			"region": [
+				1148,
+				311,
+				195,
+				245
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 827,
+			"foot_x": 210,
+			"frame": 0,
+			"region": [
+				83,
+				578,
+				201,
+				249
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 827,
+			"foot_x": 493,
+			"frame": 1,
+			"region": [
+				446,
+				630,
+				193,
+				197
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 829,
+			"foot_x": 816,
+			"frame": 2,
+			"region": [
+				780,
+				577,
+				208,
+				252
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 803,
+			"foot_x": 1213,
+			"frame": 3,
+			"region": [
+				1142,
+				572,
+				187,
+				231
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 1058,
+			"foot_x": 173,
+			"frame": 4,
+			"region": [
+				89,
+				842,
+				185,
+				216
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 1096,
+			"foot_x": 543,
+			"frame": 5,
+			"region": [
+				449,
+				843,
+				191,
+				253
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 1096,
+			"foot_x": 922,
+			"frame": 6,
+			"region": [
+				793,
+				890,
+				198,
+				206
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "JUMP",
+			"floor_y": 1096,
+			"foot_x": 1264,
+			"frame": 7,
+			"region": [
+				1129,
+				843,
+				204,
+				253
+			],
+			"source": "res://assets/characters/red_cap/run_jump.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 317,
+			"foot_x": 252,
+			"frame": 0,
+			"region": [
+				107,
+				19,
+				219,
+				298
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 317,
+			"foot_x": 562,
+			"frame": 1,
+			"region": [
+				422,
+				43,
+				216,
+				274
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 317,
+			"foot_x": 888,
+			"frame": 2,
+			"region": [
+				764,
+				74,
+				200,
+				243
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 317,
+			"foot_x": 1219,
+			"frame": 3,
+			"region": [
+				1099,
+				105,
+				204,
+				212
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 576,
+			"foot_x": 245,
+			"frame": 4,
+			"region": [
+				124,
+				378,
+				198,
+				198
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 576,
+			"foot_x": 563,
+			"frame": 5,
+			"region": [
+				449,
+				384,
+				202,
+				192
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 576,
+			"foot_x": 880,
+			"frame": 6,
+			"region": [
+				772,
+				389,
+				203,
+				187
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "CROUCH",
+			"floor_y": 576,
+			"foot_x": 1219,
+			"frame": 7,
+			"region": [
+				1115,
+				400,
+				193,
+				176
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 884,
+			"foot_x": 251,
+			"frame": 0,
+			"region": [
+				107,
+				594,
+				219,
+				290
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 884,
+			"foot_x": 571,
+			"frame": 1,
+			"region": [
+				429,
+				594,
+				216,
+				290
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 882,
+			"foot_x": 896,
+			"frame": 2,
+			"region": [
+				764,
+				604,
+				210,
+				278
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 883,
+			"foot_x": 1220,
+			"frame": 3,
+			"region": [
+				1101,
+				609,
+				204,
+				274
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 1110,
+			"foot_x": 249,
+			"frame": 4,
+			"region": [
+				104,
+				888,
+				232,
+				222
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 1110,
+			"foot_x": 579,
+			"frame": 5,
+			"region": [
+				449,
+				893,
+				203,
+				217
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 1110,
+			"foot_x": 906,
+			"frame": 6,
+			"region": [
+				770,
+				893,
+				214,
+				217
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "GUARD",
+			"floor_y": 1110,
+			"foot_x": 1237,
+			"frame": 7,
+			"region": [
+				1109,
+				899,
+				202,
+				211
+			],
+			"source": "res://assets/characters/red_cap/crouch_guard.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 276,
+			"foot_x": 180,
+			"frame": 0,
+			"region": [
+				52,
+				12,
+				207,
+				264
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 276,
+			"foot_x": 548,
+			"frame": 1,
+			"region": [
+				400,
+				25,
+				220,
+				251
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 276,
+			"foot_x": 904,
+			"frame": 2,
+			"region": [
+				756,
+				26,
+				223,
+				250
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 276,
+			"foot_x": 1256,
+			"frame": 3,
+			"region": [
+				1113,
+				24,
+				247,
+				252
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 553,
+			"foot_x": 218,
+			"frame": 4,
+			"region": [
+				44,
+				300,
+				296,
+				253
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 553,
+			"foot_x": 571,
+			"frame": 5,
+			"region": [
+				401,
+				299,
+				243,
+				254
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 554,
+			"foot_x": 897,
+			"frame": 6,
+			"region": [
+				758,
+				292,
+				213,
+				262
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH",
+			"floor_y": 554,
+			"foot_x": 1175,
+			"frame": 7,
+			"region": [
+				1111,
+				288,
+				208,
+				266
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 836,
+			"foot_x": 186,
+			"frame": 0,
+			"region": [
+				52,
+				573,
+				207,
+				263
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 836,
+			"foot_x": 542,
+			"frame": 1,
+			"region": [
+				424,
+				576,
+				190,
+				260
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 836,
+			"foot_x": 850,
+			"frame": 2,
+			"region": [
+				765,
+				573,
+				189,
+				263
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 836,
+			"foot_x": 1190,
+			"frame": 3,
+			"region": [
+				1109,
+				573,
+				248,
+				263
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 1110,
+			"foot_x": 150,
+			"frame": 4,
+			"region": [
+				52,
+				853,
+				284,
+				257
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 1110,
+			"foot_x": 506,
+			"frame": 5,
+			"region": [
+				431,
+				854,
+				179,
+				256
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 1110,
+			"foot_x": 809,
+			"frame": 6,
+			"region": [
+				776,
+				853,
+				192,
+				257
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "KICK",
+			"floor_y": 1110,
+			"foot_x": 1247,
+			"frame": 7,
+			"region": [
+				1110,
+				848,
+				209,
+				262
+			],
+			"source": "res://assets/characters/red_cap/punch_kick.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 249,
+			"foot_x": 241,
+			"frame": 0,
+			"region": [
+				111,
+				20,
+				196,
+				229
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 249,
+			"foot_x": 627,
+			"frame": 1,
+			"region": [
+				472,
+				25,
+				222,
+				224
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 249,
+			"foot_x": 1012,
+			"frame": 2,
+			"region": [
+				852,
+				35,
+				221,
+				214
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 249,
+			"foot_x": 1370,
+			"frame": 3,
+			"region": [
+				1206,
+				27,
+				251,
+				222
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 501,
+			"foot_x": 256,
+			"frame": 4,
+			"region": [
+				92,
+				278,
+				256,
+				223
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 501,
+			"foot_x": 628,
+			"frame": 5,
+			"region": [
+				476,
+				276,
+				220,
+				225
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 501,
+			"foot_x": 984,
+			"frame": 6,
+			"region": [
+				843,
+				274,
+				209,
+				227
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_2",
+			"floor_y": 501,
+			"foot_x": 1363,
+			"frame": 7,
+			"region": [
+				1226,
+				273,
+				205,
+				228
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 755,
+			"foot_x": 236,
+			"frame": 0,
+			"region": [
+				102,
+				525,
+				202,
+				230
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 755,
+			"foot_x": 613,
+			"frame": 1,
+			"region": [
+				478,
+				563,
+				206,
+				192
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 755,
+			"foot_x": 1000,
+			"frame": 2,
+			"region": [
+				846,
+				538,
+				222,
+				217
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 755,
+			"foot_x": 1359,
+			"frame": 3,
+			"region": [
+				1220,
+				524,
+				206,
+				231
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 1010,
+			"foot_x": 261,
+			"frame": 4,
+			"region": [
+				110,
+				761,
+				218,
+				249
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 1010,
+			"foot_x": 638,
+			"frame": 5,
+			"region": [
+				486,
+				789,
+				220,
+				221
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 1008,
+			"foot_x": 984,
+			"frame": 6,
+			"region": [
+				842,
+				783,
+				210,
+				225
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "PUNCH_3",
+			"floor_y": 1010,
+			"foot_x": 1363,
+			"frame": 7,
+			"region": [
+				1225,
+				780,
+				206,
+				230
+			],
+			"source": "res://assets/characters/red_cap/punch_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 291,
+			"foot_x": 226,
+			"frame": 0,
+			"region": [
+				86,
+				38,
+				206,
+				253
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 289,
+			"foot_x": 579,
+			"frame": 1,
+			"region": [
+				425,
+				36,
+				214,
+				253
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 290,
+			"foot_x": 910,
+			"frame": 2,
+			"region": [
+				747,
+				49,
+				224,
+				241
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 291,
+			"foot_x": 1173,
+			"frame": 3,
+			"region": [
+				1076,
+				56,
+				284,
+				235
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 561,
+			"foot_x": 178,
+			"frame": 4,
+			"region": [
+				113,
+				312,
+				162,
+				249
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 564,
+			"foot_x": 586,
+			"frame": 5,
+			"region": [
+				426,
+				315,
+				222,
+				249
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 564,
+			"foot_x": 898,
+			"frame": 6,
+			"region": [
+				761,
+				318,
+				211,
+				246
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_2",
+			"floor_y": 564,
+			"foot_x": 1234,
+			"frame": 7,
+			"region": [
+				1096,
+				317,
+				212,
+				247
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 851,
+			"foot_x": 219,
+			"frame": 0,
+			"region": [
+				86,
+				596,
+				206,
+				255
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 850,
+			"foot_x": 505,
+			"frame": 1,
+			"region": [
+				445,
+				589,
+				165,
+				261
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 851,
+			"foot_x": 865,
+			"frame": 2,
+			"region": [
+				776,
+				577,
+				188,
+				274
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 851,
+			"foot_x": 1194,
+			"frame": 3,
+			"region": [
+				1095,
+				611,
+				225,
+				240
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 1102,
+			"foot_x": 144,
+			"frame": 4,
+			"region": [
+				104,
+				873,
+				217,
+				229
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 1103,
+			"foot_x": 582,
+			"frame": 5,
+			"region": [
+				435,
+				877,
+				217,
+				226
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 1103,
+			"foot_x": 904,
+			"frame": 6,
+			"region": [
+				766,
+				864,
+				212,
+				239
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "KICK_3",
+			"floor_y": 1103,
+			"foot_x": 1240,
+			"frame": 7,
+			"region": [
+				1104,
+				864,
+				210,
+				239
+			],
+			"source": "res://assets/characters/red_cap/kick_combo.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 280,
+			"foot_x": 248,
+			"frame": 0,
+			"region": [
+				113,
+				27,
+				205,
+				253
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 280,
+			"foot_x": 629,
+			"frame": 1,
+			"region": [
+				487,
+				48,
+				213,
+				232
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 280,
+			"foot_x": 1013,
+			"frame": 2,
+			"region": [
+				843,
+				59,
+				239,
+				221
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 280,
+			"foot_x": 1398,
+			"frame": 3,
+			"region": [
+				1205,
+				53,
+				263,
+				227
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 557,
+			"foot_x": 228,
+			"frame": 4,
+			"region": [
+				96,
+				343,
+				214,
+				214
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 558,
+			"foot_x": 605,
+			"frame": 5,
+			"region": [
+				473,
+				319,
+				226,
+				239
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 560,
+			"foot_x": 986,
+			"frame": 6,
+			"region": [
+				859,
+				313,
+				197,
+				247
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "HIT",
+			"floor_y": 560,
+			"foot_x": 1366,
+			"frame": 7,
+			"region": [
+				1235,
+				312,
+				201,
+				248
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 818,
+			"foot_x": 237,
+			"frame": 0,
+			"region": [
+				115,
+				580,
+				194,
+				238
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 816,
+			"foot_x": 601,
+			"frame": 1,
+			"region": [
+				479,
+				585,
+				251,
+				231
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 815,
+			"foot_x": 942,
+			"frame": 2,
+			"region": [
+				843,
+				618,
+				203,
+				197
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 815,
+			"foot_x": 1325,
+			"frame": 3,
+			"region": [
+				1222,
+				633,
+				251,
+				182
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 994,
+			"foot_x": 197,
+			"frame": 4,
+			"region": [
+				84,
+				841,
+				271,
+				153
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 994,
+			"foot_x": 578,
+			"frame": 5,
+			"region": [
+				460,
+				864,
+				282,
+				130
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 983,
+			"foot_x": 915,
+			"frame": 6,
+			"region": [
+				813,
+				877,
+				299,
+				106
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		},
+		{
+			"clip": "FALL",
+			"floor_y": 984,
+			"foot_x": 1300,
+			"frame": 7,
+			"region": [
+				1192,
+				877,
+				314,
+				107
+			],
+			"source": "res://assets/characters/red_cap/hit_fall.png"
+		}
+	],
+	"pivot": [
+		512,
+		960
+	],
+	"scales": {
+		"CROUCH": 0.959731543624161,
+		"FALL": 1.20168067226891,
+		"GUARD": 0.986206896551724,
+		"HIT": 1.1304347826087,
+		"IDLE": 1.12156862745098,
+		"JUMP": 1.14859437751004,
+		"KICK": 1.08745247148289,
+		"KICK_2": 1.1304347826087,
+		"KICK_3": 1.12156862745098,
+		"PUNCH": 1.08333333333333,
+		"PUNCH_2": 1.24890829694323,
+		"PUNCH_3": 1.24347826086957,
+		"RUN": 1.15322580645161,
+		"WALK": 1.144
+	}
+}
