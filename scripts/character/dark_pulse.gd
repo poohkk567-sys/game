@@ -57,6 +57,7 @@ func _on_target(target: Area2D) -> void:
 	set_deferred("monitoring", false)
 	set_deferred("collision_mask", 0)
 	if is_instance_valid(source):
+		if source.has_method("uses_dark_pulse") and source.uses_dark_pulse(): source.shadow_return.confirm(target)
 		source.target_struck.emit(inflicted)
 	queue_redraw()
 

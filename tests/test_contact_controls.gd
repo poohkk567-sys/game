@@ -52,6 +52,9 @@ func setup(profile: String = "PHUZASHI", left: bool = false) -> void:
 		a.red_awakened = true
 		a.rig.set_red_awakened(true)
 	await frames(6)
+	# Explicit confirmed-hit prerequisites for generic slot-mapping fixtures.
+	if a.uses_dark_pulse(): a.shadow_return.confirm(b.hurt_area)
+	if b.uses_dark_pulse(): b.shadow_return.confirm(a.hurt_area)
 func run() -> void:
 	stage = load("res://scenes/versus_school.tscn").instantiate()
 	root.add_child(stage)
@@ -120,6 +123,7 @@ func run() -> void:
 						b.rig.set_red_awakened(true)
 					actor = b
 					await frames(3)
+					if actor.uses_dark_pulse(): actor.shadow_return.confirm(a.hurt_area)
 				var down: int = KEY_DOWN if second else KEY_S
 				var command: int = ([KEY_KP_1,KEY_KP_2,KEY_KP_3,KEY_CTRL] if second else [KEY_J,KEY_K,KEY_L,KEY_SHIFT])[slot-1]
 				key(down,true)

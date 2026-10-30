@@ -176,6 +176,8 @@ func _settle_round() -> void:
 	for group: String in ["six_skill_effects","cheer_assists","dark_pulses","demon_bind_effects","shadow_blink_effects","purple_punch_impacts","ninja_smoke_effects"]:
 		get_tree().call_group(group,"queue_free")
 	for fighter: PhuzashiCharacter in [p1,p2]:
+		fighter.shadow_return.reset(true)
+		fighter.buff_blink_buffer = 0
 		fighter.cheer_buff = 0.0
 		fighter.skills.reset()
 		fighter.impact_pause = 0

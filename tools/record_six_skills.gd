@@ -28,7 +28,7 @@ func record() -> void:
 			stage.p1.position.x = 480
 			var distance: float = 110
 			if action in ["SPECIAL","ULTIMATE","SOY_BOMB"]: distance = 300
-			if action in ["DARK_RIFT","GORILLA_QUAKE"]: distance = 215
+			if action in ["SHADOW_RETURN","GORILLA_QUAKE"]: distance = 215
 			if action in ["CHEER","DEMON_BIND","TRANSFORM"]: distance = 400
 			stage.p2.position.x = 480+distance
 			if profile == "RED_CAP" and action != "TRANSFORM":
@@ -36,6 +36,7 @@ func record() -> void:
 				stage.p1.rig.set_red_awakened(true)
 			stage.p1.energy = 100
 			await frames(6)
+			if action == "SHADOW_RETURN": stage.p1.shadow_return.confirm(stage.p2.hurt_area)
 			stage.p1.start_action(action)
 			var captured: bool = false
 			var impact: bool = false
@@ -47,9 +48,9 @@ func record() -> void:
 				if not captured and tick >= (75 if action == "TRANSFORM" else (65 if action in ["GORILLA_GUARD","CHEER"] else 28)):
 					await capture(action.to_lower())
 					captured = true
-				if action in ["DARK_RIFT","SOY_BOMB"] and not impact:
+				if action == "SOY_BOMB" and not impact:
 					for effect: Node in get_nodes_in_group("six_skill_effects"):
-						if (action == "DARK_RIFT" and effect.age > 0.55) or (action == "SOY_BOMB" and effect.burst and effect.burst_age > 0.10):
+						if effect.burst and effect.burst_age > 0.10:
 							await capture(action.to_lower()+"_impact")
 							impact = true
 	quit()

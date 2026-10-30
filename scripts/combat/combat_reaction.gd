@@ -27,7 +27,7 @@ static func profile(move: String, damage: int, blocked: bool = false) -> Diction
 		pause = 0.04
 		camera = 2.5
 		sound = "HEAVY"
-	if move in ["SPECIAL","CARROT_HEADBUTT","CARROT_UPROOT","SOY_BOMB","CARROT_SPIN","DARK_RIFT","SHADOW_REPRISAL","GORILLA_ELBOW","GORILLA_KNEE","GORILLA_QUAKE","GORILLA_ROAR"]:
+	if move in ["SPECIAL","CARROT_HEADBUTT","CARROT_UPROOT","SOY_BOMB","CARROT_SPIN","SHADOW_RETURN","SHADOW_REPRISAL","GORILLA_ELBOW","GORILLA_KNEE","GORILLA_QUAKE","GORILLA_ROAR"]:
 		force = 190+damage*2
 		duration = 0.14
 		shake = 4.5
@@ -50,6 +50,13 @@ static func profile(move: String, damage: int, blocked: bool = false) -> Diction
 		pause = 0.015
 		shake = 2
 		camera = 0.7
+	if move == "CAPPED_SHOVE":
+		force = 850
+		duration = 0.45
+		shake = 5
+		pause = 0.065
+		camera = 4
+		sound = "HEAVY"
 	if move == "CARROT_RUSH_FINISH":
 		force = 240
 		duration = 0.13
@@ -71,6 +78,10 @@ static func hit(victim: Node2D, attacker: Node2D, damage: int, move: String, blo
 	victim.skills.push_velocity = direction(victim,attacker)*data.force
 	victim.skills.push_remaining = data.duration
 	victim.velocity.x = victim.skills.push_velocity
+	if move == "CAPPED_SHOVE" and not blocked:
+		victim.movement_lock.clear()
+		victim.launched_once = true
+		victim.velocity.y = -270
 	if move == "ULTIMATE" and not blocked and is_instance_valid(attacker) and attacker.has_method("is_fino_active") and attacker.is_fino_active():
 		# A frontal ram sends the opponent away before the scooter can ride over
 		# them. Release leg binds so they cannot pin the launch to the floor.

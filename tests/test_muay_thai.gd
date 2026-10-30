@@ -55,7 +55,7 @@ func run() -> void:
 	var atlas: AtlasTexture = sprite.sprite_frames.get_frame_texture("IDLE",0)
 	var visual_height: float = atlas.region.size.y*absf(sprite.scale.y*boxer.rig.scale.y)
 	check(absf(visual_height-187.2) < 2,"Muay Thai standing artwork is twenty percent taller than the 156px fighters")
-	check(not boxer.start_action("CARROT_HEADBUTT") and not boxer.start_action("DARK_RIFT"),"Muay Thai cannot borrow other fighters' powers")
+	check(not boxer.start_action("CARROT_HEADBUTT") and not boxer.start_action("SHADOW_RETURN"),"Muay Thai cannot borrow other fighters' powers")
 	for left: bool in [false,true]:
 		for family: String in ["PUNCH","KICK"]:
 			await setup(left)

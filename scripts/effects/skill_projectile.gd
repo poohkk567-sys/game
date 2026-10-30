@@ -18,13 +18,13 @@ func configure(caster: Node2D, action: String) -> void:
 	direction = caster.facing
 	floor_y = caster.global_position.y
 	global_position = caster.global_position
-	if kind == "DARK_RIFT": position.x += direction*215
-	elif kind == "SOY_BOMB":
+	if kind == "SOY_BOMB":
 		position += Vector2(direction*54,-130)
 		velocity = Vector2(direction*420,-350)
 	else: position.x += direction*95
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	add_to_group("six_skill_effects")
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
@@ -51,11 +51,6 @@ func _physics_process(delta: float) -> void:
 			for target: Node2D in Hit.query(source,Rect2(global_position-Vector2(76,70),Vector2(152,140))):
 				_hit(target,22,"SOY_BOMB",false,170)
 			if burst_age > 0.32: queue_free()
-	elif kind == "DARK_RIFT":
-		if age >= 0.48 and age <= 0.72:
-			for target: Node2D in Hit.query(source,Rect2(global_position-Vector2(58,72),Vector2(116,72))):
-				_hit(target,26,"DARK_RIFT",false,180)
-		if age > 0.95: queue_free()
 	else:
 		position.x += direction*380*delta
 		for target: Node2D in Hit.query(source,Rect2(global_position-Vector2(46,70),Vector2(92,70))):
@@ -90,26 +85,18 @@ func _draw() -> void:
 				draw_circle(point,maxf(1,6*(1-p)),Color(Color("21100d"),1-p))
 				draw_line(point,point+Vector2(-3,-7),Color(Color("8d6850"),1-p),2)
 		return
-	var color := Color("ae43ff") if kind == "DARK_RIFT" else Color("ff60be")
-	if kind == "DARK_RIFT" and age < 0.48:
-		var p: float = age/0.48
-		for i in range(5):
-			var x: float = -54+i*27
-			draw_line(Vector2(x,0),Vector2(x+13,-4-(i%2)*4),Color(color,0.5+p*0.5),3)
-		draw_arc(Vector2(0,-2),54,-PI,0,24,Color(color,p*0.8),2)
-	else:
-		var p: float = clampf((age-0.48)/0.47,0,1) if kind == "DARK_RIFT" else fmod(age*5,1)
-		var opacity: float = 1-p if kind == "DARK_RIFT" else minf(1,(1.35-age)*4)
-		for i in range(7):
-			var x: float = -48+i*16
-			var h: float = (70+sin(i*12.1)*40)*(sin(p*PI)*0.65+0.65)
-			var points := PackedVector2Array([Vector2(x-13,0),Vector2(x-8,-h*0.5),Vector2(x+sin(i*2.1)*12,-h),Vector2(x+9,-h*0.36),Vector2(x+14,0)])
-			draw_colored_polygon(points,Color(color.darkened(0.35),opacity*0.85))
-			draw_line(Vector2(x,0),points[2],Color(color.lightened(0.65),opacity),2)
-		for i in range(16):
-			var point := Vector2(sin(i*17.3)*65,-fmod(age*160+i*17,150))
-			draw_rect(Rect2(point,Vector2(3,6)),Color(color.lightened(0.35),opacity*0.75))
-		if kind == "DARK_RIFT": Art.frame(self,1+mini(2,floori(p*3)),Vector2(0,-42),Vector2(190,112),opacity)
+	var color := Color("ff60be")
+	var p: float = fmod(age*5,1)
+	var opacity: float = minf(1,(1.35-age)*4)
+	for i in range(7):
+		var x: float = -48+i*16
+		var h: float = (70+sin(i*12.1)*40)*(sin(p*PI)*0.65+0.65)
+		var points := PackedVector2Array([Vector2(x-13,0),Vector2(x-8,-h*0.5),Vector2(x+sin(i*2.1)*12,-h),Vector2(x+9,-h*0.36),Vector2(x+14,0)])
+		draw_colored_polygon(points,Color(color.darkened(0.35),opacity*0.85))
+		draw_line(Vector2(x,0),points[2],Color(color.lightened(0.65),opacity),2)
+	for i in range(16):
+		var point := Vector2(sin(i*17.3)*65,-fmod(age*160+i*17,150))
+		draw_rect(Rect2(point,Vector2(3,6)),Color(color.lightened(0.35),opacity*0.75))
 
 func _bottle_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()

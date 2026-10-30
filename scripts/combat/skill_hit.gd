@@ -17,7 +17,7 @@ static func apply(source: Node2D, target: Node2D, damage: int, move: String, lau
 	if victim.has_method("bind_lock_duration"):
 		if not blocked:
 			victim.skills.push_velocity = load("res://scripts/combat/combat_reaction.gd").direction(victim,source)*push
-			victim.skills.push_remaining = 0.14
+			victim.skills.push_remaining = 0.45 if move == "CAPPED_SHOVE" else 0.14
 			victim.velocity.x = victim.skills.push_velocity
 			if launch and not victim.launched_once:
 				victim.launched_once = true

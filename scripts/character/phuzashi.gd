@@ -73,6 +73,7 @@ const PurpleImpact = preload("res://scripts/effects/purple_punch_impact.gd")
 const MovementLock = preload("res://scripts/combat/movement_lock.gd")
 const CheerAssist = preload("res://scripts/effects/cheer_assist.gd")
 const DemonBind = preload("res://scripts/effects/demon_bind.gd")
+const ShadowReturn = preload("res://scripts/combat/shadow_return.gd")
 
 @onready var rig: Node2D = $Rig
 @onready var body_shape: CollisionShape2D = $CollisionShape2D
@@ -120,6 +121,8 @@ var blink_timer: float = 0.0
 var blink_cooldown: float = 0.0
 var blink_origin: float = 0.0
 var blink_direction: int = 1
+var buff_blink_buffer: int = 0
+var shadow_return: Node2D
 var left_tap: float = -100.0
 var right_tap: float = -100.0
 var combo_family: String = ""
@@ -240,7 +243,7 @@ func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 			announce("PERFECT GUARD / +3 MP")
 			Reaction.hit(self,attacker,0,move_name,true)
 			return 0
-		var costs: Dictionary = {"DARK_RIFT":22,"SHADOW_REPRISAL":18,"CARROT_UPROOT":22,"SOY_BOMB":18,"CARROT_SPIN":26,"GORILLA_ELBOW":28,"GORILLA_KNEE":24,"GORILLA_QUAKE":22,"GORILLA_ROAR":12,"GORILLA_KING":5,"GORILLA_KING_FINISH":20}
+		var costs: Dictionary = {"SHADOW_RETURN":22,"SHADOW_REPRISAL":18,"CARROT_UPROOT":22,"SOY_BOMB":18,"CARROT_SPIN":26,"GORILLA_ELBOW":28,"GORILLA_KNEE":24,"GORILLA_QUAKE":22,"GORILLA_ROAR":12,"GORILLA_KING":5,"GORILLA_KING_FINISH":20}
 		var guard_cost: float = float(GUARD_COSTS.get(move_name,costs.get(move_name,14)))
 		if skills.guard_buff > 0: guard_cost *= 0.55
 		guard_meter = maxf(0.0,guard_meter-guard_cost)
@@ -262,6 +265,7 @@ func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 	_clear_combo()
 	purple_fist.clear()
 	blink_timer = 0.0
+	buff_blink_buffer = 0
 	jump_buffer = 0.0
 	if (was_broken or (guarded and guard_meter <= 0.0)) and health > 0.0:
 		action_name = "GUARD_BREAK"
@@ -270,7 +274,7 @@ func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 		_defense_flash("GUARD BREAK")
 		announce("GUARD BREAK / 1 SECOND")
 	else:
-		action_name = "FALL" if move_name in ["KICK_3","ULTIMATE","GORILLA_KING_FINISH"] or health <= 0 else "HIT"
+		action_name = "FALL" if move_name in ["KICK_3","ULTIMATE","GORILLA_KING_FINISH","CAPPED_SHOVE"] or health <= 0 else "HIT"
 		action_duration = 1.4 if action_name == "FALL" else 0.48
 	action_timer = action_duration
 	Reaction.hit(self,attacker,damage,move_name,false)
@@ -333,6 +337,9 @@ func _ready() -> void:
 	skills.name = "Skills"
 	add_child(skills)
 	move_child(skills,0)
+	shadow_return = ShadowReturn.new()
+	shadow_return.name = "ShadowReturn"
+	add_child(shadow_return)
 	var aura: Node2D = load("res://scripts/effects/fino_aura.gd").new()
 	aura.name = "FinoAura"
 	add_child(aura)
@@ -348,6 +355,7 @@ func _physics_process(delta: float) -> void:
 	elapsed += delta
 	skills.tick(delta)
 	cheer_buff = maxf(0,cheer_buff-delta)
+	if cheer_buff <= 0: buff_blink_buffer = 0
 	cheer_cooldown = maxf(0,cheer_cooldown-delta)
 	var previous_x: float = position.x
 	if is_instance_valid(fino_visual):
@@ -587,25 +595,32 @@ func _start_blink(direction: int) -> bool:
 		return false
 	if not specials_enabled:
 		return false
-	if guard_break_remaining > 0.0 or is_movement_locked() or blink_timer > 0.0 or blink_cooldown > 0.0 or action_timer > 0.0:
+	if guard_break_remaining > 0.0 or is_movement_locked() or action_timer > 0.0:
 		return false
 	if not is_on_floor() or pressed("crouch") or pressed("guard"):
 		return false
-	if energy < BLINK_COST:
+	var free: bool = uses_dark_pulse() and cheer_buff > 0
+	if blink_timer > 0:
+		if free:
+			buff_blink_buffer = direction
+			return true
+		return false
+	if blink_cooldown > 0 and not free: return false
+	if energy < BLINK_COST and not free:
 		announce("Shadow Blink requires 5 MP")
 		return false
 	charging = false
-	energy -= BLINK_COST
+	energy -= 0 if free else BLINK_COST
 	_clear_combo()
 	blink_timer = BLINK_DURATION
-	blink_cooldown = BLINK_COOLDOWN
+	blink_cooldown = 0 if free else BLINK_COOLDOWN
 	blink_origin = position.x
 	blink_direction = direction
 	facing = direction
 	velocity = Vector2.ZERO
 	jump_buffer = 0.0
 	_set_state("BLINK")
-	announce("SHADOW BLINK / 5 MP")
+	announce("STAND BLINK / FREE" if free else "SHADOW BLINK / 5 MP")
 	var blink_effect: Node2D = ShadowBlinkVFX.new()
 	blink_effect.configure(self)
 	get_parent().add_child(blink_effect)
@@ -683,13 +698,21 @@ func _step_blink(delta: float) -> void:
 	effects.queue_redraw()
 	if blink_timer <= 0.0:
 		_set_state("IDLE")
+		var next: int = buff_blink_buffer
+		buff_blink_buffer = 0
+		if cheer_buff > 0 and next != 0: _start_blink(next)
+
+func slot_action(index: int) -> String:
+	var action: String = SkillBook.ROSTER[fighter_profile][index]
+	return "CAPPED_SHOVE" if fighter_profile == "RED_CAP" and not red_awakened and action == "SOY_BOMB" else action
 
 func request_skill_slot(index: int) -> bool:
 	if index < 0 or index >= 6: return false
-	var action: String = SkillBook.ROSTER[fighter_profile][index]
+	var action: String = slot_action(index)
 	return false if action.is_empty() else start_action(action)
 
 func start_action(action: String) -> bool:
+	if fighter_profile == "RED_CAP" and not red_awakened and action == "SOY_BOMB": action = "CAPPED_SHOVE"
 	if fighter_profile == "BLACK_COAT":
 		if action == "ULTIMATE": action = "BLOOD_PACT"
 		if action not in ["PUNCH","KICK","BLOOD_PACT"]: return false
@@ -874,6 +897,7 @@ func apply_movement_lock(seconds: float) -> bool:
 	action_name = ""
 	action_timer = 0.0
 	blink_timer = 0.0
+	buff_blink_buffer = 0
 	jump_buffer = 0.0
 	_clear_combo()
 	purple_fist.clear()
@@ -1050,6 +1074,7 @@ func reset_training() -> void:
 	launched_once = false
 	skill_input_modifier = false
 	if is_instance_valid(skills): skills.reset()
+	if is_instance_valid(shadow_return): shadow_return.reset()
 	if is_instance_valid(pact): pact.reset()
 	guard_meter = 100.0
 	guard_break_remaining = 0.0
@@ -1071,6 +1096,7 @@ func reset_training() -> void:
 	pulse_spawned = false
 	blink_timer = 0.0
 	blink_cooldown = 0.0
+	buff_blink_buffer = 0
 	dash_timer = 0.0
 	if is_instance_valid(fino_visual):
 		fino_visual.visible = false
