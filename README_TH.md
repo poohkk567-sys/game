@@ -1,8 +1,10 @@
 # PHUZASHI — DARK PULSE / คู่มือภาษาไทย
 
-[ดาวน์โหลดโปรเจกต์ Godot ล่าสุด](https://github.com/poohkk567-sys/game/archive/refs/heads/codex/black-six-source.zip)
+[ดาวน์โหลดโปรเจกต์ Godot ล่าสุด](https://github.com/poohkk567-sys/game/archive/refs/heads/codex/coop-3d-source.zip)
 
 แตก ZIP ทั้งหมด → เปิด Godot4.2.2ขึ้นไป → Import `project.godot` → Import & Edit → รอนำเข้า → F5
+
+**โหมดใหม่:** หน้าแรกกดCo-opบอส3D / F9 / Yบนจอย เล่นสองคน PHU CHILL + ASSJIROร่างหมวก เดิน4ทิศในสนาม3D ต่อยเตะ กระโดด กัน แดช และชุบเพื่อน ยังไม่มีสกิลพิเศษ [วิธีเล่น/ปุ่ม](docs/COOP_3D_TH.md) · [ผลตรวจ](docs/COOP_3D_TEST_REPORT.md)
 
 เลือกเล่น PHUZASHI / PHUZASHI CHILL / ASSJIRO / MUAY THAI / BLACK COAT ได้ทั้งสองฝั่ง หรือเลือกสนามฝึกเดี่ยว ไม่มี EXE ใหม่
 

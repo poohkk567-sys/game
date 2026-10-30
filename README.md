@@ -1,12 +1,18 @@
 # PHUZASHI — DARK PULSE
 
-เกมต่อสู้ 2D สำหรับ Godot 4.2.2 ขึ้นไป เล่นสองคนด้วยคีย์บอร์ดหรือจอย ตั้งจอยและปุ่มแยกแต่ละฝั่งได้ มีสนามโรงเรียนและสนามฝึกภูเขา
+เกมต่อสู้ 2D พร้อมโหมดทดลองCo-opบอส2.5D สำหรับ Godot 4.2.2 ขึ้นไป เล่นสองคนด้วยคีย์บอร์ดหรือจอย ตั้งจอยและปุ่มแยกแต่ละฝั่งได้ มีสนามโรงเรียนและสนามฝึกภูเขา
 
-[ดาวน์โหลดโปรเจกต์ Godot รุ่นล่าสุด (.zip)](https://github.com/poohkk567-sys/game/archive/refs/heads/codex/black-six-source.zip) · [สกิล BLACK / ปุ่ม](docs/BLACK_SIX_SKILLS_TH.md) · [ผลทดสอบ](docs/BLACK_SIX_TEST_REPORT.md)
+[ดาวน์โหลดโปรเจกต์ Godot รุ่นล่าสุด (.zip)](https://github.com/poohkk567-sys/game/archive/refs/heads/codex/coop-3d-source.zip) · [Co-op บอส 3D / ปุ่ม](docs/COOP_3D_TH.md) · [ผลทดสอบ](docs/COOP_3D_TEST_REPORT.md)
 
 แตก ZIP ทั้งหมด → เปิด Godot 4.2.2+ → Import `project.godot` → Import & Edit → รอนำเข้าครั้งแรก → F5 ไม่มี EXE ใหม่ ไม่มีแคชหรือ ZIP รุ่นเก่าซ้อนในชุดดาวน์โหลด
 
-## ล่าสุด: BLACK ครบ 6 สกิลแดง
+## ล่าสุด: ทดลอง Co-op บอส3D สองคน
+
+กด **Co-op บอส3D** ที่หน้าแรก หรือ **F9 / Yบนจอย** ใช้P1 PHUZASHI CHILL + P2 ASSJIROร่างหมวก ช่วยกันสู้Obsidian Wardenในสนาม3Dจริง ตัวละครพิกเซลเดิม เดิน4ทิศ กระโดด ต่อยเตะคอมโบ กัน แดช ชุบเพื่อน กล้องร่วมกัน รอบนี้ยังไม่เปิดสกิลพิเศษในโหมดCo-op โหมด2Dเดิมยังอยู่ครบ
+
+[วิธีเข้าและปุ่ม](docs/COOP_3D_TH.md) · [คลิปGodotจริง](https://github.com/poohkk567-sys/game/blob/codex/coop-3d-boss-prototype/docs/PHUZASHI_Coop_3D_Preview.mp4?raw=true) · [ผลตรวจ](docs/COOP_3D_TEST_REPORT.md)
+
+## BLACK ครบ 6 สกิลแดง
 
 คลื่นเขี้ยวแดง U/RT · พุ่งอัดสามจังหวะ S+J/ลง+X · หมัดเสย S+K/ลง+B · เขี้ยวขยี้การ์ด S+L/ลง+LB · ระเบิดโทสะ S+Shift/ลง+RB · อัลติสัญญาเลือด I/Y เดิม เอฟเฟกต์ปีศาจยิ้มแดงชุดใหม่20ภาพ และท่าหมัดเสย/ทุบเต็มตัว16ภาพ ทุกสกิลโจมตีรับบัฟตีแรง30%จากอัลติได้ เล่นได้ทั้งสองฝั่งและสนามฝึก
 

@@ -63,7 +63,8 @@ func _ready() -> void:
 	_button("เริ่มต่อสู้ 2 ผู้เล่น",Vector2(238,582),Vector2(256,49),start_versus)
 	_button("สนามฝึกเดี่ยว",Vector2(507,582),Vector2(256,49),start_training)
 	_button("ตั้งค่าจอย / F7",Vector2(776,582),Vector2(266,49),Gamepads.open_settings)
-	_label("LB เปลี่ยน P1 • RB เปลี่ยน P2 • Start ต่อสู้ • X ฝึก P1 • R3 ตั้งค่า",Vector2(100,647),Vector2(1080,35),17,Color("d3cbde"))
+	_button("Co-op บอส 3D / PHU CHILL + ASSJIRO  •  Y / F9",Vector2(238,643),Vector2(804,46),start_coop)
+	_label("LB เปลี่ยน P1 • RB เปลี่ยน P2 • Start ต่อสู้ • X ฝึก • Y Co-op • R3 ตั้งค่า",Vector2(100,694),Vector2(1080,24),14,Color("d3cbde"))
 	selectors[0].grab_focus()
 
 func _refresh_character(player: int) -> void:
@@ -104,11 +105,22 @@ func start_training() -> void:
 	Gamepads.suspend_until_neutral()
 	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
+func start_coop() -> void:
+	if Gamepads.settings_open: return
+	get_tree().paused = false
+	Gamepads.suspend_until_neutral()
+	get_tree().change_scene_to_file("res://scenes/coop_boss.tscn")
+
 func _input(event: InputEvent) -> void:
+	if not Gamepads.settings_open and event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_F9:
+		start_coop()
+		return
 	if Gamepads.settings_open or not (event is InputEventJoypadButton and event.pressed):
 		return
 	if event.button_index == JOY_BUTTON_START:
 		start_versus()
+	elif event.button_index == JOY_BUTTON_Y:
+		start_coop()
 	elif event.button_index == JOY_BUTTON_X:
 		start_training()
 	elif event.button_index in [JOY_BUTTON_LEFT_SHOULDER,JOY_BUTTON_RIGHT_SHOULDER]:
