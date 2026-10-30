@@ -13,6 +13,7 @@ func prepare(profile: String, second: bool, remapped: bool = false) -> PhuzashiC
 			b.rig.set_red_awakened(true)
 		actor = b
 		await frames(3)
+		if actor.uses_dark_pulse(): actor.shadow_return.confirm(a.hurt_area)
 	pads.profile.bindings = {"p1_":Profile.defaults(),"p2_":Profile.defaults()}
 	if remapped:
 		var prefix: String = "p2_" if second else "p1_"

@@ -115,6 +115,7 @@ func _fighter_status(fighter: PhuzashiCharacter) -> String:
 	if fighter.fighter_profile == "BLACK_COAT":
 		return " / PACT +30%% %.1fs" % fighter.pact.buff_remaining if fighter.pact.buff_remaining > 0 else " / BLOOD PACT 70 MP"
 	if fighter.red_awakened: return " / AWAKENED -30% DAMAGE"
-	if fighter.fighter_profile == "RED_CAP": return " / TRANSFORM TO UNLOCK SKILLS"
+	if fighter.fighter_profile == "RED_CAP": return " / PALM SHOVE / TRANSFORM FOR CARROT SKILLS"
 	if fighter.fighter_profile == "MUAY_THAI": return " / BROWN GORILLA STAND"
-	return " / CHEER %.1fs / BIND 1.1s / MOVE +10%%" % fighter.cheer_buff if fighter.cheer_buff > 0 else " / DARK PULSE"
+	var mark: String = " / MARK READY" if fighter.shadow_return.target() != null else ""
+	return (" / STAND %.1fs / FREE BLINK / BIND 1.1s" % fighter.cheer_buff if fighter.cheer_buff > 0 else " / DARK PULSE")+mark

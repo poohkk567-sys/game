@@ -97,6 +97,20 @@ func run() -> void:
 			grapple.frame = index
 			await inspect(viewport,"COMPACT REAR NINJA/"+str(index)+"/"+str(direction))
 	grapple.queue_free()
+	var caster := AnimatedSprite2D.new()
+	caster.sprite_frames = load("res://assets/characters/ninja_cast/cast_frames.res")
+	caster.centered = false
+	viewport.add_child(caster)
+	for clip: StringName in caster.sprite_frames.get_animation_names():
+		var factor: float = 156.0/float(caster.sprite_frames.get_meta("heights")[clip])
+		caster.animation = clip
+		for direction: int in [-1,1]:
+			caster.scale = Vector2(direction*factor,factor)
+			caster.position = Vector2(256,310)-Vector2(direction*512,960)*factor
+			for index in range(8):
+				caster.frame = index
+				await inspect(viewport,"CAST/"+clip+"/"+str(index)+"/"+str(direction))
+	caster.queue_free()
 	viewport.queue_free()
 	await process_frame
 	print("ROSTER RENDER RESULT: %d samples, %d failures" % [samples,failures])

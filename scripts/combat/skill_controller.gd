@@ -5,6 +5,7 @@ const Hit = preload("res://scripts/combat/skill_hit.gd")
 const Projectile = preload("res://scripts/effects/skill_projectile.gd")
 const Feedback = preload("res://scripts/combat/skill_feedback.gd")
 const Art = preload("res://scripts/effects/skill_art.gd")
+const CAST: SpriteFrames = preload("res://assets/characters/ninja_cast/cast_frames.res")
 var fighter: Node2D
 var cooldowns: Dictionary = {}
 var spawned: bool = false
@@ -69,26 +70,31 @@ func reset() -> void:
 	if is_instance_valid(cyclone): cyclone.visible = false
 
 func start(action: String) -> bool:
-	if action not in Book.ROSTER[fighter.fighter_profile] or not Book.MOVES.has(action): return false
+	var capped_shove: bool = action == "CAPPED_SHOVE" and fighter.fighter_profile == "RED_CAP" and not fighter.red_awakened
+	if (action not in Book.ROSTER[fighter.fighter_profile] and not capped_shove) or not Book.MOVES.has(action): return false
 	if action == "BLOOD_PACT" and fighter.pact.buff_remaining > 0:
 		fighter.announce("BLOOD PACT / ALREADY ACTIVE")
 		return false
-	if fighter.fighter_profile == "RED_CAP" and not fighter.red_awakened:
+	if fighter.fighter_profile == "RED_CAP" and not fighter.red_awakened and not capped_shove:
 		fighter.announce("AWAKEN FIRST / 70 MP")
 		return false
 	if not fighter.duel_mode and not fighter.rig.use_clear_model and fighter.fighter_profile == "PHUZASHI":
 		fighter.rig.set_clear_enabled(true)
 	if (fighter.duel_mode and (not fighter.controls_enabled or fighter.health <= 0)) or fighter.action_timer > 0 or fighter.dash_timer > 0 or fighter.blink_timer > 0 or fighter.guard_break_remaining > 0 or fighter.is_movement_locked(): return false
 	if not fighter.is_on_floor() or fighter.velocity.y < 0 or (not fighter.skill_input_modifier and (fighter.pressed("guard") or (fighter.pressed("crouch") and action != "GORILLA_KNEE"))): return false
-	if float(cooldowns.get(action,0)) > 0:
-		fighter.announce("%s / COOLDOWN %.1fs" % [Book.SHORT_NAMES[action],cooldowns[action]])
+	var cooldown_key: String = "SOY_BOMB" if capped_shove else action
+	if float(cooldowns.get(cooldown_key,0)) > 0:
+		fighter.announce("%s / COOLDOWN %.1fs" % [Book.SHORT_NAMES[action],cooldowns[cooldown_key]])
+		return false
+	if action == "SHADOW_RETURN" and fighter.shadow_return.target() == null:
+		fighter.announce("HIT SHURIKEN FIRST / GUARD HIT COUNTS")
 		return false
 	var cost: float = fighter.skill_mana_cost(action)
 	if fighter.energy < cost:
 		fighter.announce("%s / NEED %d MP" % [Book.SHORT_NAMES[action],cost])
 		return false
 	fighter.energy -= cost
-	cooldowns[action] = Book.COOLDOWNS[action]
+	cooldowns[cooldown_key] = Book.COOLDOWNS[cooldown_key]
 	fighter._clear_combo()
 	fighter._begin_attack(action)
 	fighter.announce("%s / %d MP" % [Book.NAMES[action],cost])
@@ -96,6 +102,7 @@ func start(action: String) -> bool:
 
 func begin(_action: String) -> void:
 	if _action == "BLOOD_PACT": fighter.pact.begin()
+	if _action == "SHADOW_RETURN": fighter.shadow_return.begin()
 	spawned = false
 	launched = false
 	pulse = -1
@@ -134,7 +141,8 @@ func process_attack() -> void:
 	if action == "BLOOD_PACT":
 		fighter.pact.commit()
 		return
-	if action in ["DARK_RIFT","SOY_BOMB","GORILLA_QUAKE"]:
+	if action == "SHADOW_RETURN": return # Owned by the return component, not a floor projectile.
+	if action in ["SOY_BOMB","GORILLA_QUAKE"]:
 		if not spawned:
 			spawned = true
 			var effect := Projectile.new()
@@ -175,7 +183,7 @@ func process_attack() -> void:
 	for target: Node2D in Hit.query(fighter,rect):
 		if fighter.struck.has(target.get_instance_id()): continue
 		var damage: int = config[2]
-		var push: float = 350 if action == "GORILLA_ROAR" else (230 if action in ["CARROT_SPIN","SHADOW_REPRISAL"] else 150)
+		var push: float = 850 if action == "CAPPED_SHOVE" else (350 if action == "GORILLA_ROAR" else (230 if action in ["CARROT_SPIN","SHADOW_REPRISAL"] else 150))
 		var amount: int = Hit.apply(fighter,target,damage,action,action in ["CARROT_UPROOT","GORILLA_KNEE"],push)
 		if amount >= 0: fighter.struck[target.get_instance_id()] = true
 
@@ -184,7 +192,8 @@ func pose(original: String, progress: float) -> Array:
 	if fighter.action_timer <= 0: return [original,progress]
 	match action:
 		"BLOOD_PACT": return ["HIT",0.35] if progress >= 0.50 and progress < 0.65 else ["GUARD",0.8]
-		"DARK_RIFT": return ["KICK" if progress < 0.32 else "CROUCH",minf(0.7,progress*1.2)]
+		"SHADOW_RETURN": return ["PUNCH_3",clampf((progress-0.35)/0.30,0,1)] if progress >= 0.35 and progress < 0.75 else ["GUARD",0.8]
+		"CAPPED_SHOVE": return ["PUNCH_2",progress]
 		"SHADOW_COUNTER": return ["GUARD",0.75]
 		"SHADOW_REPRISAL": return ["PUNCH_3",progress]
 		"CARROT_UPROOT": return ["CROUCH",progress*2] if progress < 0.25 else ["JUMP",clampf((progress-0.25)/0.75,0,1)]
@@ -221,12 +230,14 @@ func present() -> void:
 		stand.scale = Vector2(factor*fighter.facing,factor)
 		stand.position = Vector2(-fighter.facing*40,0)-Vector2(512*fighter.facing,960)*factor
 		stand.modulate = Color(1,0.91,0.94,stand_fade*0.82)
-	extra_body.visible = action == "SOY_BOMB"
+	extra_body.visible = action in ["SOY_BOMB","CAPPED_SHOVE"]
 	if extra_body.visible:
-		var factor: float = 156.0/float(extra_body.sprite_frames.get_meta("source_height"))
+		extra_body.sprite_frames = CAST if action == "CAPPED_SHOVE" else load("res://assets/characters/red_awakened/skills_frames.res")
+		var clip: String = "SHOVE" if action == "CAPPED_SHOVE" else action
+		var factor: float = 156.0/float(CAST.get_meta("heights")[clip] if action == "CAPPED_SHOVE" else extra_body.sprite_frames.get_meta("source_height"))
 		extra_body.scale = Vector2(factor*fighter.facing,factor)
 		extra_body.position = -Vector2(512*fighter.facing,960)*factor
-		extra_body.animation = action
+		extra_body.animation = clip
 		extra_body.frame = mini(7,floori(p*8))
 		fighter.rig.visible = false
 	cyclone.visible = fighter.cyclone_active()
@@ -245,6 +256,7 @@ func present() -> void:
 		ghost.frame = body.frame
 		ghost.position = fighter.rig.position+Vector2(-fighter.facing*20,-5)+body.position*Vector2(fighter.facing*3,3)
 		ghost.scale = body.scale*Vector2(fighter.facing*3,3)
+	if is_instance_valid(fighter.shadow_return): fighter.shadow_return.present()
 	queue_redraw()
 
 func _draw() -> void:
@@ -252,6 +264,12 @@ func _draw() -> void:
 	var action: String = fighter.action_name if fighter.action_timer > 0 else ""
 	var p: float = fighter.action_progress()
 	var tint := Color("fd78bb") if fighter.fighter_profile == "MUAY_THAI" else (Color("ff9f32") if fighter.fighter_profile == "RED_CAP" else Color("bc57ff"))
+	if action == "CAPPED_SHOVE" and p > 0.25 and p < 0.85:
+		var power: float = sin((p-0.25)/0.60*PI)
+		for i in range(3):
+			var radius: float = 35+(p-0.25)*150+i*12
+			var angle: float = -PI/2 if fighter.facing > 0 else PI/2
+			draw_arc(Vector2(fighter.facing*45,-85),radius,angle,angle+PI,24,Color(1,0.75+i*0.06,0.4,power*(0.6-i*0.15)),4-i,false)
 	if action == "CARROT_UPROOT":
 		draw_set_transform(Vector2.ZERO,0,Vector2(fighter.facing,1))
 		Art.frame(self,8+mini(3,floori(p*4)),Vector2(10,-95),Vector2(235,225),sin(p*PI))

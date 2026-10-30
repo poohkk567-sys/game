@@ -34,6 +34,10 @@ func setup(profile: String = "PHUZASHI", left: bool = false, distance: float = 1
 		a.red_awakened = true
 		a.rig.set_red_awakened(true)
 	await frames(6)
+	# General skill fixtures begin with a confirmed mark; gate behavior is
+	# exercised separately with actual shuriken collisions and guards.
+	if a.uses_dark_pulse(): a.shadow_return.confirm(b.hurt_area)
+	if b.uses_dark_pulse(): b.shadow_return.confirm(a.hurt_area)
 func run() -> void:
 	stage = load("res://scenes/versus_school.tscn").instantiate()
 	root.add_child(stage)
@@ -66,7 +70,7 @@ func run() -> void:
 	var upgraded: Dictionary = Profile.upgrade_map(legacy)
 	check(Profile.validate_map(upgraded) and upgraded.special == legacy.special,"Old custom pad profiles acquire free new bindings without losing remaps")
 	for left: bool in [false,true]:
-		for spec: Array in [["PHUZASHI","DARK_RIFT",26,215],["RED_CAP","CARROT_UPROOT",24,100],["RED_CAP","SOY_BOMB",22,300],["RED_CAP","CARROT_SPIN",30,100],["MUAY_THAI","GORILLA_ELBOW",30,110],["MUAY_THAI","GORILLA_KNEE",26,100],["MUAY_THAI","GORILLA_QUAKE",24,230],["MUAY_THAI","GORILLA_ROAR",10,150],["MUAY_THAI","GORILLA_KING",60,105]]:
+		for spec: Array in [["PHUZASHI","SHADOW_RETURN",26,215],["RED_CAP","CARROT_UPROOT",24,100],["RED_CAP","SOY_BOMB",22,300],["RED_CAP","CARROT_SPIN",30,100],["MUAY_THAI","GORILLA_ELBOW",30,110],["MUAY_THAI","GORILLA_KNEE",26,100],["MUAY_THAI","GORILLA_QUAKE",24,230],["MUAY_THAI","GORILLA_ROAR",10,150],["MUAY_THAI","GORILLA_KING",60,105]]:
 			await setup(spec[0],left,spec[3])
 			check(a.start_action(spec[1]),"Cast "+spec[1]+" left="+str(left))
 			check(a.energy == 100-a.skill_mana_cost(spec[1]),"Mana deducted exactly once: "+spec[1])
@@ -74,18 +78,19 @@ func run() -> void:
 			check(is_equal_approx(b.damage_taken,spec[2]),"Actual hit damage %d for %s left=%s, got %.1f" % [spec[2],spec[1],str(left),b.damage_taken])
 			check(a.energy == 100-a.skill_mana_cost(spec[1]),"Skills never award normal-hit mana: "+spec[1])
 	await setup("PHUZASHI",false,215)
-	a.start_action("DARK_RIFT")
+	var origin: Vector2 = a.position
+	a.start_action("SHADOW_RETURN")
 	await frames(32)
 	Input.action_press("p2_jump")
 	await frames(2)
 	Input.action_release("p2_jump")
-	await frames(60)
-	check(b.damage_taken == 0,"Telegraphed ground rift can actually be jumped over")
+	await frames(95)
+	check(a.position.distance_to(origin) < 0.1 and not a.shadow_return.active,"Shadow Return comes home after an opponent's jump without a floor hazard")
 	await setup("PHUZASHI")
-	a.start_action("DARK_RIFT")
-	await frames(70)
+	a.start_action("SHADOW_RETURN")
+	await frames(100)
 	var before: float = a.energy
-	check(not a.start_action("DARK_RIFT") and a.energy == before,"Cooldown rejects recasting without charging mana again")
+	check(not a.start_action("SHADOW_RETURN") and a.energy == before,"Cooldown rejects recasting without charging mana again")
 	await setup("PHUZASHI")
 	a.start_action("SHADOW_COUNTER")
 	await frames(10)
@@ -107,7 +112,7 @@ func run() -> void:
 	await frames(27)
 	check(b.launched_once and b.velocity.y < 0 and b.position.y < 586,"Uproot launches the actual opponent body for an aerial follow-up")
 	await setup("PHUZASHI")
-	a.start_action("DARK_RIFT")
+	a.start_action("SHADOW_RETURN")
 	a.receive_attack(8,"PUNCH",b)
 	await frames(70)
 	check(get_nodes_in_group("six_skill_effects").is_empty() and a.energy == 70,"Interrupting startup cancels the unreleased effect without refunding mana")
@@ -115,7 +120,12 @@ func run() -> void:
 	a.red_awakened = false
 	a.rig.set_red_awakened(false)
 	for slot in range(5):
+		if slot == 3: continue
 		check(not a.request_skill_slot(slot) and a.energy == 100,"Capped Assjiro rejects attack slot "+str(slot+1))
+	check(a.request_skill_slot(3) and a.action_name == "CAPPED_SHOVE" and a.energy == 70,"Capped Assjiro can use the shared bottle slot as a palm shove")
+	await setup("RED_CAP")
+	a.red_awakened = false
+	a.rig.set_red_awakened(false)
 	check(a.request_skill_slot(5),"Full mana still starts the soy awakening")
 	await frames(75)
 	check(a.red_transform_phase() == "BLACK SOY SAUCE","Transformation phase explicitly identifies black soy sauce")
@@ -148,9 +158,9 @@ func run() -> void:
 	await frames(2)
 	Input.action_release("p1_chord_four")
 	Input.action_release("p1_crouch")
-	check(a.action_name == "DARK_RIFT","New slot four input starts its assigned real skill")
+	check(a.action_name == "SHADOW_RETURN","New slot four input starts its assigned real skill")
 	await frames(22)
-	check(not get_nodes_in_group("six_skill_effects").is_empty(),"Real persistent effect is spawned")
+	check(a.shadow_return.active and a.shadow_return.seal.visible,"Real hand-seal drawing is visible before teleport")
 	stage.start_round()
 	await frames(2)
 	check(get_nodes_in_group("six_skill_effects").is_empty() and a.skills.cooldowns.is_empty(),"Round reset clears projectiles, cooldowns and temporary effects")
@@ -177,7 +187,7 @@ func run() -> void:
 		Input.parse_input_event(event)
 	Input.flush_buffered_events()
 	await frames(2)
-	check(a.action_name == "DARK_RIFT" and b.action_name == "SHADOW_COUNTER","Two pad crouch chords independently trigger slots four and five")
+	check(a.action_name == "SHADOW_RETURN" and b.action_name == "SHADOW_COUNTER","Two pad crouch chords independently trigger slots four and five")
 	check(a.energy == 70 and b.energy == 70,"Each assigned controller spends only its own fighter's mana")
 	for device: int in [2,5]:
 		for code: int in [JOY_BUTTON_DPAD_DOWN,JOY_BUTTON_LEFT_SHOULDER,JOY_BUTTON_RIGHT_SHOULDER]:
@@ -199,7 +209,7 @@ func run() -> void:
 		Input.parse_input_event(key)
 	Input.flush_buffered_events()
 	await frames(2)
-	check(b.action_name == "DARK_RIFT" and a.action_name == "","P2 down+slash keyboard chord fires its own fourth skill")
+	check(b.action_name == "SHADOW_RETURN" and a.action_name == "","P2 down+slash keyboard chord fires its own fourth skill")
 	for code: int in [KEY_DOWN,KEY_SLASH]:
 		var key := InputEventKey.new()
 		key.physical_keycode = code

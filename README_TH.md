@@ -1,6 +1,6 @@
 # PHUZASHI — DARK PULSE / คู่มือภาษาไทย
 
-[ดาวน์โหลดโปรเจกต์ Godot ล่าสุด](https://github.com/poohkk567-sys/game/archive/refs/heads/codex/standing-bind-source.zip)
+[ดาวน์โหลดโปรเจกต์ Godot ล่าสุด](https://github.com/poohkk567-sys/game/archive/refs/heads/codex/shadow-return-source.zip)
 
 แตก ZIP ทั้งหมด → เปิด Godot4.2.2ขึ้นไป → Import `project.godot` → Import & Edit → รอนำเข้า → F5
 
@@ -11,7 +11,7 @@
 - PHUZASHI ได้บัฟเชียร์มีออร่าปีศาจม่วงและล็อคขาอลังการ ASSJIRO แปลงร่างมีองค์พระ/วงแสงส้มทอง
 - แบบเสื้อแทร็กดำ–ทองอยู่ `docs/concepts/track_jacket_neutral.png` เป็นคอนเซปต์สูงเท่าASSJIRO ยังไม่ทำท่า
 
-[ล่าสุด: นินจาตัวเล็กยืนดึงโซ่รัดตัว แก้ถูกคู่ต่อสู้ทับ](docs/STANDING_BIND_TH.md) · [ผลทดสอบ](docs/STANDING_BIND_TEST_REPORT.md)
+[ล่าสุด: สแตนด์แดชฟรี ประสานอินวาร์ปกลับ และผลักก่อนแปลง](docs/SHADOW_RETURN_TH.md) · [ผลทดสอบ](docs/SHADOW_RETURN_TEST_REPORT.md)
 
 [ปุ่มและกติกาล่าสุด](docs/BLOOD_PACT_CHILL_TH.md) · [README พร้อมตารางปุ่ม](README.md) · [ผลทดสอบ](docs/BLOOD_PACT_CHILL_TEST_REPORT.md)
 

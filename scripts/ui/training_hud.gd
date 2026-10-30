@@ -99,10 +99,11 @@ func _draw_move_list() -> void:
 	var moves: Array = SkillBook.ROSTER[player.fighter_profile]
 	for slot in range(6):
 		if moves[slot].is_empty(): continue
-		rows.append([keys[slot],SkillBook.NAMES[moves[slot]],"%d MP" % player.skill_mana_cost(moves[slot])])
+		var action: String = player.slot_action(slot)
+		rows.append([keys[slot],SkillBook.NAMES[action],"%d MP" % player.skill_mana_cost(action)])
 	rows.append(["PAD","RT / Down+X / Down+B / Down+LB / Down+RB / Y",""])
-	rows.append(["ASSJIRO","Attack skills require bald awakened form",""])
-	rows.append(["E / L3","Dash / PHUZASHI Blink","5 MP Blink"])
+	rows.append(["S+L / Down+LB","PHU: hit shuriken first / ASS: shove or bottle",""])
+	rows.append(["E / L3","PHU Blink: free/no cooldown during stand","5 MP base"])
 	rows.append(["Tab / R","Switch fighter / reset (50 MP)",""])
 	rows.append(["F7 / R3","Assign and remap controllers",""])
 	for i in range(rows.size()):

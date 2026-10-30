@@ -31,7 +31,7 @@ func run() -> void:
 			check(b.damage_taken == (34 if family == "PUNCH" else 52),"Three relaxed "+family+" hits retain original total, left="+str(left))
 			check(b.position.x < 645 if left else b.position.x > 585,"Combo retains physical recoil, left="+str(left))
 			check(a.energy == 100,"Normals still grant mana and respect the hundred-MP cap")
-		for spec: Array in [["SPECIAL",24,215],["DARK_RIFT",26,215],["ULTIMATE",60,280]]:
+		for spec: Array in [["SPECIAL",24,215],["SHADOW_RETURN",26,215],["ULTIMATE",60,280]]:
 			await setup("PHUZASHI_CHILL",left,spec[2])
 			check(a.start_action(spec[0]),"New model casts "+spec[0]+" left="+str(left))
 			check(a.energy == 100-Book.cost(spec[0]),"Original MP cost for "+spec[0])
