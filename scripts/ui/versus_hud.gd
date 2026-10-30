@@ -113,7 +113,7 @@ func _fighter_status(fighter: PhuzashiCharacter) -> String:
 	if fighter.action_name == "TRANSFORM" and fighter.action_timer > 0:
 		return " / AWAKENING / "+fighter.red_transform_phase()
 	if fighter.fighter_profile == "BLACK_COAT":
-		return " / PACT +30%% %.1fs" % fighter.pact.buff_remaining if fighter.pact.buff_remaining > 0 else " / BLOOD PACT 70 MP"
+		return " / PACT +30%% %.1fs" % fighter.pact.buff_remaining if fighter.pact.buff_remaining > 0 else " / SIX CRIMSON DEMON SKILLS"
 	if fighter.red_awakened: return " / AWAKENED -30% DAMAGE"
 	if fighter.fighter_profile == "RED_CAP": return " / PALM SHOVE / TRANSFORM FOR CARROT SKILLS"
 	if fighter.fighter_profile == "MUAY_THAI": return " / BROWN GORILLA STAND"

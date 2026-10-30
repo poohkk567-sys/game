@@ -54,3 +54,6 @@ if rg -n "SCRIPT ERROR:|ERROR:|FAIL " work/standing-bind-check.log; then exit 1;
 
 "$engine" --headless --path . --fixed-fps 60 --script tests/test_shadow_return_rules.gd 2>&1 | tee work/shadow-return-rules-check.log
 if rg -n "SCRIPT ERROR:|ERROR:|FAIL " work/shadow-return-rules-check.log; then exit 1; fi
+
+"$engine" --headless --path . --fixed-fps 60 --script tests/test_black_six_skills.gd 2>&1 | tee work/black-six-skills-check.log
+if rg -n "SCRIPT ERROR:|ERROR:|FAIL " work/black-six-skills-check.log; then exit 1; fi

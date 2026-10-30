@@ -6,6 +6,8 @@ const Projectile = preload("res://scripts/effects/skill_projectile.gd")
 const Feedback = preload("res://scripts/combat/skill_feedback.gd")
 const Art = preload("res://scripts/effects/skill_art.gd")
 const CAST: SpriteFrames = preload("res://assets/characters/ninja_cast/cast_frames.res")
+const BlackSkills = preload("res://scripts/combat/black_skills.gd")
+var black: Node2D
 var fighter: Node2D
 var cooldowns: Dictionary = {}
 var spawned: bool = false
@@ -49,6 +51,8 @@ func _ready() -> void:
 	cyclone.centered = false
 	cyclone.visible = false
 	add_child(cyclone)
+	black = BlackSkills.new()
+	add_child(black)
 
 func tick(delta: float) -> void:
 	for action: String in cooldowns:
@@ -58,6 +62,7 @@ func tick(delta: float) -> void:
 	stand_fade = maxf(0,stand_fade-delta*5)
 
 func reset() -> void:
+	if is_instance_valid(black): black.reset()
 	cooldowns.clear()
 	guard_buff = 0
 	push_remaining = 0
@@ -101,6 +106,7 @@ func start(action: String) -> bool:
 	return true
 
 func begin(_action: String) -> void:
+	black.reset()
 	if _action == "BLOOD_PACT": fighter.pact.begin()
 	if _action == "SHADOW_RETURN": fighter.shadow_return.begin()
 	spawned = false
@@ -114,7 +120,7 @@ func incoming(move: String, attacker: Node2D) -> bool:
 	if fighter.action_progress() < 0.12 or fighter.action_progress() > 0.40: return false
 	if not is_instance_valid(attacker) or absf(attacker.global_position.x-fighter.global_position.x) > 155: return false
 	if (attacker.global_position.x-fighter.global_position.x)*fighter.facing < 0: return false
-	if move not in ["PUNCH","PUNCH_2","PUNCH_3","KICK","KICK_2","KICK_3","AIR_PUNCH","AIR_KICK","GORILLA_ELBOW","GORILLA_KNEE","CARROT_UPROOT","CARROT_SPIN"]: return false
+	if move not in ["PUNCH","PUNCH_2","PUNCH_3","KICK","KICK_2","KICK_3","AIR_PUNCH","AIR_KICK","GORILLA_ELBOW","GORILLA_KNEE","CARROT_UPROOT","CARROT_SPIN","RAGE_DRIVE","RAGE_DRIVE_FINISH","HELL_RISER","GRIN_CRUSH"]: return false
 	fighter.last_hit_blocked = true
 	fighter._begin_attack("SHADOW_REPRISAL")
 	fighter.announce("SHADOW COUNTER / CONFIRMED")
@@ -133,11 +139,14 @@ func movement(desired: float) -> float:
 			return fighter.facing*110
 		if action == "CARROT_SPIN" and p >= 0.25 and p < 0.65: return fighter.facing*100
 	if push_remaining > 0: return push_velocity
-	return desired
+	return black.movement(desired)
 
 func process_attack() -> void:
 	var action: String = fighter.action_name
 	var p: float = fighter.action_progress()
+	if black.owns(action):
+		black.process_attack()
+		return
 	if action == "BLOOD_PACT":
 		fighter.pact.commit()
 		return
@@ -190,6 +199,7 @@ func process_attack() -> void:
 func pose(original: String, progress: float) -> Array:
 	var action: String = fighter.action_name
 	if fighter.action_timer <= 0: return [original,progress]
+	if black.owns(action): return black.pose(original,progress)
 	match action:
 		"BLOOD_PACT": return ["HIT",0.35] if progress >= 0.50 and progress < 0.65 else ["GUARD",0.8]
 		"SHADOW_RETURN": return ["PUNCH_3",clampf((progress-0.35)/0.30,0,1)] if progress >= 0.35 and progress < 0.75 else ["GUARD",0.8]
@@ -257,6 +267,7 @@ func present() -> void:
 		ghost.position = fighter.rig.position+Vector2(-fighter.facing*20,-5)+body.position*Vector2(fighter.facing*3,3)
 		ghost.scale = body.scale*Vector2(fighter.facing*3,3)
 	if is_instance_valid(fighter.shadow_return): fighter.shadow_return.present()
+	black.present()
 	queue_redraw()
 
 func _draw() -> void:

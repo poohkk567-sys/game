@@ -20,6 +20,32 @@ func inspect(viewport: SubViewport, label: String, alpha_threshold: float = 0.5)
 		failures += 1
 		push_error("Roster render "+label+" body="+str(large)+" clipped="+str(clipped))
 	samples += 1
+
+func inspect_fragments(viewport: SubViewport, label: String) -> void:
+	# A visible body alone is insufficient: neighbour-row shoes were small
+	# enough to pass the old body-presence check. Reject detached large scraps.
+	var bitmap := BitMap.new()
+	bitmap.create_from_image_alpha(viewport.get_texture().get_image(),0.5)
+	var polygons: Array[PackedVector2Array] = bitmap.opaque_to_polygons(Rect2i(0,0,512,360),0.2)
+	var core := Rect2()
+	var areas: Array[float] = []
+	var boxes: Array[Rect2] = []
+	var largest: float = 0
+	for polygon: PackedVector2Array in polygons:
+		var area: float = 0
+		var box := Rect2(polygon[0],Vector2.ZERO)
+		for i in range(polygon.size()):
+			area += polygon[i].cross(polygon[(i+1)%polygon.size()])
+			box = box.expand(polygon[i])
+		areas.append(absf(area)*0.5)
+		boxes.append(box)
+		if absf(area) > largest:
+			largest = absf(area)
+			core = box
+	for i in range(areas.size()):
+		if areas[i] > 12 and not core.grow(5).encloses(boxes[i]):
+			failures += 1
+			push_error("Detached neighbour fragment "+label+" at "+str(boxes[i]))
 func run() -> void:
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(512,360)
@@ -111,6 +137,35 @@ func run() -> void:
 				caster.frame = index
 				await inspect(viewport,"CAST/"+clip+"/"+str(index)+"/"+str(direction))
 	caster.queue_free()
+	var black := AnimatedSprite2D.new()
+	black.sprite_frames = load("res://assets/characters/black_coat/skills/black_cast_frames.res")
+	black.centered = false
+	viewport.add_child(black)
+	for clip: StringName in black.sprite_frames.get_animation_names():
+		var factor: float = 156.0/float(black.sprite_frames.get_meta("heights")[clip])
+		black.animation = clip
+		for direction: int in [-1,1]:
+			black.scale = Vector2(direction*factor,factor)
+			black.position = Vector2(256,310)-Vector2(direction*512,960)*factor
+			for index in range(8):
+				black.frame = index
+				await inspect(viewport,"BLACK CAST/"+clip+"/"+str(index)+"/"+str(direction))
+				inspect_fragments(viewport,clip+"/"+str(index)+"/"+str(direction))
+	black.queue_free()
+	await process_frame
+	var red := AnimatedSprite2D.new()
+	red.sprite_frames = load("res://assets/effects/black_skills/crimson_frames.res")
+	red.position = Vector2(256,180)
+	viewport.add_child(red)
+	for clip: StringName in red.sprite_frames.get_animation_names():
+		red.animation = clip
+		for direction: int in [-1,1]:
+			for index in range(4):
+				red.frame = index
+				var size: Vector2 = red.sprite_frames.get_frame_texture(clip,index).get_size()
+				red.scale = Vector2(direction*240.0/size.x,240.0/size.y)
+				await inspect(viewport,"BLACK FX/"+clip+"/"+str(index)+"/"+str(direction))
+	red.queue_free()
 	viewport.queue_free()
 	await process_frame
 	print("ROSTER RENDER RESULT: %d samples, %d failures" % [samples,failures])

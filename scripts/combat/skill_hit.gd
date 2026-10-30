@@ -6,6 +6,7 @@ static func apply(source: Node2D, target: Node2D, damage: int, move: String, lau
 	if target.has_method("can_be_hit_by") and not target.can_be_hit_by(source): return -1
 	var victim: Node2D = target.get_parent() if target.has_method("was_last_hit_blocked") else target
 	if victim == source: return -1
+	if source.has_method("outgoing_damage"): damage = source.outgoing_damage(damage)
 	var amount: int = damage
 	if target.has_method("receive_attack"):
 		amount = target.receive_attack(damage,move,source)
@@ -17,7 +18,7 @@ static func apply(source: Node2D, target: Node2D, damage: int, move: String, lau
 	if victim.has_method("bind_lock_duration"):
 		if not blocked:
 			victim.skills.push_velocity = load("res://scripts/combat/combat_reaction.gd").direction(victim,source)*push
-			victim.skills.push_remaining = 0.45 if move == "CAPPED_SHOVE" else 0.14
+			victim.skills.push_remaining = float({"CAPPED_SHOVE":0.45,"RAGE_DRIVE":0.055,"RAGE_DRIVE_FINISH":0.18,"GRIN_CRUSH":0.20,"CRIMSON_BURST":0.28}.get(move,0.14))
 			victim.velocity.x = victim.skills.push_velocity
 			if launch and not victim.launched_once:
 				victim.launched_once = true

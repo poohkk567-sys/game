@@ -41,6 +41,7 @@ func _draw() -> void:
 	_panel(Rect2(26,155,207,117), Color("677eaa"))
 	_text(Vector2(42,178), "MOVE / " + ("LEFT" if player.facing < 0 else "RIGHT"), 12, MUTED)
 	var move_label: String = player.state_name.replace("AIR_", "JUMP ").replace("_", " ")
+	if player.fighter_profile == "BLACK_COAT" and SkillBook.SHORT_NAMES.has(player.state_name): move_label = SkillBook.SHORT_NAMES[player.state_name]
 	if player.combo_step > 0 and player.action_timer > 0.0:
 		move_label = "%s %d/3" % [player.combo_family, player.combo_step]
 	_text(Vector2(42,207), move_label, 23, WHITE)
