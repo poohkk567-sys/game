@@ -10,6 +10,7 @@ const Profile = preload("res://scripts/input/controller_profile.gd")
 const Settings = preload("res://scripts/ui/controller_settings.gd")
 const DEADZONE: float = 0.28
 const COMMANDS: Array[String] = ["move_left","move_right","jump","crouch","run","guard","punch","kick","charge","special","ultimate","red_ultimate","pad_ultimate","dash","pad_pause","pad_help","chord_three","chord_four","chord_five"]
+const COOP_COMMANDS: Array[String] = ["coop_forward","coop_back","coop_jump","coop_revive"]
 var profile = Profile.new()
 var device_info: Dictionary = {}
 var manual_devices: Dictionary = {}
@@ -161,7 +162,7 @@ func _connection_changed(_id: int, _connected: bool) -> void:
 	device_changed.emit()
 
 func swap_single_pad() -> void:
-	if settings_open or devices.size() != 1 or context != "VERSUS":
+	if settings_open or devices.size() != 1 or context not in ["VERSUS","COOP"]:
 		return
 	if profile.preferences.p1_.mode != "auto" or profile.preferences.p2_.mode != "auto":
 		open_settings()
@@ -183,7 +184,7 @@ func _erase_joy(action: String) -> void:
 
 func _apply_layout() -> void:
 	for prefix: String in ["","p1_","p2_"]:
-		for command: String in COMMANDS:
+		for command: String in COMMANDS+COOP_COMMANDS:
 			var action: String = prefix+command
 			if not InputMap.has_action(action):
 				InputMap.add_action(action,DEADZONE)
@@ -196,6 +197,13 @@ func _apply_layout() -> void:
 			if settings_open or (waiting_neutral and command not in ["pad_pause","pad_help"]):
 				continue
 			_bind_command(prefix+command,device,profile.bindings[player][command])
+		if context == "COOP" and not settings_open and not waiting_neutral:
+			_button(prefix+"coop_forward",device,JOY_BUTTON_DPAD_UP)
+			_axis(prefix+"coop_forward",device,JOY_AXIS_LEFT_Y,-1)
+			_button(prefix+"coop_back",device,JOY_BUTTON_DPAD_DOWN)
+			_axis(prefix+"coop_back",device,JOY_AXIS_LEFT_Y,1)
+			_bind_command(prefix+"coop_jump",device,profile.bindings[player].jump)
+			_bind_command(prefix+"coop_revive",device,profile.bindings[player].charge)
 		if not settings_open and not waiting_neutral:
 			# Modifier actions share the remapped normal button but have separate keys.
 			for command: String in ["chord_three","chord_four","chord_five"]:
