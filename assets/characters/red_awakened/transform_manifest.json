@@ -1,0 +1,221 @@
+{
+	"canvas": [
+		1024,
+		1024
+	],
+	"frames": [
+		{
+			"floor_y": 270,
+			"foot_x": 231,
+			"frame": 0,
+			"parts": 1,
+			"region": [
+				127,
+				33,
+				168,
+				237
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 270,
+			"foot_x": 562,
+			"frame": 1,
+			"parts": 1,
+			"region": [
+				455,
+				33,
+				172,
+				237
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 270,
+			"foot_x": 893,
+			"frame": 2,
+			"parts": 1,
+			"region": [
+				788,
+				17,
+				171,
+				253
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 270,
+			"foot_x": 1219,
+			"frame": 3,
+			"parts": 1,
+			"region": [
+				1116,
+				39,
+				169,
+				231
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 557,
+			"foot_x": 238,
+			"frame": 4,
+			"parts": 1,
+			"region": [
+				117,
+				320,
+				189,
+				237
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 557,
+			"foot_x": 561,
+			"frame": 5,
+			"parts": 1,
+			"region": [
+				457,
+				320,
+				170,
+				237
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 558,
+			"foot_x": 907,
+			"frame": 6,
+			"parts": 1,
+			"region": [
+				796,
+				299,
+				177,
+				259
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 558,
+			"foot_x": 1230,
+			"frame": 7,
+			"parts": 1,
+			"region": [
+				1118,
+				299,
+				178,
+				259
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 827,
+			"foot_x": 246,
+			"frame": 8,
+			"parts": 1,
+			"region": [
+				134,
+				580,
+				179,
+				247
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 826,
+			"foot_x": 571,
+			"frame": 9,
+			"parts": 1,
+			"region": [
+				450,
+				597,
+				190,
+				229
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 826,
+			"foot_x": 908,
+			"frame": 10,
+			"parts": 1,
+			"region": [
+				797,
+				597,
+				178,
+				229
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 826,
+			"foot_x": 1227,
+			"frame": 11,
+			"parts": 1,
+			"region": [
+				1114,
+				588,
+				181,
+				238
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 1079,
+			"foot_x": 237,
+			"frame": 12,
+			"parts": 1,
+			"region": [
+				124,
+				846,
+				181,
+				233
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 1080,
+			"foot_x": 573,
+			"frame": 13,
+			"parts": 1,
+			"region": [
+				434,
+				855,
+				203,
+				225
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 1080,
+			"foot_x": 858,
+			"frame": 14,
+			"parts": 1,
+			"region": [
+				770,
+				857,
+				209,
+				223
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		},
+		{
+			"floor_y": 1080,
+			"foot_x": 1231,
+			"frame": 15,
+			"parts": 1,
+			"region": [
+				1094,
+				855,
+				206,
+				225
+			],
+			"source": "res://assets/characters/red_awakened/transform.png"
+		}
+	],
+	"pivot": [
+		512,
+		960
+	],
+	"scale": 1.20675105485232
+}
