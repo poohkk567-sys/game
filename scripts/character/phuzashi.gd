@@ -243,7 +243,7 @@ func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 			announce("PERFECT GUARD / +3 MP")
 			Reaction.hit(self,attacker,0,move_name,true)
 			return 0
-		var costs: Dictionary = {"SHADOW_RETURN":22,"SHADOW_REPRISAL":18,"CARROT_UPROOT":22,"SOY_BOMB":18,"CARROT_SPIN":26,"GORILLA_ELBOW":28,"GORILLA_KNEE":24,"GORILLA_QUAKE":22,"GORILLA_ROAR":12,"GORILLA_KING":5,"GORILLA_KING_FINISH":20}
+		var costs: Dictionary = {"SHADOW_RETURN":22,"SHADOW_REPRISAL":18,"CARROT_UPROOT":22,"SOY_BOMB":18,"CARROT_SPIN":26,"GORILLA_ELBOW":28,"GORILLA_KNEE":24,"GORILLA_QUAKE":22,"GORILLA_ROAR":12,"GORILLA_KING":5,"GORILLA_KING_FINISH":20,"BLOOD_FANG":18,"RAGE_DRIVE":8,"RAGE_DRIVE_FINISH":18,"HELL_RISER":24,"GRIN_CRUSH":40,"CRIMSON_BURST":25}
 		var guard_cost: float = float(GUARD_COSTS.get(move_name,costs.get(move_name,14)))
 		if skills.guard_buff > 0: guard_cost *= 0.55
 		guard_meter = maxf(0.0,guard_meter-guard_cost)
@@ -274,10 +274,11 @@ func _receive_hit(damage: int, move_name: String, attacker: Node2D) -> int:
 		_defense_flash("GUARD BREAK")
 		announce("GUARD BREAK / 1 SECOND")
 	else:
-		action_name = "FALL" if move_name in ["KICK_3","ULTIMATE","GORILLA_KING_FINISH","CAPPED_SHOVE"] or health <= 0 else "HIT"
+		action_name = "FALL" if move_name in ["KICK_3","ULTIMATE","GORILLA_KING_FINISH","CAPPED_SHOVE","RAGE_DRIVE_FINISH","HELL_RISER","GRIN_CRUSH","CRIMSON_BURST"] or health <= 0 else "HIT"
 		action_duration = 1.4 if action_name == "FALL" else 0.48
 	action_timer = action_duration
 	Reaction.hit(self,attacker,damage,move_name,false)
+	if fighter_profile == "BLACK_COAT": skills.black.reset()
 	_set_state(action_name)
 	if is_instance_valid(fino_visual): fino_visual.visible = false
 	rig.visible = true
@@ -304,7 +305,7 @@ func select_fighter(profile: String) -> bool:
 		fino_visual.sprite_frames = load("res://assets/characters/"+("phuzashi_chill" if profile == "PHUZASHI_CHILL" else "phuzashi_clear")+"/fino_ultimate_frames.res")
 	visited = {"IDLE":true}
 	reset_training()
-	announce(display_name + (" / NORMAL MOVES + I: BLOOD PACT" if profile == "BLACK_COAT" else (" / SIX GORILLA STAND SKILLS" if profile == "MUAY_THAI" else (" / O: Black soy awakening / 6 skills" if profile == "RED_CAP" else " / SIX DARK PULSE SKILLS"))))
+	announce(display_name + (" / SIX CRIMSON DEMON SKILLS" if profile == "BLACK_COAT" else (" / SIX GORILLA STAND SKILLS" if profile == "MUAY_THAI" else (" / O: Black soy awakening / 6 skills" if profile == "RED_CAP" else " / SIX DARK PULSE SKILLS"))))
 	return true
 
 func _ready() -> void:
@@ -715,7 +716,8 @@ func start_action(action: String) -> bool:
 	if fighter_profile == "RED_CAP" and not red_awakened and action == "SOY_BOMB": action = "CAPPED_SHOVE"
 	if fighter_profile == "BLACK_COAT":
 		if action == "ULTIMATE": action = "BLOOD_PACT"
-		if action not in ["PUNCH","KICK","BLOOD_PACT"]: return false
+		if action == "SPECIAL": action = "BLOOD_FANG"
+		if action not in ["PUNCH","KICK"] and action not in SkillBook.ROSTER.BLACK_COAT: return false
 	if fighter_profile == "MUAY_THAI":
 		action = {"SPECIAL":"GORILLA_ELBOW","DEMON_BIND":"GORILLA_KNEE","CHEER":"GORILLA_QUAKE","ULTIMATE":"GORILLA_KING"}.get(action,action)
 	elif fighter_profile == "RED_CAP" and action == "CHEER":
@@ -902,6 +904,7 @@ func apply_movement_lock(seconds: float) -> bool:
 	_clear_combo()
 	purple_fist.clear()
 	_set_state("BOUND")
+	if fighter_profile == "BLACK_COAT": skills.black.reset()
 	_update_body_shape()
 	for blink_visual: Node in get_tree().get_nodes_in_group("shadow_blink_effects"):
 		if blink_visual.fighter == self:

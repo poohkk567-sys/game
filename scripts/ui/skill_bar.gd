@@ -16,7 +16,8 @@ static func draw_bar(canvas: CanvasItem, fighter: Node2D, rect: Rect2, second: b
 		var locked: bool = need_mark or (move == "BLOOD_PACT" and fighter.pact.buff_remaining > 0) or fighter.fighter_profile == "RED_CAP" and ((not fighter.red_awakened and slot < 5 and move != "CAPPED_SHOVE") or (fighter.red_awakened and slot == 5))
 		var cost: float = fighter.skill_mana_cost(move)
 		var enough: bool = fighter.energy >= cost
-		var tint: Color = READY if enough and cooldown <= 0 and not locked else DIM
+		var ready: Color = Color("ff6b7e") if fighter.fighter_profile == "BLACK_COAT" else READY
+		var tint: Color = ready if enough and cooldown <= 0 and not locked else DIM
 		canvas.draw_rect(cell,Color(0.035,0.045,0.075,0.95))
 		canvas.draw_rect(cell,tint.darkened(0.45),false,1)
 		var key_label: String = keys[slot]

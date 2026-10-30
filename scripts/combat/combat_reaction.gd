@@ -62,6 +62,19 @@ static func profile(move: String, damage: int, blocked: bool = false) -> Diction
 		duration = 0.13
 		shake = 4
 		camera = 2.5
+	if move in ["BLOOD_FANG","HELL_RISER","GRIN_CRUSH","CRIMSON_BURST","RAGE_DRIVE_FINISH"]:
+		force = {"BLOOD_FANG":210,"HELL_RISER":120,"GRIN_CRUSH":290,"CRIMSON_BURST":480,"RAGE_DRIVE_FINISH":300}[move]
+		duration = {"BLOOD_FANG":0.14,"HELL_RISER":0.14,"GRIN_CRUSH":0.20,"CRIMSON_BURST":0.28,"RAGE_DRIVE_FINISH":0.18}[move]
+		shake = 5 if move in ["GRIN_CRUSH","CRIMSON_BURST"] else 4
+		pause = 0.065 if move == "GRIN_CRUSH" else 0.05
+		camera = 4 if move in ["GRIN_CRUSH","CRIMSON_BURST"] else 3
+		sound = "HEAVY"
+	if move == "RAGE_DRIVE":
+		force = 20
+		duration = 0.055
+		shake = 2.2
+		pause = 0.022
+		camera = 1.2
 	if blocked:
 		force = 85
 		duration = 0.065
@@ -78,6 +91,10 @@ static func hit(victim: Node2D, attacker: Node2D, damage: int, move: String, blo
 	victim.skills.push_velocity = direction(victim,attacker)*data.force
 	victim.skills.push_remaining = data.duration
 	victim.velocity.x = victim.skills.push_velocity
+	if move in ["CRIMSON_BURST","RAGE_DRIVE_FINISH"] and not blocked:
+		victim.movement_lock.clear()
+		victim.launched_once = true
+		victim.velocity.y = -240 if move == "CRIMSON_BURST" else -180
 	if move == "CAPPED_SHOVE" and not blocked:
 		victim.movement_lock.clear()
 		victim.launched_once = true

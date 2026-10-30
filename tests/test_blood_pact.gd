@@ -8,9 +8,8 @@ func run() -> void:
 	b = stage.p2
 	await setup("BLACK_COAT")
 	check(a.display_name == "BLACK COAT" and a.energy == 100,"New black-coat fighter can enter a real match")
-	for slot in range(5):
-		check(not a.request_skill_slot(slot) and a.energy == 100,"Unassigned special slot stays empty: "+str(slot))
-	check(not a.start_action("CHEER") and not a.start_action("SPECIAL"),"New fighter cannot borrow another fighter's spells")
+	check(Book.ROSTER.BLACK_COAT.filter(func(move: String) -> bool: return not move.is_empty()).size() == 6,"Black coat now owns six fully assigned slots")
+	check(not a.start_action("CHEER") and not a.start_action("DEMON_BIND"),"New fighter cannot borrow another fighter's spells")
 	a.energy = 69
 	check(not a.start_action("ULTIMATE") and a.energy == 69,"Pact requires 70 MP without charging a failed cast")
 	a.energy = 100
